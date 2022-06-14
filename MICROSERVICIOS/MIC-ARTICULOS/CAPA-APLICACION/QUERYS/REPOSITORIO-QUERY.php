@@ -7,4 +7,6 @@ require_once('C:/xampp/htdocs/atic/obs_nueva_arq/obs_op/MICROSERVICIOS/MIC-ARTIC
 class RepositorioQuery implements IRepositorioQuery{
     //ESTE ES EL COMENTARIO
 
+    //este es el segundo comentario de prueba.
+
 }
