@@ -1,0 +1,18 @@
+.jump-row {
+
+	margin:0 !Important;
+	padding:0 !Important;
+	width:100% !Important;
+	display:flex;
+	flex-wrap: wrap;
+
+}
+
+.jump-row .col {
+	
+	margin:0;
+	padding:0;
+	display:flex;
+	flex-wrap: wrap;
+	
+}

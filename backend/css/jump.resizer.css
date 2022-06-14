@@ -1,0 +1,35 @@
+@charset "utf-8";
+/* CSS Document */
+
+.resizer_corner {
+	width:2px;
+	height:2px;
+	display:block;
+	position:absolute;
+	cursor:e-resize;
+	z-index:999999999;
+}
+
+.resizer_bar_v {
+	width:2px;
+	height:95%;
+	display:block;
+	position:absolute;
+	cursor:e-resize;
+	z-index:999999999;
+}
+
+.resizer_bar_h {
+	width:97%;
+	height:2px;
+	display:block;
+	position:absolute;
+	cursor:n-resize;
+	z-index:999999999;
+}
+
+.resizer_corner:hover, .resizer_bar_v:hover, .resizer_bar_h:hover {
+	
+	background-color:#31cbfd;
+	
+}

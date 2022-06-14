@@ -1,0 +1,29 @@
+.jump-block-inner-toolbar .button {
+
+	text-align:center;
+	display:inline-block;
+
+}
+
+.jump-block-inner-toolbar .button-input {
+
+	width:auto;
+
+}
+
+.jump-block-inner-toolbar .input {
+
+	/*width:auto;
+	display:inline-block;*/
+
+}
+
+.jump-button-fullsize {
+	
+	width: 100%;
+	height: 100%;
+	display: block;
+	text-align: center;
+	line-height: 30px;
+	
+}

@@ -1,0 +1,55 @@
+#logo_ieasa {
+	
+	position:relative !important;
+	top:-5px;
+	left:6px;
+	
+}
+
+#nav-2 {
+	
+	display:block !important;
+	background-color:#4c4c4e !important;
+	padding:0 !Important;
+	min-height:2.55em;
+	font-family:"Gotham light regular";
+	
+}
+
+#navSubtitle {
+	
+	display:inline-block !Important;
+	position:relative;
+	top:2px;
+	
+}
+
+#navToolbar .dropdown-menu {
+	
+	left:auto !Important;
+	right:0 !Important;
+	text-align:right !Important;
+	z-index:500 !Important;
+	
+}
+
+#navIcons {
+	
+	display:inline !Important;
+	position:relative;
+	top:4px;
+	
+}
+
+#navIcons ul {
+	
+	width:auto !Important;
+	
+}
+
+#navToolbar {
+	
+	margin-top:2px;
+	
+	
+}

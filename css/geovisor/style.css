@@ -1,0 +1,70 @@
+.geovisor-toggleable-content {
+	
+	display:none;
+	background:white !important;
+	
+}
+
+.geovisor-toggleable-content-active {
+	
+	display:block !important;
+	
+}
+
+.geovisor-form-group .col {
+	
+	text-align:center !Important;
+	padding:2px 10px !Important;
+	
+}
+
+.geovisor-form-group input, .geovisor-form-group select {
+	
+	margin-left:3%;
+	width:85%;
+	border:none;
+	font-size: 12px;
+	/*font-weight: bolder;
+	text-transform: uppercase;*/
+	
+}
+
+.geovisor-form-group input[type=date] {
+	
+	margin-left:3%;
+	width:75%;
+	border:none;
+	
+}
+
+#geovisor-popup-basic {
+	
+	background:white;
+	
+}
+
+#geovisor-popup-search {
+	
+	margin:0 !important;
+	padding:10px 2px !important;
+	background-color:#e5e5e5 !important;
+	height:170px;
+	
+}
+
+#geovisor-popup-search .form-group {
+	
+	background-color:#FFFFFF !important;
+	margin: 3px 0px;
+	border-radius: 3px;
+	padding: 8px 3%;
+	display: flex;
+	align-items: center;
+	
+}
+
+#geovisor-popup-search .form-group-button {
+	
+	background-color:transparent !important;
+	
+}

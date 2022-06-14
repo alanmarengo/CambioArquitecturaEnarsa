@@ -1,0 +1,107 @@
+/*** defaults ***/
+
+body {
+    font-family: "Montserrat", sans-serif !Important;
+}
+
+a {
+    color: #FFFFFF;
+}
+
+a:hover {
+    color: inherit;
+    text-decoration: none !Important;
+    -webkit-transition: .25s ease-in-out;
+    -moz-transition: .25s ease-in-out;
+    -o-transition: .25s ease-in-out;
+    transition: .25s ease-in-out;
+}
+
+
+/*** PAGE ***/
+
+#page {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.page-container {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    position: relative;
+}
+
+
+/***  DROPDOWN ***/
+
+.dropdown-menu {
+    background-color: #4a4849;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+}
+
+.dropdown-item {
+    color: #FFFFFF;
+    font-size: 12px;
+}
+
+.dropdown-item:hover {
+    background-color: #31cbfd;
+    color: #FFFFFF;
+    font-size: 12px;
+}
+
+.jump-sublevel-labeloption, .start-option {
+    background-color: #eaeaed;
+	padding-left: 12px;
+}
+
+.start-option a {
+	
+	color:#343a40;
+	font-size: 13px;
+	font-weight: bolder;
+	cursor:pointer;
+	
+}
+
+.start-option a:hover {
+	
+	color:#343a40;
+	
+}
+
+.jump-sublevel-labeloption a {
+
+    color: #353535;
+    font-size: 13px;
+    font-weight: bolder;
+
+}
+
+.jump-sublevel-labeloption a:hover {
+	color: #353535;
+}
+
+#panel-seach-input {
+    width: 250px;
+	text-transform:uppercase;
+}
+
+#panel-seach-input-layers {
+    width: 250px;
+	text-transform:uppercase;
+}
+
+#input-share {
+    width: 100%;
+    border: 1px solid #efefef;
+    padding: 10px;
+}

@@ -1,0 +1,24 @@
+.jump-window {
+	
+	z-index:88000;
+	
+}
+
+.jump-window-header {
+	
+	padding:0 20px;
+	cursor:move;
+	
+}
+
+.jump-window-close {
+	
+	float:right;
+	
+}
+
+.jump-window-body {
+	
+	min-height:200px;
+	
+}

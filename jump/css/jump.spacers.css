@@ -1,0 +1,49 @@
+.p10 {
+	
+	padding:10px !Important;
+	
+}
+
+.p20 {
+	
+	padding:20px !Important;
+	
+}
+
+.p30 {
+	
+	padding:30px !Important;
+	
+}
+
+.pl-5 {
+	
+	padding-left:5px !Important;
+	
+}
+
+.pl-10 {
+	
+	padding-left:10px !Important;
+	
+}
+
+.plr-10 {
+	
+	padding:0px 10px !Important;
+	
+}
+
+/*** MARGINS ***/
+
+.ml-5 {
+	
+	margin-left:5px !Important;
+	
+}
+
+.ml-10 {
+	
+	margin-left:10px !Important;
+	
+}

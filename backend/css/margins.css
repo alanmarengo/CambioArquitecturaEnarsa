@@ -1,0 +1,195 @@
+/**** M ****/
+
+.m0 {
+	
+	margin:0;
+	
+}
+
+.mcustom {}
+
+/**** MT ****/
+
+.mt-10 {
+	
+	margin-top:10px !Important;
+	
+}
+
+.mt-20 {
+	
+	margin-top:20px !Important;
+	
+}
+
+.mt-30 {
+	
+	margin-top:30px !Important;
+	
+}
+
+.mt-60 {
+	
+	margin-top:60px !Important;
+	
+}
+
+.mt--30-0-0-0 {
+	
+	margin:-30px 0 0 0 !Important;
+	
+}
+
+/**** ML ****/
+
+.ml-5 {
+	
+	margin-left:5px !Important;
+	
+}
+
+.ml-10 {
+	
+	margin-left:10px !Important;
+	
+}
+
+.ml-15 {
+	
+	margin-left:15px !Important;
+	
+}
+
+.ml-20 {
+	
+	margin-left:20px;
+	
+}
+
+/**** MB ****/
+
+.mb-5 {
+	
+	margin-bottom:5px;
+	
+}
+
+.mb-10 {
+	
+	margin-bottom:10px;
+	
+}
+
+.mb-20 {
+	
+	margin-bottom:20px;
+	
+}
+
+/**** MC ****/
+
+.m5-0 {
+	
+	margin:5px 0;
+	
+}
+
+/**** MV ****/
+
+.mv-10 {
+	
+	margin:10px 0 !Important;
+	
+}
+
+/**** PADDINGS ****/
+
+.p0 {
+	
+	padding:0 !Important;
+	
+}
+
+.p20 {
+	
+	padding:20px !Important;
+	
+}
+
+.p30 {
+	
+	padding:30px !Important;
+	
+}
+
+/**** PV ****/
+
+.pv-65 {
+	
+	padding:65px 0;
+	
+}
+
+.pv-75 {
+	
+	padding:75px 0;
+	
+}
+
+.pv-10 {
+	
+	padding:10px 0;
+	
+}
+
+.pv-30 {
+	
+	padding:30px 0;
+	
+}
+
+.pv-10-30 {
+	
+	padding:10px 0 30px 0;
+	
+}
+
+.pv-30-10 {
+	
+	padding:30px 0 10px 0;
+	
+}
+
+/**** PL ****/
+
+.pl-15 {
+	
+	padding-left:15px !Important;
+	
+}
+
+.pl-20 {
+	
+	padding-left:20px !Important;
+	
+}
+
+.pl-30 {
+	
+	padding-left:30px !Important;
+	
+}
+
+/**** PB ****/
+
+.pb-50 {
+	
+	padding-bottom:50px;
+	
+}
+
+.pb-75 {
+	
+	padding-bottom:75px;
+	
+}

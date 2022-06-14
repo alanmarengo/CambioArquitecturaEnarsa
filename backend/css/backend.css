@@ -1,0 +1,40 @@
+.backend-wrapper .tab-content {
+
+	border:#dee2e6 1px solid;
+	position: relative;
+	top: -1px;
+
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+	
+	position:relative;
+	z-index:20;
+	
+}
+
+.nav-tabs .nav-link {
+	
+	outline:none;
+	
+}
+
+.backend-files-wrapper {
+	
+	border-left: 1px solid #aaa;
+    padding-left: 20px;
+	
+}
+
+.sinia-title {
+	
+	color: #0072bd;
+	font-family: 'Gotham Black';
+	font-size: 48px;
+	font-weight: bolder;
+	line-height: 38px;
+	padding-right: 0px;
+	padding-left: 20px;
+	text-decoration: none;
+
+}

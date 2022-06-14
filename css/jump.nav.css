@@ -1,0 +1,45 @@
+.jump-navbar {
+
+	width:100%;
+	height:68px;
+	display:flex;
+	padding:0;
+	margin:0;
+	background:#333333;
+
+}
+
+.jump-nav-default li a {
+	
+	
+	padding:0 20px;
+	margin:0;
+	width:100%;
+	height:100%;
+	display:block;
+	
+}
+
+.jump-flotant-nav {
+	
+	z-index:96000;
+	
+}
+
+.jump-flotant-nav-level-2 {
+	
+	z-index:97000;
+	
+}
+
+.jump-flotant-nav-level-3 {
+	
+	z-index:98000;
+	
+}
+
+.jump-flotant-nav-level-4 {
+	
+	z-index:99000;
+	
+}

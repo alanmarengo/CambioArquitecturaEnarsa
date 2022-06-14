@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>Image Map Sample</title>
+	</head>
+	<body>
+		<map name='map'>
+			
+			
+			<area shape='circle' id='1' coords='226,57,50' href='' />
+			<area shape='circle' id='2' coords='129,63,50' href=''  />
+			<area shape='circle' id='3' coords='60,135,50' href=''  />
+			<area shape='circle' id='4' coords='59,239,50' href=''  />
+			<area shape='circle' id='5' coords='130,311,50' href=''  />
+			<area shape='circle' id='6' coords='230,312,50' href=''  />
+			<area shape='circle' id='7' coords='302,239,52' href=''  />
+			<area shape='circle' id='8' coords='322,137,53' href=''  />
+			<area shape='circle' id='9' coords='391,63,50' href=''  />
+			<area shape='circle' id='10' coords='494,61,50' href=''  />
+			<area shape='circle' id='11' coords='563,134,50' href=''  />
+			<area shape='circle' id='12' coords='584,235,56' href=''  />
+			<area shape='circle' id='13' coords='656,316,50' href=''  />
+			<area shape='circle' id='14' coords='755,308,50' href=''  />
+			<area shape='circle' id='15' coords='826,240,50' href=''  />
+			<area shape='circle' id='16' coords='843,140,50' href=''  />
+			<area shape='circle' id='17' coords='913,65,55' href=''  />
+			<area shape='circle' id='18' coords='1020,65,52' href=''  />
+			<area shape='circle' id='19' coords='1090,138,50' href=''  />
+			<area shape='circle' id='20' coords='1089,240,50' href=''  />
+			<area shape='circle' id='21' coords='1017,309,50' href=''  />
+			<area shape='circle' id='22' coords='921,312,50' href=''  />
+		</map>
+	</body>
+</html>

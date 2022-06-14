@@ -1,0 +1,162 @@
+#navbar-tools {
+	
+	position:fixed;
+	min-height:44px;
+	width:100%;
+	margin:0;
+	padding:0;
+	background-color:#4c4c4e;
+	z-index:500000;
+	
+}
+
+#navbar-tools .dropdown-menu {
+	
+	width:36px;
+	
+}
+
+#navbar-tools .dropdown-menu a:not(#dropdown-draw .dropdown-item) {
+	
+	height:36px;
+	line-height:36px;
+	
+}
+
+#navbar-tools .dropdown-menu a:hover {
+	
+	background-color:#31cbfd;
+	color:#FFFFFF !Important;
+	
+}
+
+#navbar-tools .jump-row {
+	
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	
+}
+
+#navbar-tools .col {
+	
+	min-height:44px;
+	
+}
+
+#navbar-tools .col-title h3 {
+	
+	margin:0;
+	padding:0;
+	color:#FFFFFF;
+	font-weight:400;
+	font-size:18px;
+	
+}
+
+#navbar-tools ul {
+	
+	margin:0;
+	padding:0;
+	width:100%;
+	display:flex;
+	flex-wrap:wrap;
+	justify-content:flex-end;
+	
+}
+
+#navbar-tools ul li {
+	
+	height:24px;
+	display:inline-flex;
+	align-items:center;
+	border-radius:3px;
+	margin:0;
+	padding:0;
+	margin-left:-3px;
+	
+}
+
+#navbar-tools ul li:not(.input-li) {
+	
+	margin:0 0 0 5px !Important;
+	width:24px;
+	
+}
+
+#navbar-tools ul li a {
+	
+	height:100%;
+	width:100%;
+	display:inline-flex;
+	align-items:center;
+	justify-content:center;
+	margin:0;
+	padding: 0 2px;
+	color: #31cbfd;
+	border-radius: 3px;
+	
+}
+
+#navbar-tools ul li a:hover:not(.jump-link-death):not(.dropdown-menu a) {
+	
+	opacity:0.5;
+	
+}
+
+#navbar-tools ul li a i {
+	
+	font-size:14px;
+	
+}
+
+#navbar-tools ul .input-li {
+	
+	flex-grow:1;
+	display:inline-flex;
+	
+}
+
+#dropdown-draw {
+	
+	margin-top:10px;
+	margin-right:-3px;
+	
+}
+
+#dropdown-draw .dropdown-item {
+	
+	width:30px;
+	height:30px ;
+	line-height:30px;
+	
+}
+
+#dropdown-draw .dropdown-item li {
+	
+	font-size:10px;
+	font-weight:400;
+	
+}
+
+.icon-divisor {
+
+    margin: 0px !important;
+    padding: 0px 3px 0px 3px !important;
+    width: auto !important;
+    position: relative;
+
+}
+
+.icon-divisor span {
+
+    height: 25px;
+    border-left: solid 1px #666;
+
+}
+
+.toggleable-tool-active {
+	
+	background-color:#282828;
+	
+}

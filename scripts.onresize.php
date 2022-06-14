@@ -1,0 +1,1 @@
+<script src="./js/onresize.js" type="text/javascript"></script>

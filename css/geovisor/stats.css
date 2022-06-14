@@ -1,0 +1,326 @@
+#layers-wrapper {
+	
+	width:100%;
+	display:flex;
+	
+}
+
+.layer-container {
+	
+	width: 100%;
+	/*border:2px solid;*/
+	display:none;
+	
+}
+
+.layer-group {
+	
+	/*display:none;*/
+	border-bottom:solid 1px #f5f5f5;
+	
+}
+
+.layer-header, .layer-container-header {
+	
+	min-height:34px;
+	color:#888888;
+	
+}
+
+.layer-header a, .layer-container-header a {
+	
+	left: 10px;
+	color: #888888;
+	font-weight: 300;
+	display: inline-flex;
+	
+}
+
+.layer-header a:hover, .layer-container-header a:hover {
+	
+	text-decoration:none;
+	
+}
+
+.layer-container-header span:not(.abr-layer-count) {
+	
+	position:relative;
+	top:2.5px;
+	left:13px;
+	font-family:"Montserrat",sans-serif;
+	font-size: 13px;
+	font-weight: bolder;
+	color:white;
+	
+}
+
+.layer-header span {
+		
+	/*font-style:italic;*/
+	font-size: 13px;
+	margin-left: 10px;
+	margin-top: 8px;
+}
+
+.layer-header .layer-label:hover {
+	
+	opacity:0.8;
+	
+}
+
+.layer-label-active {
+
+    color:#31cbfd !important;
+
+}
+
+.abr-layer-count{
+	
+	font-size:13px;
+	font-family:"Montserrat",sans-serif;
+	font-weight:400;
+	
+}
+
+.layer-header .pretty,.layer-container-header .pretty {
+	
+	position:relative;
+	left:9px;
+	top:3px;
+	width:15px;
+	
+}
+
+.layer-header .simple-tree-pm-button {
+	
+	left:-10px;
+	margin-top:8px;
+	
+}
+
+.layer-header .simple-tree-pm-button i {
+	
+	color:white;
+	
+}
+
+.layer-body {
+	
+	display:none;
+	margin-left:10px;
+	font-size:12px;
+	
+}
+
+.layer-legend {
+	
+	margin:15px 0;
+	
+}
+
+.layer-opacity,.layer-colorpicker {
+
+    padding: 0 10px 10px 10px;
+    background: RGBA(0,0,0,0.2);
+    margin: 20px 10px 0 0;
+	display:none;
+
+}
+
+.layer-opacity label {
+	
+	color:#FFFFFF;
+	
+}
+
+.opacity-bullet-content {
+	
+	width:24px;
+	height:14px;
+	overflow:hidden;
+	position:relative;
+	left: 173px;
+	top: -14px;
+	
+}
+
+.opacity-bullet {
+	
+	width:14px;
+	height:14px;
+    background: RGBA(0,0,0,0.2);
+	transform: rotate(45deg);
+	position: relative;
+	top: 8px;
+	left: 2px;
+	
+}
+
+.layer-basico-container {
+	
+	background-color:transparent;
+	
+}
+
+#layer-title, #layer-desc {
+	
+	color:white;
+	
+}
+
+#layer-desc {
+
+	margin-top:20px;
+	text-align:justify;
+	
+}
+
+.colorpicker-bullet-content {
+	
+	width:24px;
+	height:14px;
+	overflow:hidden;
+	position:relative;
+	left: 117px;
+	top: -14px;
+	
+}
+
+.colorpicker-bullet {
+	
+	width:14px;
+	height:14px;
+    background: RGBA(0,0,0,0.2);
+	transform: rotate(45deg);
+	position: relative;
+	top: 8px;
+	left: 2px;
+	
+}
+
+.transp-value {
+
+    background: none;
+    color: white;
+    float: right;
+    width: 36px;
+
+}
+
+.layer-icons {
+	
+	margin-top:10px;
+	
+}
+
+.layer-icon {
+	
+	height:24px;
+    background: RGBA(0,0,0,0.2);
+	width:46px;
+	border-radius:3px;
+	margin-left:7px;
+	display:inline-block;
+	vertical-align:top;
+	text-align:center;
+	cursor:pointer;
+	
+}
+
+.layer-icon:hover {
+	
+	opacity:0.5;
+	
+}
+
+.layer-icon:first-child {
+	
+	margin-left:0px;
+	
+}
+
+#abr-container {
+	
+	width:40px;
+	display:inline-flex;
+	flex-direction: column;
+	background-color:#ffffff;
+	
+}
+
+#layers-container {
+	
+	display:inline-flex;
+	flex-grow:1;
+	background-color:#ffffff;
+	
+}
+
+.layer-group .layer-header .pretty i {
+
+    color: #888;
+
+}
+
+.abr {
+	
+	width:100%;
+	height:34px;
+	border:2px solid transparent;
+	text-align:center;
+	line-height:32px;
+	font-size:18px;
+	font-weight:bold;
+	cursor:pointer;
+	font-family:"Montserrat",sans-serif;
+	font-size:16px;
+	color:#888888;
+	margin-bottom: 1px;
+	background-color:#F5F5F5;
+	
+}
+
+.abr-green {
+	
+	border-color:green;
+	
+}
+
+#layer-bullet {
+
+    position: absolute;
+    left: 0px;
+    width: 36px;
+    height: 36px;
+	color:#FFFFFF;
+	background-color:#31cbfd;
+    z-index: 20;
+    display: block;
+    font-size: 20px;
+    text-align: center;
+    line-height: 36px;
+	cursor:pointer;
+	z-index:90001;
+	margin-top:20px;
+	
+}
+
+#layer-bullet:hover {
+	
+	opacity:0.5;
+	color:#FFFFFF;
+
+}
+
+.layer-bullet-opened {
+	
+	margin-right:-36px;
+	
+}
+
+.layers-visible-count {
+	
+	color: white;
+	font-size: 12px;
+	
+}

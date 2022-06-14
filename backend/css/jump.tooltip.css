@@ -1,0 +1,40 @@
+.tooltip-white-list ul {
+	
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	
+}
+
+.tooltip-white-list li {
+	
+	border-bottom:#efefef 1px solid;
+	padding:7px 0;
+	
+}
+
+.tooltip-white-list li:last-child {
+	
+	border-bottom:none !important;
+	
+}
+
+.tooltip-white-list li a {
+	
+	color:#999;
+	font-weight:bolder;
+	font-weight:400;
+	font-size:12px;
+	font-family:"Montserrat",sans-serif;
+	
+}
+
+.tooltipster-content {
+	
+	color:#999 !important;
+	font-weight: bolder !important;
+	font-weight: 400 !important;
+	font-size: 12px !important;
+	font-family: "Montserrat",sans-serif !important;
+	
+}

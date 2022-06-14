@@ -1,0 +1,247 @@
+#navbar-main {
+    min-height: 68px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 500001 !Important;
+}
+
+#navbar-main .jump-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+#navbar-main .col {
+    min-height: 68px;
+}
+
+#navbar-main ul {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#navbar-main ul li {
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 0px;
+    background-color: #4a4849;
+    margin: 0;
+    padding: 0;
+    margin-left: -3px;
+}
+
+#navbar-main ul li:not(.input-li) {
+    margin: 0 0 0 5px !Important;
+    width: 36px;
+}
+
+#navbar-main ul li a {
+    height: 36px;
+    width: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    color: #31cbfd;
+}
+
+#navbar-main ul li a:hover:not(.jump-link-death):not(.dropdown-menu a) {
+    opacity: 0.5;
+}
+
+#navbar-main ul li a:hover {
+    color: #fff;
+    background: #282828;
+}
+
+#navbar-main ul li a i {
+    font-size: 20px;
+}
+
+#navbar-main .dropdown-menu li {
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    background-color: #4a4849;
+    margin: 0;
+    padding: 0;
+    margin-left: -3px;
+}
+
+#navbar-main .dropdown-menu a {
+    height: 100%;
+    width: 100%;
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: #31cbfd;
+}
+
+#navbar-main .dropdown-menu {
+    left: auto !Important;
+    right: 0 !Important;
+}
+
+#navbar-main .dropdown-menu a:hover {
+    background-color: #31cbfd;
+    color: #FFFFFF;
+}
+
+#navbar-main ul .input-li {
+    flex-grow: 1;
+    display: inline-flex;
+}
+
+#navbar-main #dropdown-help li {
+    margin: 0;
+    width: 100%;
+    border-radius: 0;
+    padding: 0 20px;
+    line-height: 36px;
+}
+
+#navbar-main #dropdown-help li {
+    margin: 0 !Important;
+    padding: 0 !Important;
+    width: 100%;
+    border-radius: 0;
+    line-height: 36px;
+}
+
+#navbar-main #dropdown-help li a {
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding: 0 10px;
+}
+
+#navbar-main #dropdown-user li {
+    margin: 0;
+    width: 100%;
+    border-radius: 0;
+    padding: 0 20px;
+    line-height: 36px;
+}
+
+#navbar-main #dropdown-user li {
+    margin: 0 !Important;
+    padding: 0 !Important;
+    width: 100%;
+    border-radius: 0;
+    line-height: 36px;
+}
+
+#navbar-main #dropdown-user li a {
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding: 0 10px;
+}
+
+#brand {
+    display: flex;
+    flex-grow: 1;
+}
+
+#main-search {
+    width: 100%;
+    background-color: none;
+    border: none;
+    color: #FFF;
+    background: transparent;
+    font-size: 12px;
+    padding-left: 8px;
+    margin-right: 20px;
+}
+
+#main-search:focus {
+    outline: none;
+}
+
+#navbar-tools .button-tools:hover {
+    background-color: #282828;
+}
+
+.form-group-login {
+    border: none !Important;
+    outline: none;
+    background: #343a40;
+    height: 32px;
+    width: 90%;
+    margin: 10px 5% auto !Important;
+    line-height: 32px;
+    border-radius: 3px;
+}
+
+.form-group-login i {
+    vertical-align: top;
+    display: inline-block;
+    color: white;
+    margin-top: 2px;
+}
+
+.form-group-login input {
+    width: 75%;
+    margin-left: 5px;
+    border: none;
+    height: 18px;
+    background: none;
+    color: white;
+    outline: none;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.form-group-link {
+    border: none !important;
+}
+
+.form-group-link a:hover {
+    background: none !important;
+    color: #31cbfd !important;
+    opacity: 0.7;
+}
+
+#frm .form-group-button {
+    width: 80%;
+    text-align: center;
+    margin: 10px auto 0px auto;
+    height: 26px;
+    line-height: 26px;
+    border-radius: 3px;
+    background-color: #31cbfd;
+}
+
+#frm .form-group-button a {
+    color: white !important;
+}
+
+#frm .form-group-button:hover {
+    opacity: 0.7;
+}
+.logo_mobile{
+    display: none !important;
+}
+
+/* MOBILE       */
+@media (max-width: 850px) {
+.logo_desktop{
+    display: none !important;
+}
+.logo_mobile{
+    display: block !important;
+}
+.logo_mobile#logo_mobile_1{
+    width: 100%;
+    height: 50px;
+}
+
+}

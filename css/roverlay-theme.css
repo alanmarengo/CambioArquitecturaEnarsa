@@ -1,0 +1,22 @@
+.roverlay-header {
+    font-family: "Crossten Bold";
+    color: #FFFFFF;
+    background-color: #243469;
+}
+
+.roverlay-body {
+    min-height: 200px;
+    padding: 10px;
+    display: flex;
+    background-color: white;
+    color: #999999;
+}
+
+.roverlay-outer-closer {
+    display: none;
+}
+
+.roverlay-inner {
+    overflow-y: auto;
+    overflow-x: hidden;
+}

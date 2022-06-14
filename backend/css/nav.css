@@ -1,0 +1,103 @@
+#navigation {
+	
+	position:absolute;
+	right:-100%;
+	top:180px;
+	background-color:#FFFFFF;
+	z-index:90;
+	padding:0;
+	margin:0;	
+	-webkit-transition: .5s ease-in-out;
+	-moz-transition: .5s ease-in-out;
+	-o-transition: .5s ease-in-out;
+	transition: .5s ease-in-out;
+	
+}
+
+#navigation .nav, #navigation .nav li  {
+	
+	padding:0;
+	margin:0;
+	
+}
+
+#navigation .nav li  {
+	
+	border-bottom:1px solid #1B9EDB;	
+	padding:3px 5px;
+	display:flex;
+	align-items:center;
+	width:100%;
+	
+}
+
+#navigation .nav li:last-child  {
+	
+	border-bottom:none;
+	
+}
+
+#navigation .nav li a {
+	
+	font-size:13px;
+	padding-left:10px;
+	font-weight:bolder;
+	color:#1B9EDB;
+	
+}
+
+#navigation .nav li img {	
+	
+	padding-left:15px;
+	
+}
+
+#navigation .arrow {
+	
+	background-color:#0072bd;
+	color:#FFFFFF;
+	position:absolute;
+	left:-38px;
+	top:0px;
+	width:38px;
+	height:34px;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	font-size:24px;
+	font-weight:700;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	cursor:pointer;
+	background-image:url("../images/arrow_back.png");
+	background-position:center center;
+	background-repeat:no-repeat;
+	
+}
+
+#navigation.open .arrow {
+	
+	background-image:url("../images/arrow.png");
+
+}
+
+#navigation .arrow:hover {
+	
+	opacity:0.8;
+	
+}
+
+#navigation .arrow span {
+	width:38px;
+	height:34px;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	font-size:24px;
+	font-weight:700;
+	
+}

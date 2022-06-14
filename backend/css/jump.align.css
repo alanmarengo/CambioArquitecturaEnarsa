@@ -1,0 +1,45 @@
+.jump-align-top {
+	
+	position:absolute;
+	top:0px;
+	
+}
+
+.jump-align-bottom {
+	
+	position:absolute;
+	bottom:0px;
+	
+}
+
+.jump-align-left {
+	
+	position:absolute;
+	left:0px;
+	
+}
+
+.jump-align-right {
+	
+	position:absolute;
+	right:0px;
+	
+}
+
+.jump-align-center {
+	
+	position:absolute;
+	
+}
+
+.jump-float-left {
+		
+	float:left;
+	
+}
+
+.jump-float-right {
+	
+	float:right;
+	
+}

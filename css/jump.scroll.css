@@ -1,0 +1,11 @@
+.jump-scroll {
+	
+	overflow-y:auto;
+	
+}
+
+.jump-scroll:not(.jump-posfix):not(.jump-posabs):not(.navmenu) {
+	
+	position:relative !Important;
+	
+}

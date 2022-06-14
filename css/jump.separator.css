@@ -1,0 +1,14 @@
+.jump-separator {
+	
+	display:inline-block;
+	height:100%;
+	margin:0 5px;
+	cursor:text;
+	
+}
+
+.jump-separator:hover {
+	
+	color:inherit !Important;
+	
+}

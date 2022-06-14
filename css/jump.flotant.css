@@ -1,0 +1,15 @@
+.jump-flotant-heightfill {	
+
+	width:100%;
+	height:10%;
+	padding:0;
+	margin:0;
+	position:absolute;
+	
+}
+
+.jump-flotant-nav {
+	
+	z-index:20000;
+	
+}

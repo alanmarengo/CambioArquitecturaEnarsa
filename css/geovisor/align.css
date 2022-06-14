@@ -1,0 +1,40 @@
+.jus-right {
+	
+	justify-content:right;
+	justify-content:flex-end;
+	
+}
+
+.jus-left {
+	
+	justify-content:left;
+	justify-content:flex-start;
+	
+}
+
+.jus-between {
+	
+	justify-content:space-between;
+	
+}
+
+.jus-between-f100 {
+	
+	justify-content:space-between;
+	display:flex;
+	width:100%;
+	
+}
+
+.align-center {
+	
+	align-items:center;
+	
+}
+
+.ib-vt {
+	
+	display:inline-block;
+	vertical-align:top;
+	
+}

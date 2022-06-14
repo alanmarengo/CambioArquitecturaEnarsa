@@ -1,0 +1,13 @@
+#coord-tbl, #coord-hint, #coord-capture-wrapper {
+	
+	display:none;
+	
+}
+
+#coord-capture-wrapper {
+	
+	padding:7px;
+	border:1px solid #FFFFFF;
+	color:#FFFFFF !important;
+	
+}

@@ -1,0 +1,295 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 45000;
+}
+
+#popup-tab2-grafico {
+    border: 2px solid #CCCCCC;
+    background: white;
+    padding: 20px;
+    height: 80%;
+    top: 50%;
+    margin-top: -20%;
+    width: 50%;
+    left: 50%;
+    margin-left: -25%;
+    position: absolute;
+    z-index: 60000;
+    display: none;
+}
+
+#popup-tab2-grafico-inner {
+    width: 100%;
+}
+
+#popup-tab2-grafico-tab-content {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#popup-tab2-grafico .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+#popup-tab2-grafico .header a {
+    font-size: 14px !Important;
+    color: #343a40;
+    font-weight: 600;
+}
+
+#popup-tab2-grafico .header .title {
+    font-size: 14px;
+    color: #343a40;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+#popup-tab2-grafico .nav-tabs li {
+    margin-left: 10px;
+}
+
+#popup-tab2-grafico .nav-tabs li .show {
+    background-color: #8d3050;
+}
+
+#popup-tab2-grafico .nav-tabs .li:first-child {
+    margin-left: 0px !Important;
+}
+
+#popup-tab2-grafico .nav-tabs .btn-tab {
+    color: #FFFFFF !Important;
+    font-family: "Montserrat", sans-serif !Important;
+    font-size: 12px !Important;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 6px 20px !Important;
+    background-color: #343a40;
+    display: block;
+    width: 100%;
+    height: 100%;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+#popup-tab2-grafico .nav-tabs .btn-tab:hover {
+    opacity: 0.7;
+}
+
+#popup-tab2-grafico .categories {
+    display: flex;
+    padding: 0 7px;
+}
+
+#popup-tab2-grafico .category {
+    display: inline-flex;
+    margin-right: 12px;
+}
+
+#popup-tab2-grafico .category label {
+    display: inline-flex;
+    color: #8d3050;
+    font-weight: 600;
+    font-size: 12px;
+    margin: 0 0 0 3px;
+    text-transform: uppercase;
+}
+
+#popup-tab2-grafico .btn-1 {
+    color: #FFFFFF !Important;
+    font-family: "Montserrat", sans-serif !Important;
+    font-size: 10px !Important;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 10px 20px !Important;
+    background-color: #8d3050;
+    border-radius: 3px;
+}
+
+#popup-tab2-grafico .btn-2 {
+    color: #FFFFFF !Important;
+    font-family: "Montserrat", sans-serif !Important;
+    font-size: 10px !Important;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 10px 20px !Important;
+    background-color: #8d3050;
+    border-radius: 3px;
+    display: block;
+    text-align: center;
+}
+
+#popup-tab2-grafico .btn-1:hover,
+#popup-tab2-grafico .btn-2:hover {
+    opacity: 0.7;
+}
+
+#popup-tab2-grafico .popup-label {
+    font-size: 12px !Important;
+    color: #8d3050;
+    font-weight: 600;
+}
+
+#popup-tab2-grafico .popup-value {
+    font-size: 12px !Important;
+    color: #343a40;
+    font-weight: 600;
+}
+
+#popup-tab2-grafico .indicador {
+    background: #efefef;
+    padding: 20px;
+    border-radius: 3px;
+    display: inline-flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+#popup-tab2-grafico .indicador .title {
+    font-size: 10px;
+    color: #8d3050;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+#popup-tab2-grafico .indicador .value {
+    font-size: 16px;
+    color: #343a40;
+    font-weight: bold;
+}
+
+#popup-tab2-grafico .indicador .text-default {
+    font-size: 12px;
+    color: #343a40;
+    font-weight: 700;
+}
+
+#popup-tab2-grafico .indicador .date {
+    font-size: 12px;
+    color: #343a40;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+}
+
+#popup-tab2-grafico .form-group {
+    display: flex;
+    flex-direction: column;
+    border: none !important;
+    position: relative;
+}
+
+#popup-tab2-grafico .form-group label {
+    display: flex;
+    flex-direction: column;
+    border: none !important;
+    font-size: 12px;
+    color: #343a40;
+    font-weight: 700;
+}
+
+#popup-tab2-grafico .form-group input[type=text] {
+    border: 1px solid #efefef;
+    padding: 5px 20px;
+}
+
+#popup-tab2-grafico .form-group select {
+    border: 1px solid #efefef;
+    padding: 5px 20px;
+}
+
+#popup-tab2-grafico .form-group i {
+    position: absolute;
+    bottom: 12px;
+    z-index: 99999;
+    right: 15px;
+}
+
+#popup-tab2-grafico .indicador.mini {
+    align-items: center;
+    height: auto;
+}
+
+#popup-tab2-grafico .indicador.mini .value {
+    margin: 0;
+}
+
+#popup-tab2-grafico .nav-tabs.type2 {
+    border-bottom: none;
+}
+
+#panel-ha-4 .nav-tabs li:first-child .btn-tab {
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    -webkit-border-top-right-radius: 0px;
+    -webkit-border-bottom-right-radius: 0px;
+    -moz-border-radius-topright: 0px;
+    -moz-border-radius-bottomright: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+#panel-ha-4 .nav-tabs li:last-child {
+    margin: 0 !important;
+}
+
+#panel-ha-4 .nav-tabs li:last-child .btn-tab {
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    -moz-border-radius-bottomright: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    -webkit-border-top-left-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+#panel-ha-4 .nav-tabs .btn-tab {
+    color: #343a40 !Important;
+    font-family: "Montserrat", sans-serif !Important;
+    font-size: 12px !Important;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 6px 20px !Important;
+    background-color: #efefef;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#panel-ha-4 .nav-tabs .btn-tab.active {
+    color: white !important;
+}
+
+.ico-list li {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #efefef;
+}
+
+.ico-list li span {
+    margin-left: 10px;
+    font-size: 12px;
+    color: #343a40;
+    font-weight: 700;
+    padding: 10px 0;
+}

@@ -1,0 +1,17 @@
+.inline {
+
+	display:inline;
+
+}
+
+.inline-b {
+
+	display:inline-block;
+
+}
+
+.inline-f {
+
+	display:inline-flex;
+
+}

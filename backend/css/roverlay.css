@@ -1,0 +1,61 @@
+.roverlay {
+	
+	position:fixed;
+	top:0;
+	left:0;
+	display:none;
+	padding:0 20px;
+	margin:0;
+	width:100%;
+	height:100%;
+	justify-content:center;
+	align-items:center;
+	background: RGBA(0,0,0,.6);
+	flex-direction:column;
+	z-index:999999;
+	
+}
+
+.roverlay-inner {
+
+	width:100%;
+	max-height:80%;
+
+}
+
+.roverlay-inner .row {
+	
+	display:flex;
+	justify-content:center;
+	
+}
+
+.roverlay-header {
+	
+	min-height:32px;
+	padding:10px;
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
+	
+}
+
+.roverlay-header .close {
+	
+	color:#FFFFFF;
+	opacity:1;
+	font-weight:400;
+	font-size:14px;
+	
+}
+
+.roverlay-body {
+	
+	min-height:200px;
+	padding:10px;
+	display:flex;
+	overflow-y:auto;
+	overflow-x:hidden;
+	flex-direction:column;
+	
+}

@@ -1,0 +1,29 @@
+.jump-block {
+	
+	margin:0;
+	padding:0;
+	height:68px;
+	min-width:1px;
+	display:inline-block;
+	
+}
+
+.jump-block-inner-toolbar {
+	
+	height:50%;
+	
+}
+
+.jump-block-inner-toolbar ul,.jump-block-inner-toolbar ul li {
+	
+	margin:0;
+	padding:0;
+	list-style-type:none;
+	
+}
+
+.jump-block-inner-toolbar ul li {
+	
+	display:inline-block;
+	
+}

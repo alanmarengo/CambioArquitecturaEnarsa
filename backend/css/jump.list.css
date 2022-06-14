@@ -1,0 +1,24 @@
+ul,ol,li {
+	
+	list-style-type:none !important;
+	
+}
+
+.jump-list {
+	
+	margin:0;
+	padding:0;
+	
+}
+
+.jump-list-vertical li {
+	
+	display:block !Important;
+	
+}
+
+.jump-list-horizontal li {
+	
+	display:inline-block !Important;
+	
+}

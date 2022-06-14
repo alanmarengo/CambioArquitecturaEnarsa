@@ -1,0 +1,26 @@
+.flexbox {
+
+	display:flex;
+	align-items:center;
+
+}
+
+.iflexbox {
+
+	display:inline-flex;
+	align-items:center;
+
+}
+
+.flex-column {
+	
+	flex-direction:column;
+	display:flex;
+	
+}
+
+.flex-grow {
+	
+	flex-grow:1;
+	
+}

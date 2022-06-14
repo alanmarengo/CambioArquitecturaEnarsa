@@ -1,0 +1,55 @@
+.jump-posabs {
+	
+	position:absolute !Important;
+	
+}
+
+.jump-posfix {
+	
+	position:fixed !Important;
+	
+}
+
+.jump-posrel {
+	
+	position:relative !Important;
+	
+}
+
+/*****************************************************/
+
+.top-30 {
+	
+	top:30px;
+	
+}
+
+.left-30 {
+	
+	left:30px;
+	
+}
+
+.right-30 {
+	
+	right:30px;
+	
+}
+
+.bottom-30 {
+	
+	bottom:30px;
+	
+}
+
+.l--30 {
+	
+	left:-30px;
+	
+}
+
+.l--40 {
+	
+	left:-40px;
+	
+}

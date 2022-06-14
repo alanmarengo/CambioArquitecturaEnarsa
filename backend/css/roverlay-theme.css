@@ -1,0 +1,16 @@
+.roverlay-header {
+	
+	color: #FFFFFF;
+	background-color: #007bff;
+	
+}
+
+.roverlay-body {
+	
+	min-height:200px;
+	padding:10px;
+	display:flex;
+	background-color: white;
+	color:#999999;
+	
+}

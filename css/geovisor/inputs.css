@@ -1,0 +1,19 @@
+.input-white {
+	
+	border:1px solid #dedede;
+	outline:none;
+	padding:7px;
+	font-size:13px;
+	
+}
+
+.input-dark {
+	
+	background-color:transparent;
+	color:#FFFFFF !important;
+	border:1px solid #FFFFFF;
+	outline:none;
+	padding:7px;
+	font-size:13px;
+	
+}

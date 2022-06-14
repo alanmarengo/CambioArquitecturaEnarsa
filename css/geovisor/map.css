@@ -1,0 +1,102 @@
+#map {
+
+	width:100%;
+	height:100%;
+	margin:0;
+	padding:0;
+	z-index:1000;
+	
+}
+
+#mini-map {
+
+	width:100%;
+	height:320px;
+	margin:0;
+	padding:0;
+	display:block;
+	position:relative;
+	
+}
+
+#bottom-tools {
+	
+	width:50px;
+	position:fixed;
+	bottom:20px;
+	right:6px;
+	
+}
+
+#bottom-tools .nav-item {
+	
+	margin-bottom:5px;
+	
+}
+
+#bottom-tools .nav-item:last-child {
+	
+	margin-bottom:0px;
+	
+}
+
+#popup-baselayers {
+	
+	bottom:-10px !Important;
+	height:300px !Important;
+	right:40px !Important;
+	
+}
+
+#info-baselayers {
+	
+	font-size:18px;
+	
+}
+
+#info-baselayers .state label {
+	
+	/*color:#FFFFFF !important;*/
+	font-size:12px;
+	
+}
+
+#print-legend-wrapper {
+	
+	top: 25px;
+	left:20px;
+	height:91%;
+	background: rgba(255,255,255,0.6);
+	position: absolute;
+	display:none;
+	padding:0 20px;
+	
+}
+
+#global-coordinates-fixed {
+	
+	position:absolute;
+	right:0;
+	bottom:15px;
+	color:#fe5645;
+	font-size:10px;
+	z-index:1100;
+	
+}
+
+#global-coordinates {
+	
+	position:absolute;
+	right:0;
+	bottom:0;
+	color:#000000;
+	font-size:10px;
+	z-index:1100;
+	
+}
+
+#frm-adv-search .btn-light {
+	
+	border:none !important;
+	
+}

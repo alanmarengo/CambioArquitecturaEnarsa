@@ -1,0 +1,52 @@
+.panel {
+
+	position:fixed;
+	padding:0px !Important;
+    width:410px;
+	z-index:2000 !Important;
+
+}
+
+.panel-container {
+	
+	background-color:RGBA(76,76,78,0.6);
+	color:#FFFFFF;
+	height:100%;
+	padding:18px 33px;
+	display:inline-block;
+	vertical-align:top;
+    width:370px;
+	
+}
+
+.panel-arrow-container {
+	
+	color:#FFFFFF;
+	height:100%;
+	display:inline-block;
+	vertical-align:top;
+    width:25px;
+	
+}
+
+.panel-arrow-container a {
+	
+	position:relative;
+	top:25px;
+	left:-4.7px;
+	opacity:0.5;
+	
+}
+
+.panel-title {
+	
+	margin:10px 0px;
+	
+}
+
+.panel-title h3 {
+	
+	font-weight:700;
+	font-size:18px;
+	
+}

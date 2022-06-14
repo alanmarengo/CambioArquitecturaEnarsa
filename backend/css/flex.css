@@ -1,0 +1,47 @@
+.flex {
+	
+	display:flex;
+	
+}
+
+.flex-jus-left {
+
+	justify-content:left !Important;
+
+}
+
+.flex-jus-center {
+
+	justify-content:center !Important;
+
+}
+
+.flex-jus-right {
+
+	justify-content:right !Important;
+
+}
+
+.flex-jus-between {
+
+	justify-content:space-between;
+
+}
+
+.flex-vcenter {
+	
+	align-items:center;
+	
+}
+
+.flex-vtop {
+	
+	align-items:flex-start !Important;
+	
+}
+
+.flex-dir-column {
+	
+	flex-direction:column;
+	
+}

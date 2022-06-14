@@ -1,0 +1,71 @@
+
+
+#perfil_topografico {
+	
+	position:fixed;
+	left:0px;
+	bottom:0px;
+	width:512px;
+	height:230px;
+	z-index:30000;
+	display:none;
+	
+}
+
+#perfil_topografico_chart {
+	
+	width:100%;
+	height:100%;
+	
+}
+
+#close_ptop {
+	
+	position:absolute;
+	top:10px;
+	left:10px;
+	color:white;
+	z-index:30001;
+	text-decoration:none;
+	
+}
+
+#redraw_ptop {
+	
+	position:absolute;
+	top:11px;
+	left:30px;
+	color:white;
+	z-index:30001;
+	text-decoration:none;
+	
+}
+
+#close_ptop i, #redraw_ptop i {
+	
+	margin:0;
+	
+}
+
+#perfil_topografico_min_max {
+	
+	position:absolute;
+	top:5px;
+	right:7px;
+	font-size:10px;
+	color:white;
+	z-index:30001
+	
+}
+
+#perfil_topografico_min_max p {
+	
+	margin:2px;
+	
+}
+
+.highcharts-contextbutton {
+	
+	display:none !Important;
+	
+}
