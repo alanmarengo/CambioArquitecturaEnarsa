@@ -5,7 +5,7 @@
 //CREAR LOS METODOS DE : CONECTAR() { PG_CONECT() }   Y DESCONECTAR(){ PG_DISPÓSE()}
 
 
-class Conexion {
+class ConexionCatalogo {
     private $host = "localhost";
     private $user = "postgres";
     private $pass = "37159252";
