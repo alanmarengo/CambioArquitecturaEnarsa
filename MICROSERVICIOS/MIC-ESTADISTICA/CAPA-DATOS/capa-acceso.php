@@ -2,7 +2,7 @@
 
 // clase para conexion a bd
 class ConexionEstadisticas {
-    private $host = "179.43.126.101";
+    private $host = "179.43.126.101"; 
     private $user = "postgres";
     private $pass = "plahe100%";
     private $port = "5432";
