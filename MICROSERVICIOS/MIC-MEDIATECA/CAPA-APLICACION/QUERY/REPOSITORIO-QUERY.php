@@ -46,15 +46,54 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                 LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                 WHERE tf.tipo_formato_solapa = '.$solapa.' '.$extension_consulta_filtro_recursos.';';
        
-            $conexion = new ConexionMediateca();   
+        $conexion = new ConexionMediateca();   
             
+        $recursos_mediateca = $conexion->get_consulta($consulta_definitiva);     
+
+        //ACA AGARRO CADA UNO DE ESOS REGISTROS, IDENTIFICO LAS COLUMNAS Y CREO UN NEW RECURSOS(COLUMNAS)}     
+                   
+        $array_recursos_mediateca = array();
+        for($x=0; $x<=count($recursos_mediateca)-1; $x++)
+        {
+                $solapa= $recursos_mediateca[$x]['origen'];
+                $origen_id= $recursos_mediateca[$x]['origen_id'];
+                $id_recurso= $recursos_mediateca[$x]['origen_id_especifico'];
+                $titulo= $recursos_mediateca[$x]['recurso_titulo'];
+                $descripcion= $recursos_mediateca[$x]['recurso_desc'];
+                $link_imagen= $recursos_mediateca[$x]['recurso_path_url']; 
+                $autores= $recursos_mediateca[$x]['recurso_autores']; 
+                $fecha= $recursos_mediateca[$x]['recurso_fecha'];
+                $territorio_id= $recursos_mediateca[$x]['territorio_id'];
+                $estudios_id= $recursos_mediateca[$x]['sub_proyecto_id'];            
+                $metatag= $recursos_mediateca[$x]['recurso_categoria_desc'];
+                $tema= $recursos_mediateca[$x]['recurso_categoria_desc'];            
+
+                switch ($origen_id)
+                {
+                    case 0:
+                        $ico = './images/types/wms.png'; /* GIS */ ; break;
+                    
+                    case 2:
+                        $ico = './images/types/indicadores.png';/* ESTADISTICA */ ;break;
+                        
+                    case 3:
+                        $ico = './images/types/indicadores.png';/* INDICADORES */; break;
+                        
+                    case 4:
+                        $ico = './images/types/generico.png';/* ARTICULOS */  ; break;
+                            
+                    case 5:/* RECURSOS */
+                        $ico = ''; break;
+                    default:
+                        $ico = './images/types/generico.png'; break;
+                }
+                
+                //ARRAY.PUSH($LISTA_RECURSOS, $RECURSO)
+                $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$ico,$territorio_id);
+                array_push($array_recursos_mediateca,$recurso);
+            }
+
             
-            //ACA AGARRO CADA UNO DE ESOS REGISTROS, IDENTIFICO LAS COLUMNAS Y CREO UN NEW RECURSOS(COLUMNAS)}
-            $array_recursos_mediateca = array();
-            $array_recursos_mediateca = $conexion->get_consulta($consulta_definitiva);
-
-
-            //ARRAY.PUSH($LISTA_RECURSOS, $RECURSO)
         return $array_recursos_mediateca;
 
 

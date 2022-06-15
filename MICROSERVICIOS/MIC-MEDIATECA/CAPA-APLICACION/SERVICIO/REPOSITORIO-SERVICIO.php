@@ -29,50 +29,8 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         
         //return $lista_recursos_restringidos;
         $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa); 
-
-        
-        $array_recursos_mediateca = array();
-
-        for($x=0; $x<=count($recursos_mediateca)-1; $x++)
-        {
-            $solapa= $recursos_mediateca[$x]['origen'];
-            $origen_id= $recursos_mediateca[$x]['origen_id'];
-            $id_recurso= $recursos_mediateca[$x]['origen_id_especifico'];
-            $titulo= $recursos_mediateca[$x]['recurso_titulo'];
-            $descripcion= $recursos_mediateca[$x]['recurso_desc'];
-            $link_imagen= $recursos_mediateca[$x]['recurso_path_url']; 
-            $autores= $recursos_mediateca[$x]['recurso_autores']; 
-            $fecha= $recursos_mediateca[$x]['recurso_fecha'];
-            $territorio_id= $recursos_mediateca[$x]['territorio_id'];
-            $estudios_id= $recursos_mediateca[$x]['sub_proyecto_id'];            
-            $metatag= $recursos_mediateca[$x]['recurso_categoria_desc'];
-            $tema= $recursos_mediateca[$x]['recurso_categoria_desc'];            
-
-            switch ($origen_id)
-            {
-                case 0:
-                    $ico = './images/types/wms.png'; /* GIS */ ; break;
-                
-                case 2:
-                    $ico = './images/types/indicadores.png';/* ESTADISTICA */ ;break;
-                    
-                case 3:
-                    $ico = './images/types/indicadores.png';/* INDICADORES */; break;
-                       
-                case 4:
-                    $ico = './images/types/generico.png';/* ARTICULOS */  ; break;
-                           
-                case 5:/* RECURSOS */
-                    $ico = ''; break;
-                default:
-                    $ico = './images/types/generico.png'; break;
-            }
-
-            $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$ico,$territorio_id);
-            array_push($array_recursos_mediateca,$recurso);
-        }
-
-        return $array_recursos_mediateca;
+       
+  
                 
        
         //$lista_recursos_mediateca = get_recursos($lista_recursos_restringidos, $solapa);
