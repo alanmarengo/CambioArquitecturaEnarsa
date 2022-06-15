@@ -1,14 +1,10 @@
 <?php
 
-//CREAR LA CLASE CONEXION CON SUS ATRIBUTOS Y PROPIEDADES CORRESPONDIENTES.
-
-//CREAR LOS METODOS DE : CONECTAR() { PG_CONECT() }   Y DESCONECTAR(){ PG_DISPÓSE()}
-
-
+// clase para conexion a bd
 class ConexionMediateca {
-    private $host = "localhost";
+    private $host = "179.43.126.101"; 
     private $user = "postgres";
-    private $pass = "37159252";
+    private $pass = "plahe100%";
     private $port = "5432";
     private $database = "MIC-MEDIATECA";
     private $conect;
@@ -42,4 +38,8 @@ class ConexionMediateca {
         return $resultado; // 
     }
 }
+
+ // $prueba_conexion = new ConexionMediateca();
+
+
 ?>
