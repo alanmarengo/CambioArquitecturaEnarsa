@@ -39,7 +39,7 @@ class ConexionEstadisticas {
     }
 }
 
- $prueba_conexion = new ConexionEstadisticas();
+ // $prueba_conexion = new ConexionEstadisticas();
 
 
 ?>
