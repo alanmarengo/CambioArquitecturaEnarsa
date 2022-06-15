@@ -39,7 +39,7 @@ class ConexionGeovisores {
     }
 }
 
-  $prueba_conexion = new ConexionGeovisores();
+ // $prueba_conexion = new ConexionGeovisores();
 
 
 ?>
