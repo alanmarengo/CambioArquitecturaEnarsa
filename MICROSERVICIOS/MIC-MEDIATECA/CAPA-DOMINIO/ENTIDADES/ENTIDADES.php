@@ -51,7 +51,10 @@ class Recurso{
             $InfoTerritorio = $RepoCatalogo->get_info_territorio($territorio_id);
             
             $this->territorio_desc=$InfoTerritorio[0];
+            $this->territorio_fec_bbdd_date=$InfoTerritorio[1];
+            $this->territorio_simpli=$InfoTerritorio[2];
+            $this->territorio_fec_bbdd=$InfoTerritorio[3];
 
-        }
+        } 
     }
 }
