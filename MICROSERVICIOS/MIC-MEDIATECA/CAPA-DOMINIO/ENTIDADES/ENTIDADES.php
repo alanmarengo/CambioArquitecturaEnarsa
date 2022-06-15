@@ -23,7 +23,6 @@ class Recurso{
 
     public function __construct($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$ico,$territorio_id){
         
-        //ACA DEBO SETEAR TODOS LOS ATRIBUTOS CON LO QUE ME LLEGA EN EL CONSTRUCTOR. 
         $this->solapa;
         $this->origen_id;
         $this->id_recurso;
@@ -41,14 +40,14 @@ class Recurso{
         $this->territorio_desc;
         $this->territorio_fec_bbdd_date;
         $this->territorio_simpli;
-        $this->territorio_fec_bbdd;
-        //TAMBIEN DEBO LLENAR CON VALORES PRESETEADOS O NULOS LO QUE CORRESPONDA.        
+        $this->territorio_fec_bbdd;       
         $this->territorio_id=$territorio_id;
 
+        // si id_territorio es distinto de vacio, se llama al metodo para completar la informacion 
         if($territorio_id != null){
 
             $RepoCatalogo= new RepositorioServicioCatalogo();
-            $InfoTerritorio = $RepoCatalogo->get_info_territorio($territorio_id);
+            $InfoTerritorio = $RepoCatalogo->get_info_territorio($this->territorio_id);
             
             $this->territorio_desc=$InfoTerritorio[0];
             $this->territorio_fec_bbdd_date=$InfoTerritorio[1];

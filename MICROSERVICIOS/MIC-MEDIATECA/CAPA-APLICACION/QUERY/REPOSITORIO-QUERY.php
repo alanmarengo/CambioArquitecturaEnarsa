@@ -2,7 +2,7 @@
 
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/INTERFACE-REPOSITORIO-QUERY/INTERFACE-REPOSITORIO-QUERY.php');
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DATOS/capa-acceso.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DATOS/capa-acceso.php');
+require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/ENTIDADES/ENTIDADES.php');
 
 //INJECTAR EL ARCHIVO ENTIDADES.php DE ESTE MICROSERVICIO
 
@@ -12,19 +12,17 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
     public function get_recursos($lista_recursos_restringidos, $solapa){
 
-
         $extension_consulta_filtro_recursos = "AND r.recurso_id NOT IN (";
 
-        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++){
-       
+        // armo una cadena para usar como subconsulta en la query principal 
+        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        {       
            if($x==count($lista_recursos_restringidos)-1){
-               //$lista_recursos[x]==$lista_recursos[-1]
+               
                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
-           }
-           else{
+           }else{
                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
-           }
-       
+           }       
         }
 
         $consulta_definitiva = "SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
@@ -46,13 +44,16 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                 LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                 WHERE tf.tipo_formato_solapa = '.$solapa.' '.$extension_consulta_filtro_recursos.';';
        
-        $conexion = new ConexionMediateca();   
-            
-        $recursos_mediateca = $conexion->get_consulta($consulta_definitiva);     
+        // instancio una nueva conexion 
+        $conexion = new ConexionMediateca();
 
-        //ACA AGARRO CADA UNO DE ESOS REGISTROS, IDENTIFICO LAS COLUMNAS Y CREO UN NEW RECURSOS(COLUMNAS)}     
-                   
+        //realizo la consulta            
+        $recursos_mediateca = $conexion->get_consulta($consulta_definitiva);   
+
+        //creo un array para guardar todos los recursos 
         $array_recursos_mediateca = array();
+
+        // recorro el arreglo con los datos de la consulta 
         for($x=0; $x<=count($recursos_mediateca)-1; $x++)
         {
             $solapa= $recursos_mediateca[$x]['origen'];
@@ -68,7 +69,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             $metatag= $recursos_mediateca[$x]['recurso_categoria_desc'];
             $tema= $recursos_mediateca[$x]['recurso_categoria_desc'];            
 
-            switch ($origen_id)
+            // asigno la direccion de la imagen del icono dependiendo del caso 
+            switch ($origen_id) 
             {
                 case 0:
                     $ico = './images/types/wms.png'; /* GIS */ ; break;
@@ -88,19 +90,13 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                     $ico = './images/types/generico.png'; break;
             }
 
-            //ARRAY.PUSH($LISTA_RECURSOS, $RECURSO)
+            // por cada registro, se agrega un objeto recurso al array contenedor 
             $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$ico,$territorio_id);
-            array_push($array_recursos_mediateca,$recurso);
-        
+            array_push($array_recursos_mediateca,$recurso);      
         
         }
             
-        return $array_recursos_mediateca;
-
-
+        // se retorna un objeto json de los recursos 
+        return json_encode($array_recursos_mediateca); 
     }
-
-
-
-
 }
