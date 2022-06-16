@@ -15,7 +15,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 
     // funcion para traer todos los recursos de la mediateca 
-    public function get_Recursos_idUser($user_id, $solapa,$current_page,$page_size)
+    public function get_Recursos_idUser($user_id, $solapa,$current_page,$page_size, $calculo_estadistica)
     {
         //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
         $lista_recursos_restringidos = array();
@@ -37,7 +37,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
     }
 
-    public function get_Recursos($solapa,$current_page,$page_size)
+    public function get_Recursos($solapa,$current_page,$page_size, $calculo_estadistica)
     {
         //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
         $lista_recursos_restringidos = array();
@@ -58,9 +58,9 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 }
 
 // prueba de aplicacion 
- $obtener_recursos_mediateca = new RepositorioServicioMediateca();
- $recursos_mediateca = $obtener_recursos_mediateca->get_recursos(1,2,5);
- print_r($recursos_mediateca);
+ //$obtener_recursos_mediateca = new RepositorioServicioMediateca();
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_recursos(1,2,5);
+ //print_r($recursos_mediateca);
  //print_r($obtener_recursos_mediateca->get_Recursos_idUser(10,1));
 
 
