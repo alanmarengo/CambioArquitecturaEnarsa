@@ -10,7 +10,7 @@ require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERV
 
 class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
-    public function get_recursos($lista_recursos_restringidos, $solapa){
+    public function get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size){
 
         $extension_consulta_filtro_recursos = "AND r.recurso_id NOT IN (";
 
@@ -24,6 +24,31 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
            }       
         }
+
+        // variable paginado  
+        $cantidad_registros = "SELECT COUNT(*) AS total
+                                    FROM ".'"MIC-MEDIATECA".recurso r
+                                    LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+                                    LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
+                                    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+                                    LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                    LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
+                                    WHERE tf.tipo_formato_solapa = '.$solapa.' '.$extension_consulta_filtro_recursos.';';
+
+        // instancio una nueva conexion 
+        $conexion = new ConexionMediateca();
+
+        //realizo la consulta            
+        $cantidad_total_recursos = $conexion->get_consulta($cantidad_registros);   
+        $total_registros = $cantidad_total_recursos[0]['total'];
+
+        $inicio = ($current_page - 1) * $page_size;         
+
+        $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;
+
+        // fin paginador ---------------------------------
+
+
 
         $consulta_definitiva = "SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
                                 r.recurso_id AS origen_id_especifico,    
@@ -42,10 +67,9 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                 LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
                                 LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                 LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
-                                WHERE tf.tipo_formato_solapa = '.$solapa.' '.$extension_consulta_filtro_recursos.';';
+                                WHERE tf.tipo_formato_solapa = '.$solapa.' '.$extension_consulta_filtro_recursos.' '.$paginador.';';
        
-        // instancio una nueva conexion 
-        $conexion = new ConexionMediateca();
+        
 
         //realizo la consulta            
         $recursos_mediateca = $conexion->get_consulta($consulta_definitiva);   
