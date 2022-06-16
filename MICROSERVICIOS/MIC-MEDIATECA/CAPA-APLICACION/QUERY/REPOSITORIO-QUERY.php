@@ -123,4 +123,25 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         // se retorna un objeto json de los recursos 
         return $array_recursos_mediateca; 
     }
+
+    public function get_cantidad_recursos_solapa($solapa)
+    {
+        // variable consulta  
+        $cantidad_recursos_solapa = 'SELECT COUNT(*) AS cant_rec_solapa
+                                    FROM "MIC-MEDIATECA".recurso r
+                                    INNER JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
+                                    INNER JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                    WHERE tf.tipo_formato_solapa ='.$solapa;
+
+        // instancio una nueva conexion 
+        $conexion = new ConexionMediateca();
+
+        //realizo la consulta            
+        $aux_cantidad = $conexion->get_consulta($cantidad_recursos_solapa);   
+        $conexion->desconectar();
+        return $aux_cantidad[0]['cant_rec_solapa'];
+    }
 }
+
+//$test = new RepositorioQueryMediateca();
+//echo $test->get_cantidad_recursos_solapa(1);
