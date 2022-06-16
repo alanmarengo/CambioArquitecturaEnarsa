@@ -7,7 +7,7 @@ require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERV
 //INJECTAR EL ARCHIVO ENTIDADES.php DE ESTE MICROSERVICIO
 
 
-
+// COMENTARIO DE PRUEBA
 class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
     public function get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size){
