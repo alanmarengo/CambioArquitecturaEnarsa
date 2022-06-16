@@ -9,7 +9,7 @@ class RepositorioQueryUsuario implements IRepositorioQueryUsuario{
 
     public function get_recursos_id(){
         // abro la conexion
-        $conexion = new Conexion();
+        $conexion = new ConexionUsuario();
         // realizo la consulta y la ejecuto
         $query = 'SELECT p.objeto_id FROM "MIC-USUARIO".permisos as p;';
         //solo traes objetos_id        
@@ -19,7 +19,7 @@ class RepositorioQueryUsuario implements IRepositorioQueryUsuario{
 
     public function get_recursos_id_user($user_id){
         // abro la conexion
-        $conexion = new Conexion();
+        $conexion = new ConexionUsuario();
 
         $query = 'SELECT pe.objeto_id
                   FROM "MIC-USUARIO".permisos as pe

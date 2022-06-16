@@ -25,7 +25,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         //llamo al metodo get_recursos para obtener los recursos de la mediateca 
         $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa); 
        
-
+        return  $recursos_mediateca;
         //ACA IDENTIFICO UN FLAG DEL FRONT SI ES QUE DEBO CALCULAR O NO LAS ESTADISTICAS. SI NO LAS DEBO CALCULAR, LAS VOY A BUSCAR A BASE DE DATOS.
         //SI LAS DEBO CALCULAR, DEBO CALCULAR LAS ESTADISTICAS CON LOS FILTROS, TANTO ACA EN MEDIATECA COMO EN LOS DEMAS MICROSERVICIOS.
         //LA ENCARGADA DE DEVOLVER LOS FILTROS Y LAS ESTADISITCAS DE ESOS FILTROS SERA EL MICROSERVICIO CATALOGO
@@ -46,7 +46,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         
         //llamo al metodo get_recursos para obtener los recursos de la mediateca 
         $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa); 
-
+        return  $recursos_mediateca;
         // return;
                 
 
@@ -58,9 +58,10 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 }
 
 // prueba de aplicacion 
-// $obtener_recursos_mediateca = new RepositorioServicioMediateca();
-// print_r($obtener_recursos_mediateca->get_recursos(0));
-// print_r($obtener_recursos_mediateca->get_Recursos_idUser(10,0));
+ //$obtener_recursos_mediateca = new RepositorioServicioMediateca();
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_recursos(1);
+ //print_r($recursos_mediateca);
+ //print_r($obtener_recursos_mediateca->get_Recursos_idUser(10,1));
 
 
 

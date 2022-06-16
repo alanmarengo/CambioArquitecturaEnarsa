@@ -35,7 +35,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                 tr.tipo_recurso_desc, rc.recurso_categoria_desc, f.tipo_formato_id, 
                                 f.visualizacion_tipo_id, f.formato_desc, f.formato_extension, 
                                 vt.visualizacion_tipo_desc,tf.tipo_formato_solapa, 
-                                tf.tipo_formato_desc, r.sub_pruyecto_id as sub_proyecto_id, r.fecha_observatorio
+                                tf.tipo_formato_desc, r.sub_proyecto_id as sub_proyecto_id, r.fecha_observatorio
                                 FROM ".'"MIC-MEDIATECA".recurso r
                                 LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
@@ -97,6 +97,6 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         }
             
         // se retorna un objeto json de los recursos 
-        return json_encode($array_recursos_mediateca); 
+        return $array_recursos_mediateca; 
     }
 }
