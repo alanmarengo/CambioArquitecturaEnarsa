@@ -148,6 +148,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         $novedades = $resultado[3]['estadistica_inicial'];
         $obj_estadistica = new estadisticaInicial($documentos,$recursos_audiovisuales,$recursos_tecnicos,$novedades);
 
+        $conexion->desconectar();
         return  $obj_estadistica;
 
     }
