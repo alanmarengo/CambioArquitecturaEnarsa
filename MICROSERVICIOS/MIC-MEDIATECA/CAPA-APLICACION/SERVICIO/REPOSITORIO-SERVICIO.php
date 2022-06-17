@@ -29,8 +29,13 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         {                              // si se calcularan o no las estadisticas 
 
             // aca se van a calcular las estadisticas de ser necesario 
-        }else{
+        }else{            
             // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
+
+            $estadistica_inicial = $this->query->estadistica_inicial();
+
+
+
         }
 
 
@@ -67,6 +72,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
             // aca se van a calcular las estadisticas de ser necesario 
         }else{
             // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
+            $estadistica_inicial = $this->query->get_estadistica_inicial();
         }
         
         
@@ -84,9 +90,9 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 }
 
 // prueba de aplicacion 
- $obtener_recursos_mediateca = new RepositorioServicioMediateca();
- $recursos_mediateca = $obtener_recursos_mediateca->get_recursos(1,2,5,1);
- print_r($recursos_mediateca);
+ //$obtener_recursos_mediateca = new RepositorioServicioMediateca();
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_recursos(1,2,5,0);
+ //print_r($recursos_mediateca);
  //print_r($obtener_recursos_mediateca->get_Recursos_idUser(10,1));
 
 
