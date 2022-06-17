@@ -59,3 +59,18 @@ class Recurso{
 
     //HOLA JUAN Y PABLO
 }
+
+class EstadisticaInicial{
+    public $documentos;
+    public $recursos_audiovisuales;
+    public $recursos_tecnicos;
+    public $novedades;
+
+    public function __construct($documentos,$recursos_audiovisuales,$recursos_tecnicos,$novedades){
+        $this->documentos = $documentos;
+        $this->recursos_audiovisuales = $recursos_audiovisuales;
+        $this->recursos_tecnicos = $recursos_tecnicos;
+        $this->novedades = $novedades;
+    }
+
+}
