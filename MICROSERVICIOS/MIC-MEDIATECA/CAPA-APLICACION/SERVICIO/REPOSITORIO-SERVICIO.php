@@ -15,27 +15,30 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 
     // funcion para traer todos los recursos de la mediateca 
-    public function get_Recursos_idUser($user_id, $solapa,$current_page,$page_size, $calculo_estadistica)
+    public function get_Recursos($user_id, $solapa,$current_page,$page_size, $calculo_estadistica, $si_tengo_que_filtrar, $lo_que_tengo_que_filtrar)
     {
         //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
         $lista_recursos_restringidos = array();
         $servicio_usuario = new RepositorioServicioUsuario();
-        $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos_user($user_id);
+
+        if($user_id!=-1){
+            $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos_user($user_id);
+        }else{
+            $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos();
+        }
+
+       
         
         //llamo al metodo get_recursos para obtener los recursos de la mediateca 
         $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size); 
        
         if($calculo_estadistica == 1 ) // la variable calculo estadistica sera la bandera para determinar
-        {                              // si se calcularan o no las estadisticas 
-
+        {                                          // si se calcularan o no las estadisticas 
+             $estadistica_inicial = $this->query->estadistica_inicial();
             // aca se van a calcular las estadisticas de ser necesario 
         }else{            
             // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
-
-            $estadistica_inicial = $this->query->estadistica_inicial();
-
-
-
+            $estadistica_inicial = null;
         }
 
 
@@ -54,39 +57,8 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 
     }
-
-    public function get_Recursos($solapa,$current_page,$page_size, $calculo_estadistica)
-    {
-        //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
-        $lista_recursos_restringidos = array();
-        $servicio_usuario = new RepositorioServicioUsuario();
-        $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos();
-        
-        //llamo al metodo get_recursos para obtener los recursos de la mediateca 
-        $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size); 
-        
-        
-        if($calculo_estadistica == 1 ) // la variable calculo estadistica sera la bandera para determinar
-        {                              // si se calcularan o no las estadisticas 
-
-            // aca se van a calcular las estadisticas de ser necesario 
-        }else{
-            // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
-            $estadistica_inicial = $this->query->get_estadistica_inicial();
-        }
-        
-        
-        
-        
-        return  $recursos_mediateca;
-        // return;
-                
-
-    }
     
     
-
-
 }
 
 // prueba de aplicacion 
