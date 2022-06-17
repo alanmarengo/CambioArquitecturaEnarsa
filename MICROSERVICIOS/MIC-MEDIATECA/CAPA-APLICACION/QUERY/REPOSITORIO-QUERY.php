@@ -26,21 +26,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         }
 
         // variable paginado  
-        $cantidad_registros = "SELECT COUNT(*) AS total
-                                    FROM ".'"MIC-MEDIATECA".recurso r
-                                    LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
-                                    LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
-                                    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
-                                    LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                    LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
-                                    WHERE tf.tipo_formato_solapa = '.$solapa.' '.$extension_consulta_filtro_recursos.';';
 
-        // instancio una nueva conexion 
-        $conexion = new ConexionMediateca();
-
-        //realizo la consulta            
-        $cantidad_total_recursos = $conexion->get_consulta($cantidad_registros);   
-        $total_registros = $cantidad_total_recursos[0]['total'];
+        $total_registros = $this->get_cantidad_recursos_solapa($solapa,$extension_consulta_filtro_recursos);
 
         $inicio = ($current_page - 1) * $page_size;         
 
@@ -70,7 +57,9 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                 WHERE tf.tipo_formato_solapa = '.$solapa.' '.$extension_consulta_filtro_recursos.' '.$paginador.';';
        
         
-
+        // instancio una nueva conexion 
+        $conexion = new ConexionMediateca();
+        
         //realizo la consulta            
         $recursos_mediateca = $conexion->get_consulta($consulta_definitiva);   
 
@@ -124,14 +113,14 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         return $array_recursos_mediateca; 
     }
 
-    public function get_cantidad_recursos_solapa($solapa)
+    public function get_cantidad_recursos_solapa($solapa,$extension_consulta_filtro_recursos)
     {
         // variable consulta  
         $cantidad_recursos_solapa = 'SELECT COUNT(*) AS cant_rec_solapa
                                     FROM "MIC-MEDIATECA".recurso r
                                     INNER JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
                                     INNER JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                    WHERE tf.tipo_formato_solapa ='.$solapa;
+                                    WHERE tf.tipo_formato_solapa ='.$solapa.' '.$extension_consulta_filtro_recursos.';';
 
         // instancio una nueva conexion 
         $conexion = new ConexionMediateca();
