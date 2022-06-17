@@ -25,6 +25,19 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         //llamo al metodo get_recursos para obtener los recursos de la mediateca 
         $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size); 
        
+        if($calculo_estadistica == 1 ) // la variable calculo estadistica sera la bandera para determinar
+        {                              // si se calcularan o no las estadisticas 
+
+            // aca se van a calcular las estadisticas de ser necesario 
+        }else{
+            // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
+        }
+
+
+
+
+
+
         return  $recursos_mediateca;
         //ACA IDENTIFICO UN FLAG DEL FRONT SI ES QUE DEBO CALCULAR O NO LAS ESTADISTICAS. SI NO LAS DEBO CALCULAR, LAS VOY A BUSCAR A BASE DE DATOS.
         //SI LAS DEBO CALCULAR, DEBO CALCULAR LAS ESTADISTICAS CON LOS FILTROS, TANTO ACA EN MEDIATECA COMO EN LOS DEMAS MICROSERVICIOS.
@@ -32,7 +45,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
         //aca abajo le pedimos a los otros microservicios sus recursos y estadisticas, en el caso de que la solapa sea la 2 o de que se halla accionado un filtro.
 
-
+        
 
 
     }
@@ -46,6 +59,19 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         
         //llamo al metodo get_recursos para obtener los recursos de la mediateca 
         $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size); 
+        
+        
+        if($calculo_estadistica == 1 ) // la variable calculo estadistica sera la bandera para determinar
+        {                              // si se calcularan o no las estadisticas 
+
+            // aca se van a calcular las estadisticas de ser necesario 
+        }else{
+            // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
+        }
+        
+        
+        
+        
         return  $recursos_mediateca;
         // return;
                 
@@ -58,9 +84,9 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 }
 
 // prueba de aplicacion 
- //$obtener_recursos_mediateca = new RepositorioServicioMediateca();
- //$recursos_mediateca = $obtener_recursos_mediateca->get_recursos(1,2,5);
- //print_r($recursos_mediateca);
+ $obtener_recursos_mediateca = new RepositorioServicioMediateca();
+ $recursos_mediateca = $obtener_recursos_mediateca->get_recursos(1,2,5,1);
+ print_r($recursos_mediateca);
  //print_r($obtener_recursos_mediateca->get_Recursos_idUser(10,1));
 
 
