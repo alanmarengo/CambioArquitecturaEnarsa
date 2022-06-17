@@ -82,29 +82,10 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             $metatag= $recursos_mediateca[$x]['recurso_categoria_desc'];
             $tema= $recursos_mediateca[$x]['recurso_categoria_desc'];            
 
-            // asigno la direccion de la imagen del icono dependiendo del caso 
-            switch ($origen_id) 
-            {
-                case 0:
-                    $ico = './images/types/wms.png'; /* GIS */ ; break;
-                
-                case 2:
-                    $ico = './images/types/indicadores.png';/* ESTADISTICA */ ;break;
-                    
-                case 3:
-                    $ico = './images/types/indicadores.png';/* INDICADORES */; break;
-                    
-                case 4:
-                    $ico = './images/types/generico.png';/* ARTICULOS */  ; break;
-                        
-                case 5:/* RECURSOS */
-                    $ico = ''; break;
-                default:
-                    $ico = './images/types/generico.png'; break;
-            }
+    
 
             // por cada registro, se agrega un objeto recurso al array contenedor 
-            $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$ico,$territorio_id);
+            $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id);
             array_push($array_recursos_mediateca,$recurso);      
         
         }
@@ -137,22 +118,22 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
     public function get_estadistica_inicial()
     {
-        $consulta_estadistica_inicial = 'SELECT * FROM "MIC-MEDIATECA".estadistica_inicial';
+        $consulta_estadistica_inicial = 'SELECT * FROM "MIC-MEDIATECA".estadistica_inicial        ';
 
         $conexion = new ConexionMediateca();
 
         $resultado = $conexion->get_consulta($consulta_estadistica_inicial);
-        $documentos = $resultado[0]['estadistica_inicial'];
-        $recursos_audiovisuales = $resultado[1]['estadistica_inicial'];
-        $recursos_tecnicos = $resultado[2]['estadistica_inicial'];
-        $novedades = $resultado[3]['estadistica_inicial'];
+        $documentos = $resultado[0]['solapa_0'];
+        $recursos_audiovisuales = $resultado[0]['solapa_1'];
+        $recursos_tecnicos = $resultado[0]['solapa_2'];
+        $novedades = $resultado[0]['solapa_3'];
         $obj_estadistica = new estadisticaInicial($documentos,$recursos_audiovisuales,$recursos_tecnicos,$novedades);
 
         $conexion->desconectar();
-        return  $obj_estadistica;
+        return  json_encode($obj_estadistica);
 
     }
 }
 
-//$test = new RepositorioQueryMediateca();
-//echo $test->get_estadistica_inicial();
+$test = new RepositorioQueryMediateca();
+echo $test->get_estadistica_inicial();

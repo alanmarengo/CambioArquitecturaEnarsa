@@ -13,7 +13,7 @@ class Recurso{
     public $estudios_id = null;
     public $fecha = null;
     public $tema = null;
-    public $ico = null;
+    public $ico = './images/types/generico.png';
     public $estudios=array();
     public $territorio_id = null;
     public $territorio_desc = null;
