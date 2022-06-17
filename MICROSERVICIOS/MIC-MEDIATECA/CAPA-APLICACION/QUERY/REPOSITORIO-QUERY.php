@@ -108,7 +108,9 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             array_push($array_recursos_mediateca,$recurso);      
         
         }
-            
+        
+        $conexion->desconectar(); // cierro la conexion 
+
         // se retorna un objeto json de los recursos 
         return $array_recursos_mediateca; 
     }
@@ -127,10 +129,29 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         //realizo la consulta            
         $aux_cantidad = $conexion->get_consulta($cantidad_recursos_solapa);   
-        $conexion->desconectar();
+
+        $conexion->desconectar(); // cierro la conexion
+
         return $aux_cantidad[0]['cant_rec_solapa'];
+    }
+
+    public function get_estadistica_inicial()
+    {
+        $consulta_estadistica_inicial = 'SELECT * FROM "MIC-MEDIATECA".estadistica_inicial';
+
+        $conexion = new ConexionMediateca();
+
+        $resultado = $conexion->get_consulta($consulta_estadistica_inicial);
+        $documentos = $resultado[0]['estadistica_inicial'];
+        $recursos_audiovisuales = $resultado[1]['estadistica_inicial'];
+        $recursos_tecnicos = $resultado[2]['estadistica_inicial'];
+        $novedades = $resultado[3]['estadistica_inicial'];
+        $obj_estadistica = new estadisticaInicial($documentos,$recursos_audiovisuales,$recursos_tecnicos,$novedades);
+
+        return  $obj_estadistica;
+
     }
 }
 
 //$test = new RepositorioQueryMediateca();
-//echo $test->get_cantidad_recursos_solapa(1);
+//echo $test->get_estadistica_inicial();
