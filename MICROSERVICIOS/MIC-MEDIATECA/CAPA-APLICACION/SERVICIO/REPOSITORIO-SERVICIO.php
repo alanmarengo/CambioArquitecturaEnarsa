@@ -27,20 +27,32 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
             $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos();
         }
 
-       
+        $recursos_mediateca;
+        $filtros;
+
+        //seccion recursos
+
+        if($si_tengo_que_filtrar==1){
+            $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size); 
+        }else{
+            $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size); 
+        }
         
         //llamo al metodo get_recursos para obtener los recursos de la mediateca 
-        $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size); 
        
+       //seccion estadistica
         if($calculo_estadistica == 1 ) // la variable calculo estadistica sera la bandera para determinar
         {                                          // si se calcularan o no las estadisticas 
              $estadistica_inicial = $this->query->estadistica_inicial();
-            // aca se van a calcular las estadisticas de ser necesario 
+             // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
+            
         }else{            
-            // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
+            // aca se van a calcular las estadisticas de ser necesario 
             $estadistica_inicial = null;
         }
+        
 
+        //SECCION FILTROS
 
 
 

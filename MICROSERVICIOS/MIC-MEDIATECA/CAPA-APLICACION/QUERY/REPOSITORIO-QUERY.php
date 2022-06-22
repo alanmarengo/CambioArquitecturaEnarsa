@@ -133,6 +133,60 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         return  json_encode($obj_estadistica);
 
     }
+
+
+    public function get_recursos_filtrado(){
+       /* SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+    r.recurso_id AS origen_id_especifico, 
+    r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
+    NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
+    NULL::bigint AS objetos_id, r.recurso_categoria_id, r.tipo_recurso_id, 
+    r.formato_id, r.recurso_titulo, r.recurso_desc, r.recurso_fecha, 
+    r.recurso_autores, r.recurso_path_url, r.recurso_size, r.territorio_id, 
+    tr.tipo_recurso_desc, rc.recurso_categoria_desc, f.tipo_formato_id, 
+    f.visualizacion_tipo_id, f.formato_desc, f.formato_extension, 
+    vt.visualizacion_tipo_desc, t.descripcion AS territorio_desc, 
+    t.fec_bbdd_date AS territorio_fec_bbdd_date, t.territorio_simpli, 
+    t.fec_bbdd AS territorio_fec_bbdd, tf.tipo_formato_solapa, 
+    tf.tipo_formato_desc, r.sub_proyecto_id, r.fecha_observatorio,
+	ce.cap AS esia_cap, ce.titulo AS esia_titulo, 
+    ce.orden_esia AS esia_orden_esia, ce.ruta AS esia_ruta, 
+    ce.cod_esia AS esia_cod_original, e.estudios_palabras_clave, 
+    e.sub_proyecto_id, e.estudio_estado_id, e.nombre, e.fecha, e.institucion, 
+    e.responsable, e.equipo, e.cod_oficial, e.descripcion, 
+    e.fecha_text_original, e.institucion_id, 
+    ( SELECT sub_proyecto.sub_proyecto_desc
+           FROM mod_catalogo.sub_proyecto
+          WHERE sub_proyecto.sub_proyecto_id = COALESCE(c.sub_proyecto_id, e.sub_proyecto_id, NULL::bigint)
+         LIMIT 1) AS sub_proyecto_desc, 
+    e.proyecto_id, e.proyecto_desc, e.proyecto_extent, e.institucion_nombre, 
+    e.institucion_tel, e.institucion_contacto, e.institucion_email, t.cod_temp, 
+    t.desde AS tempo_desde, t.hasta AS tempo_hasta, t.descripcion AS tempo_desc, 
+    sc.clase_id, sc.subclase_desc, sc.subclase_cod, sc.estado_subclase, 
+    sc.cod_unsubclase, sc.descripcio, sc.cod_nom, sc.fec_bbdd, 
+        CASE
+            WHEN c.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
+            ELSE c.sub_proyecto_id
+        END AS sub_proyecto_id_principal, 
+    c.fecha_observatorio
+   FROM mod_mediateca.recurso r
+   LEFT JOIN mod_mediateca.tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+   LEFT JOIN mod_catalogo.territorio t ON t.territorio_id = r.territorio_id -> aca db link
+   LEFT JOIN mod_mediateca.formato f ON f.formato_id = r.formato_id
+   LEFT JOIN mod_mediateca.recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+   LEFT JOIN mod_mediateca.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+   LEFT JOIN mod_mediateca.visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id;
+   LEFT JOIN mod_catalogo.vw_estudio e ON r.estudios_id = e.estudios_id
+   LEFT JOIN mod_catalogo.cod_esia ce ON ce.cod_esia_id = r.cod_esia_id
+   LEFT JOIN mod_catalogo.cod_temporalidad t ON t.cod_temporalidad_id = r.cod_temporalidad_id
+   LEFT JOIN mod_catalogo.subclase sc ON sc.subclase_id = r.subclase_id
+   LEFT JOIN mod_catalogo.clase cc ON sc.clase_id = cc.clase_id;
+   WHERE c.tipo_formato_solapa= $solapa
+   LIMIT
+   OFFSET
+
+   */
+    }
 }
 
 $test = new RepositorioQueryMediateca();
