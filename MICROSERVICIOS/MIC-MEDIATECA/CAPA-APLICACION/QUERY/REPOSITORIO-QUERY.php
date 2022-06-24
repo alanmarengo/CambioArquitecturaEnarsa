@@ -211,12 +211,11 @@ SELECT * FROM (SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_i
     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
     LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
     LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id) AS T
-    JOIN (SELECT ce.cod_esia_id, ce.cap,ce.titulo,ce.orden_esia,ce.ruta,ce.cod_esia
-                FROM dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                    'SELECT cod_esia_id,cap,titulo,orden_esia,ruta,cod_esia FROM "MIC-CATALOGO".cod_esia')
-                    AS ce(cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)) as T2
-                    ON t.cod_esia_id = t2.cod_esia_id
-WHERE t.tipo_formato_solapa = 1 
+    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                    'SELECT * FROM "MIC-CATALOGO".cod_esia') 
+			   	    AS ce (cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)  
+                    ON t.cod_esia_id = ce.cod_esia_id
+   WHERE t.tipo_formato_solapa = 1 
 
 
 
