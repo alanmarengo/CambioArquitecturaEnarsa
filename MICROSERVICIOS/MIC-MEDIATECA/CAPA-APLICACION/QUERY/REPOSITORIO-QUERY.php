@@ -191,3 +191,66 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
 $test = new RepositorioQueryMediateca();
 echo $test->get_estadistica_inicial();
+
+
+/* query a medias, falta poner db link
+SELECT * FROM (SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+    r.recurso_id AS origen_id_especifico, 
+    r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
+    NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
+    NULL::bigint AS objetos_id, r.recurso_categoria_id, r.tipo_recurso_id, 
+    r.formato_id, r.recurso_titulo, r.recurso_desc, r.recurso_fecha, 
+    r.recurso_autores, r.recurso_path_url, r.recurso_size, r.territorio_id,
+    r.sub_proyecto_id, r.fecha_observatorio,
+    tr.tipo_recurso_desc, rc.recurso_categoria_desc,f.tipo_formato_id
+    ,f.visualizacion_tipo_id, f.formato_desc, f.formato_extension,vt.visualizacion_tipo_desc,
+    tf.tipo_formato_solapa
+    FROM "MIC-MEDIATECA".recurso as r
+    LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+    LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
+    LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
+    LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id) AS T
+    JOIN (SELECT ce.cod_esia_id, ce.cap,ce.titulo,ce.orden_esia,ce.ruta,ce.cod_esia
+                FROM dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                    'SELECT cod_esia_id,cap,titulo,orden_esia,ruta,cod_esia FROM "MIC-CATALOGO".cod_esia')
+                    AS ce(cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)) as T2
+                    ON t.cod_esia_id = t2.cod_esia_id
+WHERE t.tipo_formato_solapa = 1 
+
+
+
+
+
+             --ON ce.cod_esia_id = r.cod_esia_id       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+   
+   LEFT JOIN mod_catalogo.territorio t ON t.territorio_id = r.territorio_id -> aca db link
+   
+   LEFT JOIN mod_catalogo.vw_estudio e ON r.estudios_id = e.estudios_id
+   LEFT JOIN mod_catalogo.cod_esia ce ON ce.cod_esia_id = r.cod_esia_id
+   LEFT JOIN mod_catalogo.cod_temporalidad t ON t.cod_temporalidad_id = r.cod_temporalidad_id
+   LEFT JOIN mod_catalogo.subclase sc ON sc.subclase_id = r.subclase_id
+   LEFT JOIN mod_catalogo.clase cc ON sc.clase_id = cc.clase_id;
+*/
