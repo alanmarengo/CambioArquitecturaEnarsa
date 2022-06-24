@@ -8,17 +8,17 @@ require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERV
 class RepositorioQueryUsuario implements IRepositorioQueryUsuario{
 
     public function get_recursos_id(){
-        // abro la conexion
+        // instancio la conexion
         $conexion = new ConexionUsuario();
         // realizo la consulta y la ejecuto
         $query = 'SELECT p.objeto_id FROM "MIC-USUARIO".permisos as p;';
-        //solo traes objetos_id        
+        
         //retorno un fetch_row o fetch_assoc        
         return $conexion->get_consulta($query); // resultado, array assoc de los archivos bloqueados 
     }
 
     public function get_recursos_id_user($user_id){
-        // abro la conexion
+        // instancio la conexion
         $conexion = new ConexionUsuario();
 
         $query = 'SELECT pe.objeto_id
