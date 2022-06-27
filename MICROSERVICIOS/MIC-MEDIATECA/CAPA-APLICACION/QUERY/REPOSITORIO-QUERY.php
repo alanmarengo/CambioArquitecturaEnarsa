@@ -194,7 +194,7 @@ echo $test->get_estadistica_inicial();
 
 
 /* query a medias, falta poner db link
-SELECT * FROM (SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+SELECT * FROM (SELECT r.estudios_id as estudios_id_rec,'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
     r.recurso_id AS origen_id_especifico, 
     r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
     NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
@@ -204,7 +204,7 @@ SELECT * FROM (SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_i
     r.sub_proyecto_id, r.fecha_observatorio,
     tr.tipo_recurso_desc, rc.recurso_categoria_desc,f.tipo_formato_id
     ,f.visualizacion_tipo_id, f.formato_desc, f.formato_extension,vt.visualizacion_tipo_desc,
-    tf.tipo_formato_solapa
+    tf.tipo_formato_solapa, r.fecha_observatorio
     FROM "MIC-MEDIATECA".recurso as r
     LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
     LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
@@ -215,41 +215,54 @@ SELECT * FROM (SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_i
                     'SELECT * FROM "MIC-CATALOGO".cod_esia') 
 			   	    AS ce (cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)  
                     ON t.cod_esia_id = ce.cod_esia_id
+    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                    'select cod_temp,desde AS tempo_desde, hasta AS tempo_hasta, descripcion AS tempo_desc from "MIC-CATALOGO".cod_temporalidad') 
+			   	    AS ct (cod_temp bigint ,tempo_desde  text,tempo_hasta  text,tempo_desc  text)  
+                    ON t.cod_temporalidad_id = ct.cod_temp
+    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                    'select subclase_id, clase_id, subclase_desc, subclase_cod, estado_subclase, 
+                            cod_unsubclase, descripcio, cod_nom, fec_bbdd from "MIC-CATALOGO".subclase') 
+			   	    AS sc (subclase_id bigint,clase_id bigint, subclase_desc text, subclase_cod text, estado_subclase bigint, 
+                           cod_unsubclase text, descripcio text, cod_nom text, fec_bbdd text)  
+                    ON T.subclase_id = sc.subclase_id
+    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                    'SELECT e.estudios_id, e.estudios_palabras_clave, e.sub_proyecto_id, 
+                            e.estudio_estado_id,e.nombre,e.fecha, e.institucion,e.responsable,
+                            e.equipo, e.cod_oficial, e.descripcion, e.fecha_text_original,
+                            e.institucion_id, sp.proyecto_id,p.proyecto_desc,
+                            p.proyecto_extent,i.institucion_nombre, i.institucion_tel,
+                            i.institucion_contacto, i.institucion_email
+                    FROM "MIC-CATALOGO".estudios e
+                    LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = e.sub_proyecto_id
+                    LEFT JOIN "MIC-CATALOGO".proyecto p ON sp.proyecto_id = p.proyecto_id
+                    LEFT JOIN "MIC-CATALOGO".institucion i ON i.institucion_id = e.institucion_id') 
+			   	    AS ev (estudios_id bigint, estudios_palabras_clave text, sub_proyecto_id bigint, 
+                            estudio_estado_id bigint,nombre text,fecha date, institucion text,responsable text,
+                            equipo text, cod_oficial text, descripcion text, fecha_text_original text,
+                            institucion_id bigint, proyecto_id bigint,proyecto_desc text,
+                            proyecto_extent text,institucion_nombre text, institucion_tel text,
+                            institucion_contacto text, institucion_email text)  
+                    ON t.estudios_id_rec = ev.estudios_id
    WHERE t.tipo_formato_solapa = 1 
-
-
-
-
-
-             --ON ce.cod_esia_id = r.cod_esia_id       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
    
-   LEFT JOIN mod_catalogo.territorio t ON t.territorio_id = r.territorio_id -> aca db link
+   todavia falta adicionar esto 
+   /*
    
-   LEFT JOIN mod_catalogo.vw_estudio e ON r.estudios_id = e.estudios_id
-   LEFT JOIN mod_catalogo.cod_esia ce ON ce.cod_esia_id = r.cod_esia_id
-   LEFT JOIN mod_catalogo.cod_temporalidad t ON t.cod_temporalidad_id = r.cod_temporalidad_id
-   LEFT JOIN mod_catalogo.subclase sc ON sc.subclase_id = r.subclase_id
-   LEFT JOIN mod_catalogo.clase cc ON sc.clase_id = cc.clase_id;
-*/
+    ( SELECT sub_proyecto.sub_proyecto_desc
+           FROM mod_catalogo.sub_proyecto
+          WHERE sub_proyecto.sub_proyecto_id = COALESCE(c.sub_proyecto_id, e.sub_proyecto_id, NULL::bigint)
+         LIMIT 1) AS sub_proyecto_desc, 
+        
+        CASE
+            WHEN c.sub_proyecto_id IS NULL 
+            THEN e.sub_proyecto_id
+            ELSE c.sub_proyecto_id
+        END AS sub_proyecto_id_principal, 
+
+
+
+
+   
+   */
+   
+
