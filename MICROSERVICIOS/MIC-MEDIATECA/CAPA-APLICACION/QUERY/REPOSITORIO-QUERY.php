@@ -135,8 +135,115 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
     }
 
 
-    public function get_recursos_filtrado(){
-       /* SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+    public function get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad){
+    
+        $extension_consulta_filtro_recursos = "AND r.recurso_id NOT IN (";
+
+        // armo una cadena para usar como subconsulta en la query principal 
+        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        {       
+           if($x==count($lista_recursos_restringidos)-1){
+               
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+           }else{
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+           }       
+        }
+
+        // variable paginado  
+
+        $total_registros = $this->get_cantidad_recursos_solapa($solapa,$extension_consulta_filtro_recursos);
+
+        $inicio = ($current_page - 1) * $page_size;         
+
+        $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;
+
+        // fin paginador ---------------------------------
+
+        $aux_cadena_filtros = "";
+
+        if(!empty($qt))
+        {
+            $aux_cadena_filtros .= "AND "; // con unaccent 
+        }
+
+        if(!empty($desde))
+        {
+            $aux_cadena_filtros .= "AND "; // con unaccent 
+        }
+        if(!empty($hasta))
+        {
+            $aux_cadena_filtros .= "AND "; // con unaccent 
+        }
+        if(!empty($proyecto))
+        {
+            $aux_cadena_filtros .= "AND "; // con unaccent 
+        }
+        if(!empty($clase))
+        {
+            $aux_cadena_filtros .= "AND "; // con unaccent 
+        }
+        if(!empty($subclase))
+        {
+            $aux_cadena_filtros .= "AND "; // con unaccent 
+        }
+        if(!empty($tipo_doc))
+        {
+            $aux_cadena_filtros .= "AND "; // con unaccent 
+        }
+        if(!empty($filtro_temporalidad))
+        {
+            $aux_cadena_filtros .= "AND "; // con unaccent 
+        }
+        
+
+
+
+        $consulta_definitiva = "".$solapa.' '.$extension_consulta_filtro_recursos.' '.$paginador.';';
+       
+        
+        // instancio una nueva conexion 
+        $conexion = new ConexionMediateca();
+        
+        //realizo la consulta            
+        $recursos_mediateca = $conexion->get_consulta($consulta_definitiva);   
+
+        //creo un array para guardar todos los recursos 
+        $array_recursos_mediateca = array();
+
+        // recorro el arreglo con los datos de la consulta 
+        for($x=0; $x<=count($recursos_mediateca)-1; $x++)
+        {
+            $solapa= $recursos_mediateca[$x]['origen'];
+            $origen_id= $recursos_mediateca[$x]['origen_id'];
+            $id_recurso= $recursos_mediateca[$x]['origen_id_especifico'];
+            $titulo= $recursos_mediateca[$x]['recurso_titulo'];
+            $descripcion= $recursos_mediateca[$x]['recurso_desc'];
+            $link_imagen= $recursos_mediateca[$x]['recurso_path_url']; 
+            $autores= $recursos_mediateca[$x]['recurso_autores']; 
+            $fecha= $recursos_mediateca[$x]['recurso_fecha'];
+            $territorio_id= $recursos_mediateca[$x]['territorio_id'];
+            $estudios_id= $recursos_mediateca[$x]['sub_proyecto_id'];            
+            $metatag= $recursos_mediateca[$x]['recurso_categoria_desc'];
+            $tema= $recursos_mediateca[$x]['recurso_categoria_desc'];            
+
+    
+
+            // por cada registro, se agrega un objeto recurso al array contenedor 
+            $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id);
+            array_push($array_recursos_mediateca,$recurso);      
+        
+        }
+        
+        $conexion->desconectar(); // cierro la conexion 
+
+        // se retorna un objeto json de los recursos 
+        return $array_recursos_filtrados_mediateca; 
+    
+    
+    
+    
+        /* SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
     r.recurso_id AS origen_id_especifico, 
     r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
     NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
