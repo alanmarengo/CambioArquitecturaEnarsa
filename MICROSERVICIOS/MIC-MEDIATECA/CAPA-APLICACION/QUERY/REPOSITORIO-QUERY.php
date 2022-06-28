@@ -135,7 +135,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
     }
 
 
-    public function get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad){
+    public function get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad){
     
         $extension_consulta_filtro_recursos = "AND r.recurso_id NOT IN (";
 
@@ -160,43 +160,103 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         // fin paginador ---------------------------------
 
-        $aux_cadena_filtros = "";
+        // validacion de filtros 
 
-        if(!empty($qt))
-        {
-            $aux_cadena_filtros .= "AND "; // con unaccent 
+        $aux_cadena_filtros = ""; // variable contenedora, almacenara un string con todas las adeciones de filtros a la consulta principal
+
+        if(!empty($qt)) // variable que viene del buscador.
+        {            
+            $aux_cadena_filtros .= "AND (lower(unaccent(T.origen_search_text)) LIKE  lower(unaccent(%".$qt."%))"; // con unaccent  lower(unaccent('my_MMuíèles'))
+            $aux_cadena_filtros .= " OR lower(unaccent(e.estudios_palabras_clave)) LIKE  lower(unaccent(%".$qt."%))";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.nombre)) LIKE  lower(unaccent(%".$qt."%))) "; 
         }
 
-        if(!empty($desde))
-        {
-            $aux_cadena_filtros .= "AND "; // con unaccent 
+        switch ($tipo_temporalidad) { // dependiendo del valor de $tipo_temporalidad, el filtro de fecha se hace en campos diferentes
+            case 0:
+                if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
+                {
+                    $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                            OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";  
+                
+                }else{ 
+                    if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                    {
+                        $aux_cadena_filtros .= "  AND (('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";
+
+                    }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                    {
+                        $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                OR('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";
+
+                    }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                        $aux_cadena_filtros .= "";
+                    }
+
+                }
+            case 1:
+                if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
+                {
+                    $aux_cadena_filtros .= " AND ((T.fecha_observatorio IS NOT NULL)   AND
+                                                  (T.fecha_observatorio BETWEEN ".$desde." AND ".$hasta."))";
+                    if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                    {
+                        $aux_cadena_filtros .= "  AND ((T.fecha_observatorio IS NOT NULL)  AND 
+                                                       (T.fecha_observatorio <= ".$hasta."))";
+
+                    }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                    {
+                        $aux_cadena_filtros .= "  AND ((T.fecha_observatorio IS NOT NULL)  AND 
+                                                       (T.fecha_observatorio >= ".$desde."))";
+
+                    }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                        $aux_cadena_filtros .= "";
+                    }
+                }
+            case 2:
+                if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
+                {
+                    $aux_cadena_filtros .= " AND ((T.recurso_fecha IS NOT NULL)   AND
+                                                  (T.recurso_fecha BETWEEN ".$desde." AND ".$hasta."))";
+                    if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                    {
+                        $aux_cadena_filtros .= "  AND ((T.recurso_fecha IS NOT NULL)  AND 
+                                                       (T.recurso_fecha <= ".$hasta."))";
+
+                    }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                    {
+                        $aux_cadena_filtros .= "  AND ((T.recurso_fecha IS NOT NULL)  AND 
+                                                       (T.recurso_fecha >= ".$desde."))";
+
+                    }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                        $aux_cadena_filtros .= "";
+                    }
+                }
         }
-        if(!empty($hasta))
-        {
-            $aux_cadena_filtros .= "AND "; // con unaccent 
-        }
+        
         if(!empty($proyecto))
         {
-            $aux_cadena_filtros .= "AND "; // con unaccent 
+            $aux_cadena_filtros .= " AND e.sub_proyecto_id = ".$proyecto; //
         }
+
         if(!empty($clase))
         {
-            $aux_cadena_filtros .= "AND "; // con unaccent 
+            $aux_cadena_filtros .= " AND sc.clase_id = ".$clase; // con unaccent 
         }
         if(!empty($subclase))
         {
-            $aux_cadena_filtros .= "AND "; // con unaccent 
+            $aux_cadena_filtros .= "AND sc.subclase_id =".$subclase; // con unaccent 
         }
         if(!empty($tipo_doc))
         {
-            $aux_cadena_filtros .= "AND "; // con unaccent 
+            $aux_cadena_filtros .= "AND t.recurso_categoria_id = ".$tipo_doc; // con unaccent 
         }
         if(!empty($filtro_temporalidad))
         {
             $aux_cadena_filtros .= "AND "; // con unaccent 
         }
         
-
+        // fin evaluacion de filtros. 
 
 
         $consulta_definitiva = "".$solapa.' '.$extension_consulta_filtro_recursos.' '.$paginador.';';
@@ -343,13 +403,13 @@ SELECT * FROM (SELECT r.estudios_id as estudios_id_rec,'recurso mediateca'::text
                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = e.sub_proyecto_id
                     LEFT JOIN "MIC-CATALOGO".proyecto p ON sp.proyecto_id = p.proyecto_id
                     LEFT JOIN "MIC-CATALOGO".institucion i ON i.institucion_id = e.institucion_id') 
-			   	    AS ev (estudios_id bigint, estudios_palabras_clave text, sub_proyecto_id bigint, 
+			   	    AS e (estudios_id bigint, estudios_palabras_clave text, sub_proyecto_id bigint, 
                             estudio_estado_id bigint,nombre text,fecha date, institucion text,responsable text,
                             equipo text, cod_oficial text, descripcion text, fecha_text_original text,
                             institucion_id bigint, proyecto_id bigint,proyecto_desc text,
                             proyecto_extent text,institucion_nombre text, institucion_tel text,
                             institucion_contacto text, institucion_email text)  
-                    ON t.estudios_id_rec = ev.estudios_id
+                    ON t.estudios_id_rec = e.estudios_id
    WHERE t.tipo_formato_solapa = 1 
    
    todavia falta adicionar esto 
