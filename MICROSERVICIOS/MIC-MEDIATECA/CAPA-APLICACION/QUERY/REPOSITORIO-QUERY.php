@@ -196,9 +196,9 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             $aux_cadena_filtros .= "AND "; // con unaccent 
         }
         
+        
 
-
-
+        
         $consulta_definitiva = "".$solapa.' '.$extension_consulta_filtro_recursos.' '.$paginador.';';
        
         
@@ -351,25 +351,21 @@ SELECT * FROM (SELECT r.estudios_id as estudios_id_rec,'recurso mediateca'::text
                             institucion_contacto text, institucion_email text)  
                     ON t.estudios_id_rec = ev.estudios_id
    WHERE t.tipo_formato_solapa = 1 
-   
-   todavia falta adicionar esto 
-   /*
-   
-    ( SELECT sub_proyecto.sub_proyecto_desc
-           FROM mod_catalogo.sub_proyecto
-          WHERE sub_proyecto.sub_proyecto_id = COALESCE(c.sub_proyecto_id, e.sub_proyecto_id, NULL::bigint)
-         LIMIT 1) AS sub_proyecto_desc, 
-        
-        CASE
-            WHEN c.sub_proyecto_id IS NULL 
-            THEN e.sub_proyecto_id
-            ELSE c.sub_proyecto_id
-        END AS sub_proyecto_id_principal, 
 
 
 
 
-   
-   */
-   
+   //AGREGAR PARAMETRO  TIPO_TEMPORALIDAD Y REALIZAR ESTAS VERIFICACIONES.
+
+   IF (_desde <> '' AND _tipo_temporalidad ='0') THEN
+		buffer := buffer || ' AND ((C.tempo_desde >= '''||_desde||''')AND( C.tempo_hasta<='''||_hasta||''' ))';
+	END IF;
+	
+	IF (_desde <> '' AND _tipo_temporalidad ='1') THEN
+		buffer := buffer || 'AND (C.fecha_observatorio IS NOT NULL) AND ((C.fecha_observatorio >= '''||_desde||''')AND(C.fecha_observatorio<= '''||_hasta||''')) ';
+	END IF;
+	
+	IF (_desde <> '' AND _tipo_temporalidad ='2') THEN
+		buffer := buffer || 'AND (C.recurso_fecha IS NOT NULL) AND (( C.recurso_fecha >='''||_desde||''')AND(C.recurso_fecha <= '''||_hasta||''')) ';
+	END IF;
 
