@@ -234,27 +234,12 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                 }
         }
         
-        if(!empty($proyecto))
-        {
-            $aux_cadena_filtros .= " AND e.sub_proyecto_id = ".$proyecto; //
-        }
+        if(!empty($proyecto)) { $aux_cadena_filtros .= " AND e.sub_proyecto_id = ".$proyecto; }
+        if(!empty($clase)) { $aux_cadena_filtros .= " AND sc.clase_id = ".$clase; }
+        if(!empty($subclase)) { $aux_cadena_filtros .= "AND sc.subclase_id =".$subclase; }
+        if(!empty($tipo_doc)) { $aux_cadena_filtros .= "AND t.recurso_categoria_id = ".$tipo_doc; }
 
-        if(!empty($clase))
-        {
-            $aux_cadena_filtros .= " AND sc.clase_id = ".$clase; // con unaccent 
-        }
-        if(!empty($subclase))
-        {
-            $aux_cadena_filtros .= "AND sc.subclase_id =".$subclase; // con unaccent 
-        }
-        if(!empty($tipo_doc))
-        {
-            $aux_cadena_filtros .= "AND t.recurso_categoria_id = ".$tipo_doc; // con unaccent 
-        }
-        if(!empty($filtro_temporalidad))
-        {
-            $aux_cadena_filtros .= "AND "; // con unaccent 
-        }
+        // fin validacion de filtros 
         
         $consulta_definitiva = "".$solapa.' '.$extension_consulta_filtro_recursos.' '.$paginador.';';
        
