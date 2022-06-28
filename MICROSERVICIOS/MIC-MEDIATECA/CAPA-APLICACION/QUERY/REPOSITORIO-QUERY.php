@@ -294,7 +294,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         // fin paginador ---------------------------------
 
-        $consulta_paginado = "SELECT * FROM (SELECT r.estudios_id as estudios_id_rec,'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+        $consulta_definitiva = "SELECT * FROM (SELECT r.estudios_id as estudios_id_rec,'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
                                                             r.recurso_id AS origen_id_especifico, 
                                                             r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
                                                             NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
@@ -355,7 +355,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         //creo un array para guardar todos los recursos 
         $array_recursos_mediateca_filtrados = array();
 
-        // recorro el arreglo con los datos de la consulta 
+        // recorro el arreglo con los datos de la consulta ll
         for($x=0; $x<=count($recursos_mediateca_filtrados)-1; $x++)
         {
             $solapa= $recursos_mediateca_filtrados[$x]['origen'];
