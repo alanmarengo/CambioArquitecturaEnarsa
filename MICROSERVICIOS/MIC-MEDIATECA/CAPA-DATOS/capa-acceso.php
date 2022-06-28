@@ -9,7 +9,7 @@ class ConexionMediateca {
     private $database = "MIC-MEDIATECA";
     private $conect;
 
-    public function __construct()
+    public function __construct()//instancia una nueva conexion
     {
         // pgsql:host=localhost;port=5432;dbname=testdb;   (ejemplo dns para pgsql )
         $string_conn = "pgsql:host=" .$this->host.";port=".$this->port.";dbname=".$this->database;
@@ -30,7 +30,7 @@ class ConexionMediateca {
         $this->conect = null;
     }
 
-    public function get_consulta(string $query)
+    public function get_consulta(string $query)// ejecuta una consulta que recibe por parametro
     {
         $consulta = $this->conect->query($query);
         $resultado = $consulta->fetchall(PDO::FETCH_ASSOC);

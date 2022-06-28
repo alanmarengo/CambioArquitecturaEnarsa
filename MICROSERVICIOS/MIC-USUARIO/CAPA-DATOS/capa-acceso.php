@@ -9,7 +9,7 @@ class ConexionUsuario {
     private $database = "MIC-USUARIO";
     private $conect;
 
-    public function __construct()
+    public function __construct() // crea una nueva instancia de conexion
     {
         // pgsql:host=localhost;port=5432;dbname=testdb;   (ejemplo dns para pgsql )
         $string_conn = "pgsql:host=" .$this->host.";port=".$this->port.";dbname=".$this->database;
@@ -24,13 +24,11 @@ class ConexionUsuario {
             echo "ERROR: ".$e->getMessage(); // y el tipo de error devuelto por la db.
         }
     }
-
     public function desconectar()// cierra la conexion creada. 
     {
         $this->conect = null;
     }
-
-    public function get_consulta(string $query)
+    public function get_consulta(string $query)// ejecuta una consulta, la cual recibe por parametro
     {
         $consulta = $this->conect->query($query);
         $resultado = $consulta->fetchall(PDO::FETCH_ASSOC);
