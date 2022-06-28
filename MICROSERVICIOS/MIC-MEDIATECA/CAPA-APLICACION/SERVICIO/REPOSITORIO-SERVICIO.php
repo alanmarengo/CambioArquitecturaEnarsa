@@ -15,7 +15,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 
     // funcion para traer todos los recursos de la mediateca 
-    public function get_Recursos($user_id, $solapa,$current_page,$page_size, $calculo_estadistica, $si_tengo_que_filtrar, $lo_que_tengo_que_filtrar)
+    public function get_Recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar)
     {
         //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
         $lista_recursos_restringidos = array();
@@ -32,14 +32,15 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
         //seccion recursos
 
+        //llamo al metodo get_recursos para obtener los recursos de la mediateca
+
         if($si_tengo_que_filtrar==1){
-            $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size); 
+            $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad); 
         }else{
             $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size); 
         }
         
-        //llamo al metodo get_recursos para obtener los recursos de la mediateca 
-       
+                
        //seccion estadistica
         if($calculo_estadistica == 1 ) // la variable calculo estadistica sera la bandera para determinar
         {                                          // si se calcularan o no las estadisticas 
