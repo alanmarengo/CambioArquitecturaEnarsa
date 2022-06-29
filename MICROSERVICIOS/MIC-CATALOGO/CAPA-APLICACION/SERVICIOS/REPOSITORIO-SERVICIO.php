@@ -14,4 +14,11 @@ class RepositorioServicioCatalogo implements IRepositorioServicioCatalogo{
         return $this->query->get_info_territorio($territorio_id);               
     }
 
+
+    public function get_filtros($solapa){
+        return $this->query->get_filtros($solapa);     
+    }
+
+
+
 }
