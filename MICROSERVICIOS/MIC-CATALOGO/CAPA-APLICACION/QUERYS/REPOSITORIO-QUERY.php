@@ -66,9 +66,9 @@ class RepositorioQuery implements IRepositorioQuery{
 
         //DEPENDIENDO DE QUE SOLAPA ENTRE Y QUE FILTROS ID CALCULO ENTONCES:
         $lista_filtros_solapa_0=[0,1,3,4];
-        $QUERY_PRINCIPAL_DEFINITIVA;
-        $QUERY_DEFINITIVA;
-
+        $lista_filtros_solapa_1=[0,3,4,5];
+        $lista_filtros_solapa_2=[0,2,3,4];
+        $lista_filtros_solapa_3=[0,3,4];
 
         switch($solapa){
 
@@ -77,31 +77,15 @@ class RepositorioQuery implements IRepositorioQuery{
                 ." FROM "
                 ." mod_catalogo.vw_filtros_values F "
                 ."LEFT JOIN "
-                ."(";
-
-                for($x=0;x<=$lista_filtros_solapa_0.lenght; $x++){
-                    $QUERY_PRINCIPAL_DEFINITIVA=$QUERY_PRINCIPAL+ConstruirQuery($lista_filtros_solapa_0[$x])
-
-                    if($x==$lista_filtros_solapa_0.lenght)
-                    {
-                        . $QUERY_PRINCIPAL_DEFINITIVA;
-                    }
-
-                    . $QUERY_PRINCIPAL_DEFINITIVA=$QUERY_PRINCIPAL+ConstruirQuery($lista_filtros_solapa_0[$x]) + "UNION ALL";
-
-                //en el caso de perderse, mirar la base de datos AHRCS EN MOD_MEDIATECA.GET_CONSULKTA_FILTRO_CONSULTA
-                //TAMBIEN SI TE PERDES ANDA A MEDIATECA_FIND_PAGE
-
-
-                }
-
-                .")T ";
+                ."("
+                ."--QUERY_UNION"
+                .")T "
                 ."ON F.filtro_id=T.filtro_id AND F.valor_id = T.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
-
-                
+                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirUnion($lista_filtros_solapa_0, 0, $filtro_id), $QUERY_DEFINITIVA);           
                 break;
 
             case 1:
+                //HACER LO MISMO QUE ARRIBA Y PROBAR TODO
                 break;
             case 2:
                 break;
@@ -117,6 +101,50 @@ class RepositorioQuery implements IRepositorioQuery{
 
 
     }
+
+    public function ConstruirUnion($lista_filtros_solapa, $solapa, $filtro_id){
+        $LISTA_UNIONES=array();
+        $QUERY_RETURN="";
+        $QUERY="SELECT '||_filtro_id||'::BIGINT AS filtro_id,sub_proyecto_desc::TEXT AS desc,
+        CASE
+                    WHEN r.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
+                    ELSE r.sub_proyecto_id
+                END AS sub_proyecto_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total
+        FROM MIC-MEDIATECA.recurso r --db link
+        LEFT JOIN MIC-MEDIATECA.formato f ON f.formato_id = r.formato_id --con db link
+        LEFT JOIN MIC-MEDIATECA.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id --db link
+        LEFT JOIN mod_catalogo.vw_estudio e ON r.estudios_id = e.estudios_id
+        LEFT JOIN mod_catalogo.subclase sc ON sc.subclase_id = r.subclase_id
+        LEFT JOIN mod_catalogo.clase cc ON sc.clase_id = cc.clase_id;
+        WHERE tf.tipo_formato_solapa = $solapa AND valor_id IS NOT NULL AND _desc IS NOT NULL";
+
+        for($x=0;x<=$lista_filtros_solapa.lenght; $x++)
+        {
+            if($x==$lista_filtros_solapa_0.lenght)
+            {
+                $QUERY_RETURN+=$QUERY. "\n".ConstruirQuery($lista_filtros_solapa[$x]);
+            }
+            $QUERY_RETURN+=$QUERY. "\n".ConstruirQuery($lista_filtros_solapa[$x]) + "UNION ALL"."\n";
+            //en el caso de perderse, mirar la base de datos AHRCS EN MOD_MEDIATECA.GET_CONSULKTA_FILTRO_CONSULTA
+            //TAMBIEN SI TE PERDES ANDA A MEDIATECA_FIND_PAGE       
+        }
+
+        return $QUERY_RETURN;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function ConstruirQuery($filtro_id){
         
         //FILTRO ID 0
