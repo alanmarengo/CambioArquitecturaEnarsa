@@ -19,7 +19,7 @@ class RepositorioQuery implements IRepositorioQuery{
 
 
     
-    public function get_filtros($solapa){
+    public function get_filtros($solapa){ //
         //ESTO RETORNA UNA LISTA DE FILTROSDTOS
 
 
