@@ -22,19 +22,6 @@ class RepositorioQuery implements IRepositorioQuery{
     public function get_filtros($solapa){
         //ESTO RETORNA UNA LISTA DE FILTROSDTOS
 
-        $QUERY_PRINCIPAL="SELECT '||_filtro_id||'::BIGINT AS filtro_id,sub_proyecto_desc::TEXT AS desc,
-        CASE
-                    WHEN r.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
-                    ELSE r.sub_proyecto_id
-                END AS sub_proyecto_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total
-        FROM MIC-MEDIATECA.recurso r --db link
-        LEFT JOIN MIC-MEDIATECA.formato f ON f.formato_id = r.formato_id --con db link
-        LEFT JOIN MIC-MEDIATECA.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id --db link
-        LEFT JOIN mod_catalogo.vw_estudio e ON r.estudios_id = e.estudios_id
-        LEFT JOIN mod_catalogo.subclase sc ON sc.subclase_id = r.subclase_id
-        LEFT JOIN mod_catalogo.clase cc ON sc.clase_id = cc.clase_id;
-        WHERE tf.tipo_formato_solapa = $solapa AND valor_id IS NOT NULL AND _desc IS NOT NULL";
-
 
         //SOLAPA 0, FILTROS_ID : 0,1,3,4
         //SOLAPA 1, FILTROS_ID : 0,3,4,5
@@ -47,22 +34,6 @@ class RepositorioQuery implements IRepositorioQuery{
         //AREA TEMATICA : FILTRO_ID 3
         //TEMA/SUBTEMA: FILTRO_ID 4
         //RECURSOS AUDIOVISUALES: FILTRO ID 5
-
-        /* 
-      $QUERY= SELECT '||_filtro_id||'::BIGINT AS filtro_id,sub_proyecto_desc::TEXT AS desc,
-        CASE
-                    WHEN r.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
-                    ELSE r.sub_proyecto_id
-                END AS sub_proyecto_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total
-        FROM "MIC-MEDIATECA".recurso r --db link
-        LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id --con db link
-        LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id --db link
-        LEFT JOIN mod_catalogo.vw_estudio e ON r.estudios_id = e.estudios_id
-        LEFT JOIN mod_catalogo.subclase sc ON sc.subclase_id = r.subclase_id
-        LEFT JOIN mod_catalogo.clase cc ON sc.clase_id = cc.clase_id;
-        WHERE tf.tipo_formato_solapa = $solapa
-*/
-
 
         //DEPENDIENDO DE QUE SOLAPA ENTRE Y QUE FILTROS ID CALCULO ENTONCES:
         $lista_filtros_solapa_0=[0,1,3,4];
