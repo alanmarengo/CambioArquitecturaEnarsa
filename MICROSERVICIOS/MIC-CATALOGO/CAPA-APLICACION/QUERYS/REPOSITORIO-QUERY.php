@@ -36,26 +36,6 @@ class RepositorioQuery implements IRepositorioQuery{
         WHERE tf.tipo_formato_solapa = $solapa AND valor_id IS NOT NULL AND _desc IS NOT NULL";
 
 
-        $CONSULTA_POSIBLE_1;
-        $CONSULTA_POSIBLE_2;
-        $CONSULTA_POSIBLE_3;
-        $CONSULTA_POSIBLE_4;
-
-
-        //FILTRO ID 0
-        $CONSULTA_PROYECTO=' GROUP BY sub_proyecto_desc,sub_proyecto_id_principal ';
-        //FILTRO ID 1
-        $CONSULTA_AREA_GESTION='AND recurso_categoria_id IN(SELECT recurso_categoria_id FROM mod_mediateca.recurso_categoria WHERE recurso_categoria_filtro=1) GROUP BY recurso_categoria_desc,recurso_categoria_id ';
-        //FILTRO ID 2
-        $CONSULTA_RECURSOS_TECNICOS='AND recurso_categoria_id IN(SELECT recurso_categoria_id FROM mod_mediateca.recurso_categoria WHERE recurso_categoria_filtro=2) GROUP BY recurso_categoria_desc,recurso_categoria_id ';
-        //FILTRO ID 3 
-        $CONSULTA_AREA_TEMATICA=' GROUP BY clase_id ';
-        //FILTRO ID 4
-        $CONSULTA_TEMA='GROUP BY subclase_desc,subclase_id ';
-        //FILTRO ID 5
-        $CONSULTA_RECURSOS_AUDIOVISUALES='AND recurso_categoria_id IN(SELECT recurso_categoria_id FROM mod_mediateca.recurso_categoria WHERE recurso_categoria_filtro=5) GROUP BY recurso_categoria_desc,recurso_categoria_id ';
-
-
         //SOLAPA 0, FILTROS_ID : 0,1,3,4
         //SOLAPA 1, FILTROS_ID : 0,3,4,5
         //SOLAPA 2, FILTROS_ID : 0,2,3,4
@@ -136,16 +116,21 @@ class RepositorioQuery implements IRepositorioQuery{
         //EJECUTAR QUERY DEFINITIVA Y VAS A RECORRER ESE RESULTADO Y VAS A FORMAR Y DEVOLVER UNA LISTA DE FILTROSDTOS
 
 
-
-
-
-
-
-
-
-
     }
     public function ConstruirQuery($filtro_id){
+        
+        //FILTRO ID 0
+        $CONSULTA_PROYECTO=' GROUP BY sub_proyecto_desc,sub_proyecto_id_principal ';
+        //FILTRO ID 1
+        $CONSULTA_AREA_GESTION='AND recurso_categoria_id IN(SELECT recurso_categoria_id FROM mod_mediateca.recurso_categoria WHERE recurso_categoria_filtro=1) GROUP BY recurso_categoria_desc,recurso_categoria_id ';
+        //FILTRO ID 2
+        $CONSULTA_RECURSOS_TECNICOS='AND recurso_categoria_id IN(SELECT recurso_categoria_id FROM mod_mediateca.recurso_categoria WHERE recurso_categoria_filtro=2) GROUP BY recurso_categoria_desc,recurso_categoria_id ';
+        //FILTRO ID 3 
+        $CONSULTA_AREA_TEMATICA=' GROUP BY clase_id ';
+        //FILTRO ID 4
+        $CONSULTA_TEMA='GROUP BY subclase_desc,subclase_id ';
+        //FILTRO ID 5
+        $CONSULTA_RECURSOS_AUDIOVISUALES='AND recurso_categoria_id IN(SELECT recurso_categoria_id FROM mod_mediateca.recurso_categoria WHERE recurso_categoria_filtro=5) GROUP BY recurso_categoria_desc,recurso_categoria_id ';
         switch($filtro_id){
             case 0:
                 return $CONSULTA_PROYECTO;
