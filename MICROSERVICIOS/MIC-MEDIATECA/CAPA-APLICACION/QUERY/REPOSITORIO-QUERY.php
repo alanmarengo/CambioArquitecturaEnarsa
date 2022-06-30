@@ -160,7 +160,11 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         {            
             $aux_cadena_filtros .= "AND (lower(unaccent(T.origen_search_text)) LIKE  lower(unaccent(%".$qt."%))"; // con unaccent  lower(unaccent('my_MMuíèles'))
             $aux_cadena_filtros .= " OR lower(unaccent(e.estudios_palabras_clave)) LIKE  lower(unaccent(%".$qt."%))";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.nombre)) LIKE  lower(unaccent(%".$qt."%))) "; 
+            $aux_cadena_filtros .= " OR lower(unaccent(e.nombre)) LIKE  lower(unaccent(%".$qt."%))) ";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.equipo)) LIKE  lower(unaccent(%".$qt."%))) ";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.institucion)) LIKE  lower(unaccent(%".$qt."%))) ";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.responsable)) LIKE  lower(unaccent(%".$qt."%))) "; 
+             
         }
 
         switch ($tipo_temporalidad) { // dependiendo del valor de $tipo_temporalidad, el filtro de fecha se hace en campos diferentes
@@ -294,7 +298,10 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         // fin paginador ---------------------------------
 
-        $consulta_definitiva = "SELECT * FROM (SELECT r.estudios_id as estudios_id_rec,'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+        $consulta_definitiva = "SELECT *,CASE
+                                            WHEN t.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
+                                            ELSE t.sub_proyecto_id
+                                         END AS sub_proyecto_id_principal FROM (SELECT r.estudios_id as estudios_id_rec,'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
                                                             r.recurso_id AS origen_id_especifico, 
                                                             r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
                                                             NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
@@ -368,7 +375,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             $fecha= $recursos_mediateca_filtrados[$x]['recurso_fecha'];
             $territorio_id= $recursos_mediateca_filtrados[$x]['territorio_id'];
             $estudios_id= $recursos_mediateca_filtrados[$x]['sub_proyecto_id'];            
-            $metatag= $recursos_mediateca_filtrados[$x]['recurso_categoria_desc'];
+            $metatag= $recursos_mediateca_filtrados[$x]['recurso_categoria_desc'];//
             $tema= $recursos_mediateca_filtrados[$x]['recurso_categoria_desc'];            
 
     
