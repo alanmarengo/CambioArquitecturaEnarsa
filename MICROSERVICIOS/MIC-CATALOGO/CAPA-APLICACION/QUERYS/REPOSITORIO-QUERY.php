@@ -52,7 +52,7 @@ class RepositorioQuery implements IRepositorioQuery{
                 ."--QUERY_UNION"
                 .")T "
                 ."ON F.filtro_id=T.filtro_id AND F.valor_id = T.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
-                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirUnion($lista_filtros_solapa_0, 0, $filtro_id), $QUERY_DEFINITIVA);           
+                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id), $QUERY_DEFINITIVA);           
                 break;
 
             case 1:
@@ -73,7 +73,7 @@ class RepositorioQuery implements IRepositorioQuery{
 
     }
 
-    public function ConstruirUnion($lista_filtros_solapa, $solapa, $filtro_id){
+    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa, $filtro_id){
         $LISTA_UNIONES=array();
         $QUERY_RETURN="";
         $QUERY="SELECT '||_filtro_id||'::BIGINT AS filtro_id,sub_proyecto_desc::TEXT AS desc,
@@ -93,9 +93,9 @@ class RepositorioQuery implements IRepositorioQuery{
         {
             if($x==$lista_filtros_solapa_0.lenght)
             {
-                $QUERY_RETURN+=$QUERY. "\n".ConstruirQuery($lista_filtros_solapa[$x]);
+                $QUERY_RETURN+=$QUERY. "\n".ConstruirQueryFiltro($lista_filtros_solapa[$x]);
             }
-            $QUERY_RETURN+=$QUERY. "\n".ConstruirQuery($lista_filtros_solapa[$x]) + "UNION ALL"."\n";
+            $QUERY_RETURN+=$QUERY. "\n".ConstruirQueryFiltro($lista_filtros_solapa[$x]) + "UNION ALL"."\n";
             //en el caso de perderse, mirar la base de datos AHRCS EN MOD_MEDIATECA.GET_CONSULKTA_FILTRO_CONSULTA
             //TAMBIEN SI TE PERDES ANDA A MEDIATECA_FIND_PAGE       
         }
@@ -106,17 +106,7 @@ class RepositorioQuery implements IRepositorioQuery{
 
 
 
-
-
-
-
-
-
-
-
-
-
-    public function ConstruirQuery($filtro_id){
+    public function ConstruirQueryFiltro($filtro_id){
         
         //FILTRO ID 0
         $CONSULTA_PROYECTO=' GROUP BY sub_proyecto_desc,sub_proyecto_id_principal ';
