@@ -3,6 +3,7 @@
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/INTERFACE-REPOSITORIO-SERVICIO/INTERFACE-REPOSITORIO-SERVICIO.php');
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-APLICACION/QUERY/REPOSITORIO-QUERY.php');
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-USUARIO/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIOS.php');
+require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-CATALOGO/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
 
 
 class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
@@ -21,13 +22,18 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         $lista_recursos_restringidos = array();
         $servicio_usuario = new RepositorioServicioUsuario();
 
+
+        
+
         if($user_id!=-1){
             $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos_user($user_id);
         }else{
             $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos();
         }
 
-        $recursos_mediateca;
+        $servicio_catalogo = new RepositorioServicioCatalogo();
+
+        $recursos_mediateca_filtros;
         $filtros;
 
         //seccion recursos
@@ -35,29 +41,32 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         //llamo al metodo get_recursos para obtener los recursos de la mediateca
 
         if($si_tengo_que_filtrar==1){
-            $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad); 
+            $recursos_mediateca_filtros=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
+            $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca_filtros->$aux_cadena_filtros,1);
         }else{
-            $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size); 
+            $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size);
+            $filtros=$servicio_catalogo->get_filtros($solapa,null,0);
         }
         
-                
+        //ESTADISTICA EN LA PRIMERA CARGA VALOR 0
+        //SI YA ESTA EN MEDIATECA Y  ACCIONA FILTROS VALOR 1
+        //SI YA ESTA EN MEDIATECA Y NO ACCIONA FILTROS VALOR 2    
+
        //seccion estadistica
-        if($calculo_estadistica == 1 ) // la variable calculo estadistica sera la bandera para determinar
+        if($calculo_estadistica == 0 ) // la variable calculo estadistica sera la bandera para determinar
         {                                          // si se calcularan o no las estadisticas 
              $estadistica_inicial = $this->query->estadistica_inicial();
              // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
             
-        }else{            
+        }else if ($calculo_estadistica == 1){            
             // aca se van a calcular las estadisticas de ser necesario 
+            $estadistica_inicial = null; // aca voy a ir a buscar las estadisticas dependiendo en que solapa fue.
+        }
+        else{
             $estadistica_inicial = null;
         }
-        
 
-        //SECCION FILTROS
-
-
-
-
+    
 
         return  $recursos_mediateca;
         //ACA IDENTIFICO UN FLAG DEL FRONT SI ES QUE DEBO CALCULAR O NO LAS ESTADISTICAS. SI NO LAS DEBO CALCULAR, LAS VOY A BUSCAR A BASE DE DATOS.

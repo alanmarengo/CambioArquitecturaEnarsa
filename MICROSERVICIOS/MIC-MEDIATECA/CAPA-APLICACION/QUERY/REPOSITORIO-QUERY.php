@@ -3,6 +3,8 @@
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/INTERFACE-REPOSITORIO-QUERY/INTERFACE-REPOSITORIO-QUERY.php');
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DATOS/capa-acceso.php');
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/ENTIDADES/ENTIDADES.php');
+require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/DTOS/DTOS.php');
+
 
 //INJECTAR EL ARCHIVO ENTIDADES.php DE ESTE MICROSERVICIO
 
@@ -92,9 +94,10 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
             // por cada registro, se agrega un objeto recurso al array contenedor 
             $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id);
-            array_push($array_recursos_mediateca,$recurso);      
-        
+            array_push($array_recursos_mediateca,$recurso);
+            
         }
+
         
         $conexion->desconectar(); // cierro la conexion 
 
@@ -385,11 +388,14 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             array_push($array_recursos_mediateca_filtrados,$recurso);      
         
         }
-        
+
+
+        //
+
         $conexion->desconectar(); // cierro la conexion 
 
         // se retorna un objeto json de los recursos 
-        return $array_recursos_filtrados_mediateca; 
+        return new RecursosFiltros($array_recursos_filtrados_mediateca,$aux_cadena_filtros); 
     
   
     }

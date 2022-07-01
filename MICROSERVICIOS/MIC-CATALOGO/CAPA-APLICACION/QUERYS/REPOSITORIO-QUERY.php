@@ -19,7 +19,9 @@ class RepositorioQuery implements IRepositorioQuery{
 
 
     
-    public function get_filtros($solapa,$consulta_base){ //
+    public function get_filtros($solapa,$aux_cadena_filtros,$si_tengo_que_filtrar){ 
+        $filtros= array();
+
         //ESTO RETORNA UNA LISTA DE FILTROSDTOS
 
         //SOLAPA 0, FILTROS_ID : 0,1,3,4
@@ -39,86 +41,46 @@ class RepositorioQuery implements IRepositorioQuery{
         $lista_filtros_solapa_1=[0,3,4,5];
         $lista_filtros_solapa_2=[0,2,3,4];
         $lista_filtros_solapa_3=[0,3,4];
+        $QUERY_DEFINITIVA;
 
         switch($solapa){
 
-           // SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro('$SUBQUERY',0) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL 
-
-           /* consulta que debo formar 
-           
-            $SQL = 	"SELECT F.*,COALESCE(T.total,0) AS total "
-            ." FROM "
-            ." mod_catalogo.vw_filtros_values F "
-            ."LEFT JOIN "
-            ."("
-            ."SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro('$SUBQUERY',0) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL "
-            ."SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro('$SUBQUERY',1) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL "
-            ."SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro('$SUBQUERY',2) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL "
-            ."SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro('$SUBQUERY',3) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL "
-            ."SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro('$SUBQUERY',5) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL "
-            ."SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro('$SUBQUERY',4) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL"
-            .")T "
-            ."ON F.filtro_id=T.filtro_id AND F.valor_id = T.valor_id ORDER BY valor_desc ASC;";
-           
-           */       
-        
         
             case 0:
-                // $lista_filtros_solapa_0=[0,1,3,4];
 
-                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(T.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
+                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
                 'LEFT JOIN('.
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",0) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",1) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",3) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",4) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                ")T ON F.filtro_id=T.filtro_id AND F.valor_id = T.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
+                '--QUERY_UNION'.
+                ")A ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
 
-                //$QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id), $QUERY_DEFINITIVA);           
-                //break;
+                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id,$extension_consulta_filtro_recursos,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
+                break;
 
             case 1:
 
-                //$lista_filtros_solapa_1=[0,3,4,5];
 
-                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(T.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
+                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
                 'LEFT JOIN('.
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",0) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",3) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",4) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",5) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                ")T ON F.filtro_id=T.filtro_id AND F.valor_id = T.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
+                '--QUERY_UNION'.
+                ")A ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
 
-                //$QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id), $QUERY_DEFINITIVA);           
-                //break;
+                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_1, 1, $filtro_id,$extension_consulta_filtro_recursos,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
+                break;
                     //HACER LO MISMO QUE ARRIBA Y PROBAR TODO
               
             case 2:
-
-                //$lista_filtros_solapa_2=[0,2,3,4];
-
-                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(T.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                'LEFT JOIN('.
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",0) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",2) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",3) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",4) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                ")T ON F.filtro_id=T.filtro_id AND F.valor_id = T.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
-
-                //$QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id), $QUERY_DEFINITIVA);           
-                //break;
+                    //
+                    break;
 
             case 3:
                 // $lista_filtros_solapa_3=[0,3,4];
-                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(T.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
+                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
                 'LEFT JOIN('.
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",0) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",3) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                    "SELECT * FROM mod_mediateca.get_filtros_total_consulta_filtro(".$consulta_base.",4) WHERE valor_id IS NOT NULL AND _desc IS NOT NULL UNION ALL".
-                ")T ON F.filtro_id=T.filtro_id AND F.valor_id = T.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
+                '--QUERY_UNION'.
+                ")A ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
 
-                // $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id), $QUERY_DEFINITIVA);           
-                // break;
+                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_3, 3, $filtro_id,$extension_consulta_filtro_recursos,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
+                break;
 
 
         }
@@ -131,27 +93,32 @@ class RepositorioQuery implements IRepositorioQuery{
 
     }
 
-    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa, $filtro_id){
-        // $LISTA_UNIONES=array();
+    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa, $filtro_id,$extension_consulta_filtro_recursos,$si_tengo_que_filtrar){
 
         $QUERY_RETURN="";
         
         $QUERY="SELECT '||_filtro_id||'::BIGINT AS filtro_id,sub_proyecto_desc::TEXT AS desc,
         CASE
-                    WHEN r.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
-                    ELSE r.sub_proyecto_id
+                    WHEN t.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
+                    ELSE t.sub_proyecto_id
                 END AS sub_proyecto_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total
-        FROM MIC-MEDIATECA.recurso r --db link
-        LEFT JOIN MIC-MEDIATECA.formato f ON f.formato_id = r.formato_id --con db link
+        FROM MIC-MEDIATECA.recurso t --db link
+        LEFT JOIN MIC-MEDIATECA.formato f ON f.formato_id = t.formato_id --con db link
         LEFT JOIN MIC-MEDIATECA.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id --db link
-        LEFT JOIN mod_catalogo.vw_estudio e ON r.estudios_id = e.estudios_id
-        LEFT JOIN mod_catalogo.subclase sc ON sc.subclase_id = r.subclase_id
-        LEFT JOIN mod_catalogo.clase cc ON sc.clase_id = cc.clase_id;
+        LEFT JOIN mod_catalogo.vw_estudio e ON t.estudios_id = e.estudios_id
+        LEFT JOIN mod_catalogo.cod_esia ce ON ce.cod_esia_id = t.cod_esia_id
+        LEFT JOIN mod_catalogo.cod_temporalidad ct ON ct.cod_temporalidad_id = r.cod_temporalidad_id
+        LEFT JOIN mod_catalogo.subclase sc ON sc.subclase_id = t.subclase_id
         WHERE tf.tipo_formato_solapa = $solapa AND valor_id IS NOT NULL AND _desc IS NOT NULL";
 
-        for($x=0;x<=$lista_filtros_solapa.lenght; $x++)
+        if($si_tengo_que_filtrar==1){
+            $QUERY+= "\n".$extension_consulta_filtro_recursos;
+        }
+        
+
+        for($x=0;x<=$lista_filtros_solapa.lenght-1; $x++)
         {
-            if($x==$lista_filtros_solapa_0.lenght)
+            if($x==$lista_filtros_solapa_0.lenght-1)
             {
                 $QUERY_RETURN+=$QUERY. "\n".ConstruirQueryFiltro($lista_filtros_solapa[$x]);
             }
@@ -163,6 +130,136 @@ class RepositorioQuery implements IRepositorioQuery{
         return $QUERY_RETURN;
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
