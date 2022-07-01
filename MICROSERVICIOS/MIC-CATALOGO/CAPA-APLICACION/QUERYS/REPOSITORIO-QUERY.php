@@ -53,7 +53,7 @@ class RepositorioQuery implements IRepositorioQuery{
                 '--QUERY_UNION'.
                 ")A ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
 
-                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id,$extension_consulta_filtro_recursos,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
+                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id,$aux_cadena_filtros,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
                 break;
 
             case 1:
@@ -64,7 +64,7 @@ class RepositorioQuery implements IRepositorioQuery{
                 '--QUERY_UNION'.
                 ")A ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
 
-                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_1, 1, $filtro_id,$extension_consulta_filtro_recursos,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
+                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_1, 1, $filtro_id,$aux_cadena_filtros,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
                 break;
                     //HACER LO MISMO QUE ARRIBA Y PROBAR TODO
               
@@ -79,7 +79,7 @@ class RepositorioQuery implements IRepositorioQuery{
                 '--QUERY_UNION'.
                 ")A ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
 
-                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_3, 3, $filtro_id,$extension_consulta_filtro_recursos,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
+                $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_3, 3, $filtro_id,$aux_cadena_filtros,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
                 break;
 
 
@@ -93,7 +93,7 @@ class RepositorioQuery implements IRepositorioQuery{
 
     }
 
-    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa, $filtro_id,$extension_consulta_filtro_recursos,$si_tengo_que_filtrar){
+    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa, $filtro_id,$aux_cadena_filtros,$si_tengo_que_filtrar){
 
         $QUERY_RETURN="";
         
@@ -112,7 +112,7 @@ class RepositorioQuery implements IRepositorioQuery{
         WHERE tf.tipo_formato_solapa = $solapa AND valor_id IS NOT NULL AND _desc IS NOT NULL";
 
         if($si_tengo_que_filtrar==1){
-            $QUERY+= "\n".$extension_consulta_filtro_recursos;
+            $QUERY+= "\n".$aux_cadena_filtros;
         }
         
 
