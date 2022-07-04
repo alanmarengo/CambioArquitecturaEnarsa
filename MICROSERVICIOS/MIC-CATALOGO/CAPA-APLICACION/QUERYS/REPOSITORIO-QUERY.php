@@ -2,6 +2,7 @@
 
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-CATALOGO/CAPA-DOMINIO/INTERFACE-QUERYS/REPOSITORIO-INTERFACE-QUERY.php');
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-CATALOGO/CAPA-DATOS/capa-acceso.php');
+require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-CATALOGO/CAPA-DOMINIO/DTOS/DTOS.php');
 //INCLUIR LA LIBRERIA DTO.
 
 class RepositorioQuery implements IRepositorioQuery{
@@ -19,9 +20,8 @@ class RepositorioQuery implements IRepositorioQuery{
 
 
     
-    public function get_filtros($solapa,$aux_cadena_filtros,$si_tengo_que_filtrar){ 
-        $filtros= array();
-
+    public function get_filtros($solapa,$aux_cadena_filtros,$si_tengo_que_filtrar, $filtro_id){ 
+      
         //ESTO RETORNA UNA LISTA DE FILTROSDTOS
 
         //SOLAPA 0, FILTROS_ID : 0,1,3,4
@@ -45,69 +45,99 @@ class RepositorioQuery implements IRepositorioQuery{
         
         $QUERY_DEFINITIVA = ""; // variable contenedora de consulta final a ejecutar. 
 
-        switch($solapa){
-        
-            case 0: // PROYECTO
+        if(empty($filtro_id)) // si filtro_id viene vacio,
+        {
+            switch($solapa)
+            {       
+                case 0: // PROYECTO
 
-                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_0, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
-                 " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
-                 break;
-
-
-                //    AND F.total!=0; <--- aun falta discriminar los valores 0, pero eso cuando hayan datos 
-                 //echo $QUERY_DEFINITIVA;
-                //$QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id,$aux_cadena_filtros,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
-                //break;
-
-            case 1: // AREA DE GESTION 
-
-                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_1, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
-                 " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
-                 break;
-
-                //$QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                //'LEFT JOIN'.
-                //'--QUERY_UNION'.
-                //")A ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
-
-                //$union = $this->ConstruirQueryUnion($lista_filtros_solapa_1, 1,$aux_cadena_filtros,$si_tengo_que_filtrar);
-
-               // $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",, $QUERY_DEFINITIVA);           
-                //break;
-                    //HACER LO MISMO QUE ARRIBA Y PROBAR TODO
-              
-            case 2: // 
-
-                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_2, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
-                 " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
-                    //
-                break;
-
-            case 3:
-
-                $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_3, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
-                 " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
-                    //
-                break;
+                    $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_0, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
+                    break;
 
 
+                    //    AND F.total!=0; <--- aun falta discriminar los valores 0, pero eso cuando hayan datos 
+                    //echo $QUERY_DEFINITIVA;
+                    //$QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id,$aux_cadena_filtros,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
+                    //break;
+
+                case 1: // AREA DE GESTION 
+
+                    $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_1, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
+                    break;
+
+                    //$QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
+                    //'LEFT JOIN'.
+                    //'--QUERY_UNION'.
+                    //")A ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
+
+                    //$union = $this->ConstruirQueryUnion($lista_filtros_solapa_1, 1,$aux_cadena_filtros,$si_tengo_que_filtrar);
+
+                // $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",, $QUERY_DEFINITIVA);           
+                    //break;
+                        //HACER LO MISMO QUE ARRIBA Y PROBAR TODO
+                
+                case 2: // 
+
+                    $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_2, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
+                        //
+                    break;
+
+                case 3:
+
+                    $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_3, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
+                        //
+                    break;
+
+
+            }
+
+            // ejecutar consulta final, para obtener lista de filtros 
+
+            $conexion = New ConexionCatalogo();
+
+            $resultado_final_filtros = $conexion->get_consulta($QUERY_DEFINITIVA);
+
+            //creo un array para guardar todos los filtros 
+            $filtros= array();
+
+            // recorro el arreglo con los datos de la consulta 
+            for($x=0; $x<=count($resultado_final_filtros)-1; $x++)
+            {
+                $filtro_nombre= $resultado_final_filtros[$x]['filtro_nombre'];
+                $filtro_id= $resultado_final_filtros[$x]['filtro_id'];
+                $valor_id= $resultado_final_filtros[$x]['valor_id'];
+                $valor_desc= $resultado_final_filtros[$x]['valor_desc'];
+                $parent_filtro_id= $resultado_final_filtros[$x]['parent_filtro_id'];
+                $parent_valor_id= $resultado_final_filtros[$x]['parent_valor_id']; 
+                $total= $resultado_final_filtros[$x]['total'];    
+
+                // por cada registro, se agrega un objeto FiltroDTO al array contenedor    
+
+                $filtro = new FiltroDTO($filtro_nombre,$filtro_id,$valor_id,$valor_desc,$total,$parent_valor_id);
+                array_push($filtros,$filtro);
+                
+            }
         }
 
-        // ejecutar consulta final, para obtener lista de filtros 
+        
+        $conexion->desconectar(); // cierro la conexion 
 
-        $conexion = New ConexionCatalogo();
-
-        $resultado_final_filtros = $conexion->get_consulta($QUERY_DEFINITIVA);
+        // se retorna un objeto json de los filtros 
+        return $filtros; 
 
         //EJECUTAR QUERY DEFINITIVA Y VAS A RECORRER ESE RESULTADO Y VAS A FORMAR Y DEVOLVER UNA LISTA DE FILTROSDTOS
 
     }
 
-    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa,$aux_cadena_filtros,$si_tengo_que_filtrar){
+    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa,$aux_cadena_filtros,$si_tengo_que_filtrar, $filtro_id){
 
         // NOTA: esta funcion devuelve una subconsulta  con las uniones de las consultas de los filtros
 
@@ -361,4 +391,4 @@ class RepositorioQuery implements IRepositorioQuery{
 }
 
 $test = new RepositorioQuery();
-echo $test->get_filtros(0,"(1,2,3)",1);
+print_r( $test->get_filtros(0,"(1,2,3)",1));
