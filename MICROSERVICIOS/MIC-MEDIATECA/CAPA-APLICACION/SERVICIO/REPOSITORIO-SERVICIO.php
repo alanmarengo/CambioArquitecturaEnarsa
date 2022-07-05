@@ -16,13 +16,11 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 
     // funcion para traer todos los recursos de la mediateca 
-    public function get_Recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar)
+    public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$filtro_id)
     {
         //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
         $lista_recursos_restringidos = array();
         $servicio_usuario = new RepositorioServicioUsuario();
-
-
         
 
         if($user_id!=-1){
@@ -33,19 +31,19 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
         $servicio_catalogo = new RepositorioServicioCatalogo();
 
-        $recursos_mediateca_filtros;
-        $filtros;
+        $recursos_mediateca_filtros; // variable contenedora de los recursos
 
-        //seccion recursos
+        $filtros; // variable contenedora de los filtros 
 
+        //seccion logica de obtencion de recursos y filtros  
         //llamo al metodo get_recursos para obtener los recursos de la mediateca
 
-        if($si_tengo_que_filtrar==1){
-            $recursos_mediateca_filtros=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
-            $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca_filtros->$aux_cadena_filtros,1);
+        if($si_tengo_que_filtrar==1){  
+            $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
+            $filtros=$servicio_catalogo->get_filtros($solapa,$lista_recursos_restringidos,$si_tengo_que_filtrar, $filtro_id);
         }else{
             $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size);
-            $filtros=$servicio_catalogo->get_filtros($solapa,null,0);
+            $filtros=$servicio_catalogo->get_filtros($solapa,$lista_recursos_restringidos,$si_tengo_que_filtrar, $filtro_id);
         }
         
         //ESTADISTICA EN LA PRIMERA CARGA VALOR 0
@@ -53,9 +51,10 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         //SI YA ESTA EN MEDIATECA Y NO ACCIONA FILTROS VALOR 2    
 
        //seccion estadistica
+       $calculo_estadistica = 0;
         if($calculo_estadistica == 0 ) // la variable calculo estadistica sera la bandera para determinar
         {                                          // si se calcularan o no las estadisticas 
-             $estadistica_inicial = $this->query->estadistica_inicial();
+             $estadistica_inicial = $this->query->get_estadistica_inicial();
              // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
             
         }else if ($calculo_estadistica == 1){            
@@ -66,9 +65,13 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
             $estadistica_inicial = null;
         }
 
-    
+        $array_respuesta_final = Array();
 
-        return  $recursos_mediateca;
+        array_push($array_respuesta_final,$recursos_mediateca);
+        array_push($array_respuesta_final,$filtros);
+        array_push($array_respuesta_final,$estadistica_inicial);
+
+        return  $array_respuesta_final;
         //ACA IDENTIFICO UN FLAG DEL FRONT SI ES QUE DEBO CALCULAR O NO LAS ESTADISTICAS. SI NO LAS DEBO CALCULAR, LAS VOY A BUSCAR A BASE DE DATOS.
         //SI LAS DEBO CALCULAR, DEBO CALCULAR LAS ESTADISTICAS CON LOS FILTROS, TANTO ACA EN MEDIATECA COMO EN LOS DEMAS MICROSERVICIOS.
         //LA ENCARGADA DE DEVOLVER LOS FILTROS Y LAS ESTADISITCAS DE ESOS FILTROS SERA EL MICROSERVICIO CATALOGO
@@ -79,16 +82,44 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 
     }
+
+    // funcion para buscar los filtros
     
     
 }
 
-// prueba de aplicacion 
- //$obtener_recursos_mediateca = new RepositorioServicioMediateca();
- //$recursos_mediateca = $obtener_recursos_mediateca->get_recursos(1,2,5,0);
- //print_r($recursos_mediateca);
- //print_r($obtener_recursos_mediateca->get_Recursos_idUser(10,1));
+ //prueba de aplicacion 
+ $obtener_recursos_mediateca = new RepositorioServicioMediateca();
+ //$lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar
+ //$user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar)
+ // 
+ // $user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$filtro_id
 
+ // si no hay que filtrar 
+ // test solapa 0 - documentos 
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,0,1,20,"","","","","","","","","",0,""); // test solapa cero, sin filtros 
+ //print_r($recursos_mediateca);
+
+ // test solapa 1  - recursos audivisuales
+ // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,1,1,20,"","","","","","","","","",0,"");
+ // print_r($recursos_mediateca);
+
+ // test solapa 3 - novedades 
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,3,1,20,"","","","","","","","","",0,"");
+ //print_r($recursos_mediateca);
+
+// si hay que filtrar
+ // test solapa 0 - documentos 
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,0,1,20,"","","","","","","","","",1,""); // test solapa cero, sin filtros 
+ //print_r($recursos_mediateca);
+
+ // test solapa 1  - recursos audivisuales
+ // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,1,1,20,"","","","","","","","","",1,"");
+ // print_r($recursos_mediateca);
+
+ // test solapa 3 - novedades 
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,3,1,20,"","","","","","","","","",1,"");
+ //print_r($recursos_mediateca);
 
 
 

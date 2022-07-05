@@ -91,7 +91,6 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             $tema= $recursos_mediateca[$x]['recurso_categoria_desc'];            
 
     
-
             // por cada registro, se agrega un objeto recurso al array contenedor 
             $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id);
             array_push($array_recursos_mediateca,$recurso);
@@ -113,7 +112,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         // instancio una nueva conexion 
         $conexion = new ConexionMediateca();
 
-        //realizo la consulta            
+        //realizo la consulta 
+        //echo $cantidad_recursos_solapa;           
         $aux_cantidad = $conexion->get_consulta($cantidad_recursos_solapa);   
 
         $conexion->desconectar(); // cierro la conexion
@@ -192,7 +192,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                         $aux_cadena_filtros .= "";
                     }
 
-                }
+                } break;
             case 1:
                 if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
                 {
@@ -211,7 +211,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                     }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
                         $aux_cadena_filtros .= "";
                     }
-                }
+                } break;
             case 2:
                 if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
                 {
@@ -230,7 +230,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                     }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
                         $aux_cadena_filtros .= "";
                     }
-                }
+                } break;
         }
         
         if(!empty($proyecto)) { $aux_cadena_filtros .= " AND e.sub_proyecto_id = ".$proyecto; }
@@ -242,56 +242,56 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         
         // variable paginado  
-        $consulta_paginado = "SELECT COUNT(*) FROM (SELECT r.estudios_id as estudios_id_rec,'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
-                                                            r.recurso_id AS origen_id_especifico, 
-                                                            r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
-                                                            NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
-                                                            NULL::bigint AS objetos_id, r.recurso_categoria_id, r.tipo_recurso_id, 
-                                                            r.formato_id, r.recurso_titulo, r.recurso_desc, r.recurso_fecha, 
-                                                            r.recurso_autores, r.recurso_path_url, r.recurso_size, r.territorio_id,
-                                                            r.sub_proyecto_id, r.fecha_observatorio,
-                                                            tr.tipo_recurso_desc, rc.recurso_categoria_desc,f.tipo_formato_id
-                                                            ,f.visualizacion_tipo_id, f.formato_desc, f.formato_extension,vt.visualizacion_tipo_desc,
-                                                            tf.tipo_formato_solapa
-                                                    FROM ".'"MIC-MEDIATECA".recurso as r
-                                                    LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
-                                                    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
-                                                    LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
-                                                    LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
-                                                    LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id) AS T
-                                                    LEFT JOIN dblink('."'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                                    'SELECT * FROM ".'"MIC-CATALOGO".cod_esia'.') 
-                                                                    AS ce (cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)  
-                                                                    ON t.cod_esia_id = ce.cod_esia_id
-                                                    LEFT JOIN dblink('."'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                                    'select cod_temp,desde AS tempo_desde, hasta AS tempo_hasta, descripcion AS tempo_desc from ".'"MIC-CATALOGO".cod_temporalidad'.") 
-                                                                    AS ct (cod_temp bigint ,tempo_desde  text,tempo_hasta  text,tempo_desc  text)  
-                                                                    ON t.cod_temporalidad_id = ct.cod_temp
-                                                    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                                    'select subclase_id, clase_id, subclase_desc, subclase_cod, estado_subclase, 
-                                                                            cod_unsubclase, descripcio, cod_nom, fec_bbdd from ".'"MIC-CATALOGO".subclase'.") 
-                                                                    AS sc (subclase_id bigint,clase_id bigint, subclase_desc text, subclase_cod text, estado_subclase bigint, 
-                                                                        cod_unsubclase text, descripcio text, cod_nom text, fec_bbdd text)  
-                                                                    ON T.subclase_id = sc.subclase_id
-                                                    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                                    'SELECT e.estudios_id, e.estudios_palabras_clave, e.sub_proyecto_id, 
-                                                                            e.estudio_estado_id,e.nombre,e.fecha, e.institucion,e.responsable,
-                                                                            e.equipo, e.cod_oficial, e.descripcion, e.fecha_text_original,
-                                                                            e.institucion_id, sp.proyecto_id,p.proyecto_desc,
-                                                                            p.proyecto_extent,i.institucion_nombre, i.institucion_tel,
-                                                                            i.institucion_contacto, i.institucion_email
-                                                                    FROM ".'"MIC-CATALOGO".estudios e
-                                                                    LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = e.sub_proyecto_id
-                                                                    LEFT JOIN "MIC-CATALOGO".proyecto p ON sp.proyecto_id = p.proyecto_id
-                                                                    LEFT JOIN "MIC-CATALOGO".institucion i ON i.institucion_id = e.institucion_id'.") 
-                                                                    AS e (estudios_id bigint, estudios_palabras_clave text, sub_proyecto_id bigint, 
-                                                                            estudio_estado_id bigint,nombre text,fecha date, institucion text,responsable text,
-                                                                            equipo text, cod_oficial text, descripcion text, fecha_text_original text,
-                                                                            institucion_id bigint, proyecto_id bigint,proyecto_desc text,
-                                                                            proyecto_extent text,institucion_nombre text, institucion_tel text,
-                                                                            institucion_contacto text, institucion_email text)  
-                                                                    ON t.estudios_id_rec = e.estudios_id
-                                                WHERE t.tipo_formato_solapa = ";
+        $consulta_paginado = "SELECT COUNT(*) as cant_rec_solapa  FROM (SELECT r.estudios_id as estudios_id_rec,'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+                                                                    r.recurso_id AS origen_id_especifico, r.recurso_id ,
+                                                                    r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
+                                                                    NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
+                                                                    NULL::bigint AS objetos_id, r.recurso_categoria_id, r.tipo_recurso_id, 
+                                                                    r.formato_id, r.recurso_titulo, r.recurso_desc, r.recurso_fecha, 
+                                                                    r.recurso_autores, r.recurso_path_url, r.recurso_size, r.territorio_id,
+                                                                    r.sub_proyecto_id, r.fecha_observatorio,
+                                                                    tr.tipo_recurso_desc, rc.recurso_categoria_desc,f.tipo_formato_id
+                                                                    ,f.visualizacion_tipo_id, f.formato_desc, f.formato_extension,vt.visualizacion_tipo_desc,
+                                                                    tf.tipo_formato_solapa
+                                                            FROM ".'"MIC-MEDIATECA".recurso as r
+                                                            LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+                                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+                                                            LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
+                                                            LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
+                                                            LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id) AS T
+                                                            LEFT JOIN dblink('."'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                                                            'SELECT * FROM ".'"MIC-CATALOGO".cod_esia'."') 
+                                                                            AS ce (cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)  
+                                                                            ON t.cod_esia_id = ce.cod_esia_id
+                                                            LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                                                            'select cod_temp,desde AS tempo_desde, hasta AS tempo_hasta, descripcion AS tempo_desc from ".'"MIC-CATALOGO".cod_temporalidad'."') 
+                                                                            AS ct (cod_temp bigint ,tempo_desde  text,tempo_hasta  text,tempo_desc  text)  
+                                                                            ON t.cod_temporalidad_id = ct.cod_temp
+                                                            LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                                                            'select subclase_id, clase_id, subclase_desc, subclase_cod, estado_subclase, 
+                                                                                    cod_unsubclase, descripcio, cod_nom, fec_bbdd from ".'"MIC-CATALOGO".subclase'."') 
+                                                                            AS sc (subclase_id bigint,clase_id bigint, subclase_desc text, subclase_cod text, estado_subclase bigint, 
+                                                                                cod_unsubclase text, descripcio text, cod_nom text, fec_bbdd text)  
+                                                                            ON T.subclase_id = sc.subclase_id
+                                                            LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                                                            'SELECT e.estudios_id, e.estudios_palabras_clave, e.sub_proyecto_id, 
+                                                                                    e.estudio_estado_id,e.nombre,e.fecha, e.institucion,e.responsable,
+                                                                                    e.equipo, e.cod_oficial, e.descripcion, e.fecha_text_original,
+                                                                                    e.institucion_id, sp.proyecto_id,p.proyecto_desc,
+                                                                                    p.proyecto_extent,i.institucion_nombre, i.institucion_tel,
+                                                                                    i.institucion_contacto, i.institucion_email
+                                                                            FROM ".'"MIC-CATALOGO".estudios e
+                                                                            LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = e.sub_proyecto_id
+                                                                            LEFT JOIN "MIC-CATALOGO".proyecto p ON sp.proyecto_id = p.proyecto_id
+                                                                            LEFT JOIN "MIC-CATALOGO".institucion i ON i.institucion_id = e.institucion_id'."') 
+                                                                            AS e (estudios_id bigint, estudios_palabras_clave text, sub_proyecto_id bigint, 
+                                                                                    estudio_estado_id bigint,nombre text,fecha date, institucion text,responsable text,
+                                                                                    equipo text, cod_oficial text, descripcion text, fecha_text_original text,
+                                                                                    institucion_id bigint, proyecto_id bigint,proyecto_desc text,
+                                                                                    proyecto_extent text,institucion_nombre text, institucion_tel text,
+                                                                                    institucion_contacto text, institucion_email text)  
+                                                                            ON t.estudios_id_rec = e.estudios_id
+                                                        WHERE t.tipo_formato_solapa = ";
 
         $total_registros = $this->get_cantidad_recursos_solapa($consulta_paginado,$solapa,$aux_cadena_filtros,$extension_consulta_filtro_recursos);
 
@@ -305,7 +305,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                             WHEN t.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
                                             ELSE t.sub_proyecto_id
                                          END AS sub_proyecto_id_principal FROM (SELECT r.estudios_id as estudios_id_rec,'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
-                                                            r.recurso_id AS origen_id_especifico, 
+                                                            r.recurso_id AS origen_id_especifico, r.recurso_id,
                                                             r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
                                                             NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
                                                             NULL::bigint AS objetos_id, r.recurso_categoria_id, r.tipo_recurso_id, 
@@ -322,16 +322,16 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                                     LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                                     LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id) AS T
                                                     LEFT JOIN dblink('."'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                                    'SELECT * FROM ".'"MIC-CATALOGO".cod_esia'.') 
+                                                                    'SELECT * FROM ".'"MIC-CATALOGO".cod_esia'."') 
                                                                     AS ce (cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)  
                                                                     ON t.cod_esia_id = ce.cod_esia_id
-                                                    LEFT JOIN dblink('."'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                                    'select cod_temp,desde AS tempo_desde, hasta AS tempo_hasta, descripcion AS tempo_desc from ".'"MIC-CATALOGO".cod_temporalidad'.") 
+                                                    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                                                    'select cod_temp,desde AS tempo_desde, hasta AS tempo_hasta, descripcion AS tempo_desc from ".'"MIC-CATALOGO".cod_temporalidad'."') 
                                                                     AS ct (cod_temp bigint ,tempo_desde  text,tempo_hasta  text,tempo_desc  text)  
                                                                     ON t.cod_temporalidad_id = ct.cod_temp
                                                     LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
                                                                     'select subclase_id, clase_id, subclase_desc, subclase_cod, estado_subclase, 
-                                                                            cod_unsubclase, descripcio, cod_nom, fec_bbdd from ".'"MIC-CATALOGO".subclase'.") 
+                                                                            cod_unsubclase, descripcio, cod_nom, fec_bbdd from ".'"MIC-CATALOGO".subclase'."') 
                                                                     AS sc (subclase_id bigint,clase_id bigint, subclase_desc text, subclase_cod text, estado_subclase bigint, 
                                                                         cod_unsubclase text, descripcio text, cod_nom text, fec_bbdd text)  
                                                                     ON T.subclase_id = sc.subclase_id
@@ -345,7 +345,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                                                     FROM ".'"MIC-CATALOGO".estudios e
                                                                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = e.sub_proyecto_id
                                                                     LEFT JOIN "MIC-CATALOGO".proyecto p ON sp.proyecto_id = p.proyecto_id
-                                                                    LEFT JOIN "MIC-CATALOGO".institucion i ON i.institucion_id = e.institucion_id'.") 
+                                                                    LEFT JOIN "MIC-CATALOGO".institucion i ON i.institucion_id = e.institucion_id'."') 
                                                                     AS e (estudios_id bigint, estudios_palabras_clave text, sub_proyecto_id bigint, 
                                                                             estudio_estado_id bigint,nombre text,fecha date, institucion text,responsable text,
                                                                             equipo text, cod_oficial text, descripcion text, fecha_text_original text,
@@ -358,6 +358,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         
         // instancio una nueva conexion 
         $conexion = new ConexionMediateca();
+        echo $consulta_definitiva;
         
         //realizo la consulta            
         $recursos_mediateca_filtrados = $conexion->get_consulta($consulta_definitiva);   
@@ -395,10 +396,11 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         $conexion->desconectar(); // cierro la conexion 
 
         // se retorna un objeto json de los recursos 
-        return new RecursosFiltros($array_recursos_filtrados_mediateca,$aux_cadena_filtros); 
+        return new RecursosFiltros($array_recursos_mediateca_filtrados,$aux_cadena_filtros); 
     
   
     }
+
 }
 
 $test = new RepositorioQueryMediateca();

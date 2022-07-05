@@ -21,7 +21,7 @@ class Recurso{
     public $territorio_simpli = null;
     public $territorio_fec_bbdd = null;
 
-    public function __construct($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$ico,$territorio_id){
+    public function __construct($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id){
         
         $this->solapa = $solapa;
         $this->origen_id = $origen_id;
@@ -34,7 +34,6 @@ class Recurso{
         $this->estudios_id = $estudios_id;
         $this->fecha = $fecha;
         $this->tema = $tema;
-        $this->ico = $ico;
         $this->territorio_id = $territorio_id;
         $this->territorio_desc;
         $this->territorio_fec_bbdd_date;
