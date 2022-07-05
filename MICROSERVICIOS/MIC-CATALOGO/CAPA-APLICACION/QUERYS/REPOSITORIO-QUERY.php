@@ -24,12 +24,14 @@ class RepositorioQuery implements IRepositorioQuery{
       
         //ESTO RETORNA UNA LISTA DE FILTROSDTOS
 
-        //SOLAPA 0, FILTROS_ID : 0,1,3,4
+        // cada solapa, hace utiliza una determinada cantidad de filtros 
+        //SOLAPA 0, FILTROS_ID : 0,1,3,4 -> filtros_id 
         //SOLAPA 1, FILTROS_ID : 0,3,4,5
         //SOLAPA 2, FILTROS_ID : 0,2,3,4
         //SOLAPA 3, FILTROS_ID : 0,3,4
 
-         //OBRA/PROYECTO : FILTRO_ID 0
+        // cada filtro tiene una clase o tipo 
+        //OBRA/PROYECTO : FILTRO_ID 0
         //AREA GESTION : FILTRO_ID 1
         //RECURSOS TECNICOS: FILTRO_ID 2
         //AREA TEMATICA : FILTRO_ID 3
@@ -49,10 +51,10 @@ class RepositorioQuery implements IRepositorioQuery{
         {
             switch($solapa)
             {       
-                case 0: // PROYECTO
+                case 0:
 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_0, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_0, 0,$aux_cadena_filtros,$si_tengo_que_filtrar,$filtro_id).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
                     break;
 
@@ -62,10 +64,10 @@ class RepositorioQuery implements IRepositorioQuery{
                     //$QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id,$aux_cadena_filtros,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
                     //break;
 
-                case 1: // AREA DE GESTION 
+                case 1: 
 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_1, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_1, 0,$aux_cadena_filtros,$si_tengo_que_filtrar,$filtro_id).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
                     break;
 
@@ -83,7 +85,7 @@ class RepositorioQuery implements IRepositorioQuery{
                 case 2: // 
 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_2, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_2, 0,$aux_cadena_filtros,$si_tengo_que_filtrar,$filtro_id).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
                         //
                     break;
@@ -91,9 +93,9 @@ class RepositorioQuery implements IRepositorioQuery{
                 case 3:
 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_3, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_3, 0,$aux_cadena_filtros,$si_tengo_que_filtrar,$filtro_id).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
-                        //
+                       
                     break;
 
 
@@ -104,7 +106,7 @@ class RepositorioQuery implements IRepositorioQuery{
             $conexion = New ConexionCatalogo();
 
             $resultado_final_filtros = $conexion->get_consulta($QUERY_DEFINITIVA);
-
+            
             //creo un array para guardar todos los filtros 
             $filtros= array();
 
@@ -125,6 +127,9 @@ class RepositorioQuery implements IRepositorioQuery{
                 array_push($filtros,$filtro);
                 
             }
+
+        }else if (!empty($filtro_id)){
+            // aca va la logica para cuando se calculan los filtros para un filtro id 
         }
 
         
@@ -183,7 +188,7 @@ class RepositorioQuery implements IRepositorioQuery{
                                     WHERE t.tipo_formato_solapa ='.$solapa;    
                     break;               
 
-                case 1 : // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
+                case 1: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
                     $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
                                         t.recurso_categoria_id::BIGINT AS valor_id,
                                         COUNT(*)::BIGINT AS total 
@@ -200,7 +205,7 @@ class RepositorioQuery implements IRepositorioQuery{
                                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
                                     WHERE t.tipo_formato_solapa = '.$solapa; 
                     break;
-                    case 2: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
+                case 2: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
                         $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
                                             t.recurso_categoria_id::BIGINT AS valor_id,
                                             COUNT(*)::BIGINT AS total 
@@ -390,5 +395,5 @@ class RepositorioQuery implements IRepositorioQuery{
 
 }
 
-$test = new RepositorioQuery();
-print_r( $test->get_filtros(0,"(1,2,3)",1));
+//$test = new RepositorioQuery();
+//print_r( $test->get_filtros(0,"(1,2,3)",1));
