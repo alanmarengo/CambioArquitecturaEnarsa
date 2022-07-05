@@ -391,7 +391,34 @@ class RepositorioQuery implements IRepositorioQuery{
         }
     }
 
+    public function get_filtros_activo(){
 
+        //ESTO RETORNA UNA LISTA DE FILTROSDTOS
+
+        // cada solapa, hace utiliza una determinada cantidad de filtros 
+        //SOLAPA 0, FILTROS_ID : 0,1,3,4 -> filtros_id 
+        //SOLAPA 1, FILTROS_ID : 0,3,4,5
+        //SOLAPA 2, FILTROS_ID : 0,2,3,4
+        //SOLAPA 3, FILTROS_ID : 0,3,4
+
+        // cada filtro tiene una clase o tipo 
+        //OBRA/PROYECTO : FILTRO_ID 0
+        //AREA GESTION : FILTRO_ID 1
+        //RECURSOS TECNICOS: FILTRO_ID 2
+        //AREA TEMATICA : FILTRO_ID 3
+        //TEMA/SUBTEMA: FILTRO_ID 4
+        //RECURSOS AUDIOVISUALES: FILTRO ID 5
+
+        //DEPENDIENDO DE QUE SOLAPA ENTRE Y QUE FILTROS ID CALCULO ENTONCES:
+        $lista_filtros_solapa_0=[0,1,3,4];
+        $lista_filtros_solapa_1=[0,3,4,5];
+        $lista_filtros_solapa_2=[0,2,3,4];
+        $lista_filtros_solapa_3=[0,3,4];
+
+        // a partir de aca desarrollar la logica 
+        
+
+    }
 
 }
 
