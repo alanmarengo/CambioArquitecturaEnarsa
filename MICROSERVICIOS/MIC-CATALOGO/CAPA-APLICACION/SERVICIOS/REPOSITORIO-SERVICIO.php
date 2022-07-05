@@ -19,6 +19,10 @@ class RepositorioServicioCatalogo implements IRepositorioServicioCatalogo{
         return $this->query->get_filtros($solapa,$aux_cadena_filtros,$si_tengo_que_filtrar,$filtro_id);     //
     }
 
-
+    public function get_filtros_activo()
+    {
+        return $this->query->get_filtros_activo();
+    }
+        
 
 }
