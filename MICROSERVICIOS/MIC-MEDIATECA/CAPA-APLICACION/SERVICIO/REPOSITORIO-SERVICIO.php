@@ -4,6 +4,7 @@ require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERV
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-APLICACION/QUERY/REPOSITORIO-QUERY.php');
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-USUARIO/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIOS.php');
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-CATALOGO/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/DTOS/DTOS.php');
 
 
 class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
@@ -18,6 +19,13 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
     // funcion para traer todos los recursos de la mediateca 
     public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar)
     {
+
+
+        $respuesta= new Respuesta();
+        $respuesta->solapa=$solapa;
+        $respuesta->pagina=$current_page;
+
+
         //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
         $lista_recursos_restringidos = array();
         $servicio_usuario = new RepositorioServicioUsuario();
@@ -51,27 +59,32 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         //SI YA ESTA EN MEDIATECA Y NO ACCIONA FILTROS VALOR 2    
 
        //seccion estadistica
-       $calculo_estadistica = 0;
+        $calculo_estadistica = 0;
         if($calculo_estadistica == 0 ) // la variable calculo estadistica sera la bandera para determinar
         {                                          // si se calcularan o no las estadisticas 
              $estadistica_inicial = $this->query->get_estadistica_inicial();
-             // aca traeremos las estadisticas iniciales, si es que no se deben calcular de nuevo
+             $respuesta-> registros_total_0 =  $estadistica_inicial->documentos;
+             $respuesta-> $registros_total_1= $estadistica_inicial->recursos_audiovisuales;
+             $respuesta-> $registros_total_2=$estadistica_inicial->recursos_tecnicos;
+             $respuesta-> $registros_total_3=$estadistica_inicial->novedades;
             
         }else if ($calculo_estadistica == 1){            
             // aca se van a calcular las estadisticas de ser necesario 
-            $estadistica_inicial = null; // aca voy a ir a buscar las estadisticas dependiendo en que solapa fue.
+            $estadistica_solapa_2=null; // aca hay que poner el servicio de el microservicio que sea que nos devuelva la estadisica de la solapa 2;
+
+            $respuesta-> registros_total_0 =$recursos_mediateca->EstadisticasFiltros->estadistica_documentos;
+            $respuesta-> $registros_total_1=$recursos_mediateca->EstadisticasFiltros->estadistica_recursos_audiovisuales;
+            $respuesta-> $registros_total_2=$estadistica_solapa_2;
+            $respuesta-> $registros_total_3=$recursos_mediateca->EstadisticasFiltros->estadistica_recursos_audiovisuales;
         }
-        else{
-            $estadistica_inicial = null;
-        }
 
-        $array_respuesta_final = Array();
 
-        array_push($array_respuesta_final,$recursos_mediateca);
-        array_push($array_respuesta_final,$filtros);
-        array_push($array_respuesta_final,$estadistica_inicial);
+        $respuesta->filtros=$filtros;
+        $respuesta->recordset=$recursos_mediateca;
 
-        return  $array_respuesta_final;
+
+
+        return  $respuesta;
         //ACA IDENTIFICO UN FLAG DEL FRONT SI ES QUE DEBO CALCULAR O NO LAS ESTADISTICAS. SI NO LAS DEBO CALCULAR, LAS VOY A BUSCAR A BASE DE DATOS.
         //SI LAS DEBO CALCULAR, DEBO CALCULAR LAS ESTADISTICAS CON LOS FILTROS, TANTO ACA EN MEDIATECA COMO EN LOS DEMAS MICROSERVICIOS.
         //LA ENCARGADA DE DEVOLVER LOS FILTROS Y LAS ESTADISITCAS DE ESOS FILTROS SERA EL MICROSERVICIO CATALOGO

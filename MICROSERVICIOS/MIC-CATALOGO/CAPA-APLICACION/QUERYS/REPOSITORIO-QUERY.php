@@ -167,7 +167,7 @@ class RepositorioQuery implements IRepositorioQuery{
         {            
             switch($lista_filtros_solapa[$x])
             {
-                case 0:
+                case 0:                                                                                                            //CONSEGUIR COMO SEA QUE ENTRE EL CASE DE ALLA ARRIBA
                     $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,sp.sub_proyecto_desc::TEXT AS desc,recurso_categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
                                     FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
                                                 'SELECT t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
