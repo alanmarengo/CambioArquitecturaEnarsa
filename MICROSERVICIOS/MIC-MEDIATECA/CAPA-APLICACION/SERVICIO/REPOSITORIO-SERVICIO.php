@@ -16,7 +16,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 
     // funcion para traer todos los recursos de la mediateca 
-    public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$filtro_id)
+    public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar)
     {
         //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
         $lista_recursos_restringidos = array();
@@ -40,10 +40,10 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
         if($si_tengo_que_filtrar==1){  
             $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
-            $filtros=$servicio_catalogo->get_filtros($solapa,$lista_recursos_restringidos,$si_tengo_que_filtrar, $filtro_id);
+            $filtros=$servicio_catalogo->get_filtros($solapa,$lista_recursos_restringidos,$si_tengo_que_filtrar);
         }else{
             $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size);
-            $filtros=$servicio_catalogo->get_filtros($solapa,$lista_recursos_restringidos,$si_tengo_que_filtrar, $filtro_id);
+            $filtros=$servicio_catalogo->get_filtros($solapa,$lista_recursos_restringidos,$si_tengo_que_filtrar);
         }
         
         //ESTADISTICA EN LA PRIMERA CARGA VALOR 0
