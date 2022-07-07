@@ -80,12 +80,12 @@ class RepositorioQuery implements IRepositorioQuery{
                     //break;
                         //HACER LO MISMO QUE ARRIBA Y PROBAR TODO
                 
-                case 2: // 
-
+                case 2: //  en solapa 2 por el momento no se hace nada 
+                    /*
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
                     'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_2, 2,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
-                        //
+                        // */
                     break;
 
                 case 3:
