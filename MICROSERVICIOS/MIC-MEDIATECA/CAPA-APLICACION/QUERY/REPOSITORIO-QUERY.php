@@ -97,11 +97,12 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             
         }
 
+        //CALCULAR EN ALGUN LUGAR CANTIDAD DE PAGINAS
         
         $conexion->desconectar(); // cierro la conexion 
 
         // se retorna un objeto json de los recursos 
-        return $array_recursos_mediateca; 
+        return new Recursos($recursos_mediateca); // CANTIDAD DE PAGINAS // ,  $extension_consulta_filtro_recursos );
     }
 
     public function get_cantidad_recursos_solapa($query, $solapa, $filtros, $extension_consulta_filtro_recursos)
@@ -398,7 +399,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         $estadisticas_filtrado = get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos);
 
         // se retorna un objeto json de los recursos 
-        return new RecursosFiltros($array_recursos_mediateca_filtrados,$aux_cadena_filtros,$estadisticas_filtrado ); 
+    return new RecursosFiltros($array_recursos_mediateca_filtrados,$aux_cadena_filtros,$estadisticas_filtrado, $extension_consulta_filtro_recursos /** , cantidad de paginas*/); 
     
   
     }

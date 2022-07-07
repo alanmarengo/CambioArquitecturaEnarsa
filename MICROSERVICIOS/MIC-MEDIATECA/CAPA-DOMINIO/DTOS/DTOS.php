@@ -1,17 +1,31 @@
 <?php
-
+//esto devuelve get_recursos_filtrado
 class RecursosFiltros{
     public $recursos;
     public $aux_cadena_filtros;
+    public $lista_recursos_restringidos;
     public $CantidadPaginas;
     public $EstadisticasFiltros;
 
 
-    public function __construct($recursos,$aux_cadena_filtros,$CantidadPaginas,$EstadisticasFiltros){
+    public function __construct($recursos,$aux_cadena_filtros,$CantidadPaginas,$EstadisticasFiltros,$lista_recursos_restringidos){
         $this->recursos=$recursos;
         $this->aux_cadena_filtros=$aux_cadena_filtros; 
         $this->CantidadPaginas=$CantidadPaginas;
         $this->EstadisticasFiltros=$EstadisticasFiltros;
+        $this->lista_recursos_restringidos=$lista_recursos_restringidos;
+    }
+}
+
+//esto devuelve get_recursos
+class Recursos{
+    public $recursos;
+    public $lista_recursos_restringidos;
+    public $CantidadPaginas;
+    public function __construct($recursos,$CantidadPaginas,$lista_recursos_restringidos){
+        $this->recursos=$recursos;
+        $this->CantidadPaginas=$CantidadPaginas;
+        $this->lista_recursos_restringidos=$lista_recursos_restringidos;
     }
 }
 

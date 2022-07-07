@@ -19,7 +19,7 @@ class RepositorioQuery implements IRepositorioQuery{
 
 
     
-    public function get_filtros($solapa,$aux_cadena_filtros,$si_tengo_que_filtrar){ 
+    public function get_filtros($solapa,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar){ 
       
         //ESTO RETORNA UNA LISTA DE FILTROSDTOS
 
@@ -52,7 +52,7 @@ class RepositorioQuery implements IRepositorioQuery{
                 case 0:
 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_0, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_0, 0,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
                     break;
 
@@ -65,7 +65,7 @@ class RepositorioQuery implements IRepositorioQuery{
                 case 1: 
 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_1, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_1, 0,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
                     break;
 
@@ -83,7 +83,7 @@ class RepositorioQuery implements IRepositorioQuery{
                 case 2: // 
 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_2, 2,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_2, 2,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
                         //
                     break;
@@ -91,7 +91,7 @@ class RepositorioQuery implements IRepositorioQuery{
                 case 3:
 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_3, 3,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_3, 3,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
                        
                     break;
@@ -137,7 +137,7 @@ class RepositorioQuery implements IRepositorioQuery{
 
     }
 
-    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa,$aux_cadena_filtros,$si_tengo_que_filtrar){
+    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar){
 
         // NOTA: esta funcion devuelve una subconsulta  con las uniones de las consultas de los filtros
 
@@ -198,7 +198,10 @@ class RepositorioQuery implements IRepositorioQuery{
                                     LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                    WHERE t.tipo_formato_solapa = '.$solapa; 
+                                    WHERE t.tipo_formato_solapa = '.$solapa; //SIEMPRE CONCATENAR LOS FILTROS DE RECURSOS RESTRINGIDOS
+
+                                    //SI TENGO QUE FILTRAR ==1
+                                    //QUERY_PARCIAL . = $AUX_CADENA_FILTROS.
                     break;
                 case 2: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
                         $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,

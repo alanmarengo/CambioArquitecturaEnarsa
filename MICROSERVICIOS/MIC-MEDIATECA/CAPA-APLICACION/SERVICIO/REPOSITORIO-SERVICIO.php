@@ -39,7 +39,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
         $servicio_catalogo = new RepositorioServicioCatalogo();
 
-        $recursos_mediateca_filtros; // variable contenedora de los recursos
+        $recursos_mediateca; // variable contenedora de los recursos
 
         $filtros; // variable contenedora de los filtros 
 
@@ -48,10 +48,10 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
         if($si_tengo_que_filtrar==1){  
             $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
-            $filtros=$servicio_catalogo->get_filtros($solapa,$lista_recursos_restringidos,$si_tengo_que_filtrar);
+            $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar);
         }else{
             $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size);
-            $filtros=$servicio_catalogo->get_filtros($solapa,$lista_recursos_restringidos,$si_tengo_que_filtrar);
+            $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar);
         }
         
         //ESTADISTICA EN LA PRIMERA CARGA VALOR 0
@@ -81,7 +81,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
         $respuesta->filtros=$filtros;
         $respuesta->recordset=$recursos_mediateca;
-
+        $respuesta->cantidadpaginas=$recursos_mediateca->cantidadpaginas;
 
 
         return  $respuesta;
