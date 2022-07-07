@@ -36,7 +36,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                              WHERE tf.tipo_formato_solapa =';
 
         $total_registros = $this->get_cantidad_recursos_solapa($consulta_paginado,$solapa,"",$extension_consulta_filtro_recursos);
-
+        $cant_paginas= ceil($total_registros/$page_size);
         $inicio = ($current_page - 1) * $page_size;         
 
         $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;
@@ -102,7 +102,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         $conexion->desconectar(); // cierro la conexion 
 
         // se retorna un objeto json de los recursos 
-        return new Recursos($recursos_mediateca); // CANTIDAD DE PAGINAS // ,  $extension_consulta_filtro_recursos );
+        // Recursos($recursos,$CantidadPaginas,$lista_recursos_restringidos)
+        return new Recursos($recursos,$cant_paginas ,$extension_consulta_filtro_recursos); // CANTIDAD DE PAGINAS // ,  $extension_consulta_filtro_recursos );
     }
 
     public function get_cantidad_recursos_solapa($query, $solapa, $filtros, $extension_consulta_filtro_recursos)
@@ -296,6 +297,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         $total_registros = $this->get_cantidad_recursos_solapa($consulta_paginado,$solapa,$aux_cadena_filtros,$extension_consulta_filtro_recursos);
 
+        $cant_paginas= ceil($total_registros/$page_size);
         $inicio = ($current_page - 1) * $page_size;         
 
         $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;
@@ -399,7 +401,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         $estadisticas_filtrado = get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos);
 
         // se retorna un objeto json de los recursos 
-    return new RecursosFiltros($array_recursos_mediateca_filtrados,$aux_cadena_filtros,$estadisticas_filtrado, $extension_consulta_filtro_recursos /** , cantidad de paginas*/); 
+        //RecursosFiltros($recursos,$aux_cadena_filtros,$CantidadPaginas,$EstadisticasFiltros,$lista_recursos_restringidos)
+    return new RecursosFiltros($array_recursos_mediateca_filtrados,$aux_cadena_filtros,$cant_paginas,$estadisticas_filtrado, $extension_consulta_filtro_recursos); /* cantidad de paginas*/
     
   
     }
