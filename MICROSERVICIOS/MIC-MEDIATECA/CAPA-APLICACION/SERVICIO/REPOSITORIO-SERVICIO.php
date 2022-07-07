@@ -20,7 +20,6 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
     public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar)
     {
 
-
         $respuesta= new Respuesta();
         $respuesta->solapa=$solapa;
         $respuesta->pagina=$current_page;
@@ -30,6 +29,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         $lista_recursos_restringidos = array();
         $servicio_usuario = new RepositorioServicioUsuario();
         
+        if(empty($user_id)){ $user_id = -1; } // si el id de usuario viene vacio, se le pone -1.
 
         if($user_id!=-1){
             $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos_user($user_id);
@@ -96,10 +96,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
     }
 
-    // funcion para buscar los filtros
-    
-    
-}
+} // fin clase RepositorioServicioMediateca  <-----------------
 
  //prueba de aplicacion 
  $obtener_recursos_mediateca = new RepositorioServicioMediateca();

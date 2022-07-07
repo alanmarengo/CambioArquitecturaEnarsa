@@ -65,7 +65,7 @@ class RepositorioQuery implements IRepositorioQuery{
                 case 1: 
 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_1, 0,$aux_cadena_filtros,$si_tengo_que_filtrar).
+                    'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_1, 1,$aux_cadena_filtros,$si_tengo_que_filtrar).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
                     break;
 
@@ -80,12 +80,12 @@ class RepositorioQuery implements IRepositorioQuery{
                     //break;
                         //HACER LO MISMO QUE ARRIBA Y PROBAR TODO
                 
-                case 2: // 
-
+                case 2: //  en solapa 2 por el momento no se hace nada 
+                    /*
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
                     'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_2, 2,$aux_cadena_filtros,$si_tengo_que_filtrar).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
-                        //
+                        // */
                     break;
 
                 case 3:
