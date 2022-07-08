@@ -74,7 +74,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
             // aca se van a calcular las estadisticas de ser necesario 
             $estadistica_solapa_2=null; // aca hay que poner el servicio de el microservicio que sea que nos devuelva la estadisica de la solapa 2;
 
-            $estadisticas_filtradas = $this->get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos);
+            $estadisticas_filtradas = $this->query->get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos);
 
             $respuesta->registros_total_0 = $estadistica_inicial['solapa_0'];
              $respuesta->registros_total_1 = $estadistica_inicial['solapa_1'];
