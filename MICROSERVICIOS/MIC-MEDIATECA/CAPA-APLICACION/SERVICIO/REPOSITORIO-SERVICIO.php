@@ -62,12 +62,12 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         $calculo_estadistica = 0;
         if($calculo_estadistica == 0 ) // la variable calculo estadistica sera la bandera para determinar
         {                                          // si se calcularan o no las estadisticas 
-             $estadistica_inicial = $this->query->get_estadistica_inicial();
+             $estadistica_inicial = JSON_decode($this->query->get_estadistica_inicial());
 
-             $respuesta->registros_total_0 = $estadistica_inicial['solapa_0'];
-             $respuesta->registros_total_1 = $estadistica_inicial['solapa_1'];
-             $respuesta->registros_total_2 = $estadistica_inicial['solapa_2'];
-             $respuesta->registros_total_3 = $estadistica_inicial['solapa_3'];
+             $respuesta->registros_total_0 = $estadistica_inicial->documentos;
+             $respuesta->registros_total_1 = $estadistica_inicial->recursos_audiovisuales;
+             $respuesta->registros_total_2 = $estadistica_inicial->recursos_tecnicos;
+             $respuesta->registros_total_3 = $estadistica_inicial->novedades;
 
             
         }else if ($calculo_estadistica == 1){            
@@ -111,8 +111,8 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
  // si no hay que filtrar 
  // test solapa 0 - documentos 
- //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,0,1,20,"","","","","","","","","",0,""); // test solapa cero, sin filtros 
- //print_r($recursos_mediateca);
+ $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,0,1,20,"","","","","","","","","",0,""); // test solapa cero, sin filtros 
+ print_r($recursos_mediateca);
 
  // test solapa 1  - recursos audivisuales
  // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,1,1,20,"","","","","","","","","",0,"");

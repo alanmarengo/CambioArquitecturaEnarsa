@@ -103,7 +103,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         // se retorna un objeto json de los recursos 
         // Recursos($recursos,$CantidadPaginas,$lista_recursos_restringidos)
-        return new Recursos($recursos,$cant_paginas ,$extension_consulta_filtro_recursos); // CANTIDAD DE PAGINAS // ,  $extension_consulta_filtro_recursos );
+        return new Recursos($array_recursos_mediateca,$cant_paginas ,$extension_consulta_filtro_recursos); // CANTIDAD DE PAGINAS // ,  $extension_consulta_filtro_recursos );
     }
 
     public function get_cantidad_recursos_solapa($query, $solapa, $filtros, $extension_consulta_filtro_recursos)

@@ -60,20 +60,8 @@ class Respuesta{
     public $rec_per_page;
     public $current_page = 20;
 
-    public function __construct($recordset,$filtros,$paginas,$solapa,$estudio_nombre,$mode_label,$registros_total_0,$registros_total_1,$registros_total_2,$registros_total_3,$rec_per_page){
-        $this->recordset=$recordset;
-        $this->filtros=$filtros;
-        $this->paginas=$paginas;
-        $this->solapa=$solapa;
-        $this->pagina=$pagina;
-        $this->estudio_nombre=$estudio_nombre;
-        $this->mode_label=$mode_label;
-        $this->registros_total_0=$registros_total_0;
-        $this->registros_total_1=$registros_total_1;
-        $this->registros_total_2=$registros_total_2;
-        $this->registros_total_3=$registros_total_3;
-        $this->rec_per_page=20;
-
+    public function __construct(){
+        
     }
 
 
