@@ -168,7 +168,11 @@ class RepositorioQuery implements IRepositorioQuery{
             switch($lista_filtros_solapa[$x])
             {
                 case 0:                                                                                                            //CONSEGUIR COMO SEA QUE ENTRE EL CASE DE ALLA ARRIBA
-                    $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,sp.sub_proyecto_desc::TEXT AS desc,recurso_categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
+                    $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,sp.sub_proyecto_desc::TEXT AS desc,
+                                        CASE
+                                            WHEN t.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
+                                            ELSE t.sub_proyecto_id
+                                        END  AS valor_id ,COUNT(*)::BIGINT AS total 
                                     FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
                                                 'SELECT t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                     FROM ".'"MIC-MEDIATECA".recurso t 
@@ -389,34 +393,7 @@ class RepositorioQuery implements IRepositorioQuery{
         }
     }
 
-    public function get_filtros_activo(){
 
-        //ESTO RETORNA UNA LISTA DE FILTROSDTOS
-
-        // cada solapa, hace utiliza una determinada cantidad de filtros 
-        //SOLAPA 0, FILTROS_ID : 0,1,3,4 -> filtros_id 
-        //SOLAPA 1, FILTROS_ID : 0,3,4,5
-        //SOLAPA 2, FILTROS_ID : 0,2,3,4
-        //SOLAPA 3, FILTROS_ID : 0,3,4
-
-        // cada filtro tiene una clase o tipo 
-        //OBRA/PROYECTO : FILTRO_ID 0
-        //AREA GESTION : FILTRO_ID 1
-        //RECURSOS TECNICOS: FILTRO_ID 2
-        //AREA TEMATICA : FILTRO_ID 3
-        //TEMA/SUBTEMA: FILTRO_ID 4
-        //RECURSOS AUDIOVISUALES: FILTRO ID 5
-
-        //DEPENDIENDO DE QUE SOLAPA ENTRE Y QUE FILTROS ID CALCULO ENTONCES:
-        $lista_filtros_solapa_0=[0,1,3,4];
-        $lista_filtros_solapa_1=[0,3,4,5];
-        $lista_filtros_solapa_2=[0,2,3,4];
-        $lista_filtros_solapa_3=[0,3,4];
-
-        // a partir de aca desarrollar la logica 
-        
-
-    }
 
 }
 
