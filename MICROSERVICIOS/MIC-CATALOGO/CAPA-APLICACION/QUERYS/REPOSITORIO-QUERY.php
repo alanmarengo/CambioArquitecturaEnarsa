@@ -162,10 +162,10 @@ class RepositorioQuery implements IRepositorioQuery{
                                 LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
                                 WHERE t.tipo_formato_solapa = '.$solapa; */
 
-        $auxiliar_extensiones_filtros = ""; // variable que concatenara los filtros y los recursos restringidos, en caso de ser necesario, sino no hay que filtrar. solo ira vacio.
+        $auxiliar_extensiones_filtros = ""; // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario, sino no hay que filtrar. solo ira vacio.
         if($si_tengo_que_filtrar == 1)
         {
-            $auxiliar_extensiones_filtros .= ' '.$aux_cadena_filtros.' '.$lista_recursos_restringidos;
+            $auxiliar_extensiones_filtros = ' '.$aux_cadena_filtros.' '.$lista_recursos_restringidos;
         }
 
         for($x=0;$x<=count($lista_filtros_solapa)-1; $x++) // cada filtro_id que exista en la lista 

@@ -19,11 +19,9 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
     // funcion para traer todos los recursos de la mediateca 
     public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar)
     {
-
-        $respuesta= new Respuesta();
-        $respuesta->solapa=$solapa;
-        $respuesta->pagina=$current_page;
-
+        $respuesta= new Respuesta(); // objeto que recopilara la informacion 
+        $respuesta->solapa = $solapa ;
+        $respuesta->current_page = $current_page;
 
         //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
         $lista_recursos_restringidos = array();
@@ -48,10 +46,12 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
         if($si_tengo_que_filtrar==1){  
             $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
-            $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar);
+            $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->RecursosFiltros->aux_cadena_filtros,$recursos_mediateca->RecursosFiltros->extension_consulta_filtro_recursos,$si_tengo_que_filtrar);
+            $respuesta->cant_paginas = $recursos_mediateca->RecursosFiltros->cant_paginas;            
         }else{
             $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size);
-            $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar);
+            $filtros=$servicio_catalogo->get_filtros($solapa,"",$lista_recursos_restringidos,$si_tengo_que_filtrar); // si no hay que filtrar, se envia vacio en el parametro de los filtros. 
+            $respuesta->cant_paginas = $recursos_mediateca->Recursos->cant_paginas;
         }
         
         //ESTADISTICA EN LA PRIMERA CARGA VALOR 0
@@ -63,26 +63,30 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         if($calculo_estadistica == 0 ) // la variable calculo estadistica sera la bandera para determinar
         {                                          // si se calcularan o no las estadisticas 
              $estadistica_inicial = $this->query->get_estadistica_inicial();
-             $respuesta-> registros_total_0 =  $estadistica_inicial->documentos;
-             $respuesta-> $registros_total_1= $estadistica_inicial->recursos_audiovisuales;
-             $respuesta-> $registros_total_2=$estadistica_inicial->recursos_tecnicos;
-             $respuesta-> $registros_total_3=$estadistica_inicial->novedades;
+
+             $respuesta->registros_total_0 = $estadistica_inicial['solapa_0'];
+             $respuesta->registros_total_1 = $estadistica_inicial['solapa_1'];
+             $respuesta->registros_total_2 = $estadistica_inicial['solapa_2'];
+             $respuesta->registros_total_3 = $estadistica_inicial['solapa_3'];
+
             
         }else if ($calculo_estadistica == 1){            
             // aca se van a calcular las estadisticas de ser necesario 
             $estadistica_solapa_2=null; // aca hay que poner el servicio de el microservicio que sea que nos devuelva la estadisica de la solapa 2;
 
-            $respuesta-> registros_total_0 =$recursos_mediateca->EstadisticasFiltros->estadistica_documentos;
-            $respuesta-> $registros_total_1=$recursos_mediateca->EstadisticasFiltros->estadistica_recursos_audiovisuales;
-            $respuesta-> $registros_total_2=$estadistica_solapa_2;
-            $respuesta-> $registros_total_3=$recursos_mediateca->EstadisticasFiltros->estadistica_recursos_audiovisuales;
+            $estadisticas_filtradas = $this->get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos);
+
+            $respuesta->registros_total_0 = $estadistica_inicial['solapa_0'];
+             $respuesta->registros_total_1 = $estadistica_inicial['solapa_1'];
+             //$respuesta->registros_total_2 = $estadistica_inicial['solapa_2']; // esto traeria el mic recursos tecnicos 
+             $respuesta->registros_total_3 = $estadistica_inicial['solapa_3'];
+
+
         }
-
-
+        
         $respuesta->filtros=$filtros;
-        $respuesta->recordset=$recursos_mediateca;
-        $respuesta->cantidadpaginas=$recursos_mediateca->cantidadpaginas;
-
+        $respuesta->recordset=$recursos_mediateca;       
+        
 
         return  $respuesta;
         //ACA IDENTIFICO UN FLAG DEL FRONT SI ES QUE DEBO CALCULAR O NO LAS ESTADISTICAS. SI NO LAS DEBO CALCULAR, LAS VOY A BUSCAR A BASE DE DATOS.
