@@ -58,6 +58,7 @@ class Respuesta{
     public $registros_total_2;
     public $registros_total_3;
     public $rec_per_page;
+    public $current_page = 20;
 
     public function __construct($recordset,$filtros,$paginas,$solapa,$estudio_nombre,$mode_label,$registros_total_0,$registros_total_1,$registros_total_2,$registros_total_3,$rec_per_page){
         $this->recordset=$recordset;
