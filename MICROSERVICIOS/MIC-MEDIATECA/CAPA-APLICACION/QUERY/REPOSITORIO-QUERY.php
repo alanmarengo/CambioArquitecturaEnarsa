@@ -110,12 +110,12 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
     {
         // variable consulta  
         $cantidad_recursos_solapa = $query.' '.$solapa.' '.$filtros.' '.$extension_consulta_filtro_recursos.';';
+        //echo $cantidad_recursos_solapa; 
 
         // instancio una nueva conexion 
         $conexion = new ConexionMediateca();
 
-        //realizo la consulta 
-        //echo $cantidad_recursos_solapa;           
+        //realizo la consulta                   
         $aux_cantidad = $conexion->get_consulta($cantidad_recursos_solapa);   
 
         $conexion->desconectar(); // cierro la conexion
@@ -163,12 +163,12 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         if(!empty($qt)) // variable que viene del buscador.
         {            
-            $aux_cadena_filtros .= "AND (lower(unaccent(T.origen_search_text)) LIKE  lower(unaccent(%".$qt."%))"; // con unaccent  lower(unaccent('my_MMuíèles'))
-            $aux_cadena_filtros .= " OR lower(unaccent(e.estudios_palabras_clave)) LIKE  lower(unaccent(%".$qt."%))";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.nombre)) LIKE  lower(unaccent(%".$qt."%))) ";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.equipo)) LIKE  lower(unaccent(%".$qt."%))) ";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.institucion)) LIKE  lower(unaccent(%".$qt."%))) ";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.responsable)) LIKE  lower(unaccent(%".$qt."%))) "; 
+            $aux_cadena_filtros .= " AND ( lower(unaccent(T.origen_search_text)) LIKE  lower(unaccent('%".$qt."%'))"; // con unaccent  lower(unaccent('my_MMuíèles'))
+            $aux_cadena_filtros .= " OR lower(unaccent(e.estudios_palabras_clave)) LIKE  lower(unaccent('%".$qt."%'))";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.nombre)) LIKE  lower(unaccent('%".$qt."%')) ";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.equipo)) LIKE  lower(unaccent('%".$qt."%')) ";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.institucion)) LIKE  lower(unaccent('%".$qt."%')) ";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.responsable)) LIKE  lower(unaccent('%".$qt."%')) ) "; 
              
         }
 
@@ -361,7 +361,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         
         // instancio una nueva conexion 
         $conexion = new ConexionMediateca();
-        echo $consulta_definitiva;
+        //echo $consulta_definitiva;
         
         //realizo la consulta            
         $recursos_mediateca_filtrados = $conexion->get_consulta($consulta_definitiva);   
@@ -398,7 +398,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         $conexion->desconectar(); // cierro la conexion 
 
-        $estadisticas_filtrado = get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos);
+        $estadisticas_filtrado = $this->get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos);
 
         // se retorna un objeto json de los recursos 
         //RecursosFiltros($recursos,$aux_cadena_filtros,$CantidadPaginas,$EstadisticasFiltros,$lista_recursos_restringidos)
@@ -487,13 +487,13 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             switch($solapas[$x])
             {
                 case 0:
-                    $estadistica_documentos= $total_estadistica_solapa['total'];
+                    $estadistica_documentos= $total_estadistica_solapa[0];
                     break;
                 case 1:
-                    $estadistica_recursos_audiovisuales= $total_estadistica_solapa['total'];
+                    $estadistica_recursos_audiovisuales= $total_estadistica_solapa[0];
                     break;
                 case 3:
-                     $estadistica_novedades= $total_estadistica_solapa['total'];
+                     $estadistica_novedades= $total_estadistica_solapa[0];
                     break;
             }                       
 

@@ -102,6 +102,7 @@ class RepositorioQuery implements IRepositorioQuery{
             // ejecutar consulta final, para obtener lista de filtros 
 
             $conexion = New ConexionCatalogo();
+            //echo $QUERY_DEFINITIVA;
 
             $resultado_final_filtros = $conexion->get_consulta($QUERY_DEFINITIVA);
             
@@ -179,12 +180,12 @@ class RepositorioQuery implements IRepositorioQuery{
                                             ELSE t.sub_proyecto_id
                                         END  AS valor_id ,COUNT(*)::BIGINT AS total 
                                     FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                'SELECT t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                                'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                     FROM ".'"MIC-MEDIATECA".recurso t 
                                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                                 LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                                 LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
-                                            as T (estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
+                                            as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
                                     LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                                     LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
@@ -197,12 +198,12 @@ class RepositorioQuery implements IRepositorioQuery{
                                         t.recurso_categoria_id::BIGINT AS valor_id,
                                         COUNT(*)::BIGINT AS total 
                                     FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                            'SELECT t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                            'SELECT t.recurso_id, t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                 FROM ".'"MIC-MEDIATECA".recurso t 
                                             LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                             LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                             LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
-                                            as T (estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
+                                            as T (recurso_id bigint, origen_search_text text,estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
                                     LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                                     LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
@@ -217,12 +218,12 @@ class RepositorioQuery implements IRepositorioQuery{
                                             t.recurso_categoria_id::BIGINT AS valor_id,
                                             COUNT(*)::BIGINT AS total 
                                         FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                'SELECT t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                                'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                     FROM ".'"MIC-MEDIATECA".recurso t 
                                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                                 LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                                 LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
-                                                as T (estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
+                                                as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
                                         LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                                         LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                         LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
@@ -232,12 +233,12 @@ class RepositorioQuery implements IRepositorioQuery{
                 case 3:
                     $query_parcial = "SELECT  ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,'tema'::TEXT AS desc,clase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
                                         FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                    'SELECT t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                                    'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                         FROM ".'"MIC-MEDIATECA".recurso t 
                                                     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                                     LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                                     LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
-                                                as T (estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
+                                                as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
                                         LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                                         LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                         LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
@@ -247,12 +248,12 @@ class RepositorioQuery implements IRepositorioQuery{
                 case 4:
                     $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,subclase_desc::TEXT AS desc,t.subclase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
                                         FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                    'SELECT t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                                    'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                         FROM ".'"MIC-MEDIATECA".recurso t 
                                                     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                                     LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                                     LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
-                                                as T (estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
+                                                as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
                                         LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                                         LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                         LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
@@ -262,12 +263,12 @@ class RepositorioQuery implements IRepositorioQuery{
                 case 5:
                     $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,recurso_categoria_desc::TEXT AS desc,recurso_categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
                     FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                'SELECT t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                'SELECT t.recurso_id ,t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                     FROM ".'"MIC-MEDIATECA".recurso t 
                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                 LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                 LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
-                            as T (estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
+                            as T (recurso_id bigint, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
                     LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                     LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
