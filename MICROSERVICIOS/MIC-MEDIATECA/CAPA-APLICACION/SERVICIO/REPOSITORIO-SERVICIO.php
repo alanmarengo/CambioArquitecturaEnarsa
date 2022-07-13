@@ -44,14 +44,24 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         //seccion logica de obtencion de recursos y filtros  
         //llamo al metodo get_recursos para obtener los recursos de la mediateca
 
-        if($si_tengo_que_filtrar==1){  
+        if($si_tengo_que_filtrar==1){ 
+            if($solapa==2){
+
+            } 
+            else{
             $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
             $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->aux_cadena_filtros,$recursos_mediateca->lista_recursos_restringidos,$si_tengo_que_filtrar);
-            $respuesta->cant_paginas = $recursos_mediateca->CantidadPaginas;            
+            $respuesta->cant_paginas = $recursos_mediateca->CantidadPaginas;    
+            }        
         }else{
+            if($solapa==2){
+
+            }
+            else {
             $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size);
             $filtros=$servicio_catalogo->get_filtros($solapa,"",$recursos_mediateca->lista_recursos_restringidos,$si_tengo_que_filtrar); // si no hay que filtrar, se envia vacio en el parametro de los filtros. 
             $respuesta->cant_paginas = $recursos_mediateca->CantidadPaginas;
+            }
         }
         
         //ESTADISTICA EN LA PRIMERA CARGA VALOR 0
@@ -75,11 +85,9 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
             $estadistica_solapa_2=null; // aca hay que poner el servicio de el microservicio que sea que nos devuelva la estadisica de la solapa 2;
 
             $estadisticas_filtradas = $this->query->get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos);
-
-            $respuesta->registros_total_0 = $estadistica_inicial['solapa_0'];
-             $respuesta->registros_total_1 = $estadistica_inicial['solapa_1'];
-             //$respuesta->registros_total_2 = $estadistica_inicial['solapa_2']; // esto traeria el mic recursos tecnicos 
-             $respuesta->registros_total_3 = $estadistica_inicial['solapa_3'];
+            $respuesta->registros_total_0 =  $estadisticas_filtradas->estadistica_documentos;
+            $respuesta->registros_total_1 = $estadisticas_filtradas->estadistica_recursos_audiovisuales;
+            $respuesta->registros_total_3 = $estadisticas_filtradas->estadistica_novedades;
 
 
         }
