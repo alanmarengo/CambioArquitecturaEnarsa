@@ -5,7 +5,7 @@ require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERV
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-USUARIO/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIOS.php');
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-CATALOGO/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
 require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/DTOS/DTOS.php');
-
+//INJECTAR  SERVICIO MIC-RECURSOS TECNICOS
 
 class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 {
@@ -36,6 +36,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         }
 
         $servicio_catalogo = new RepositorioServicioCatalogo();
+        $servicio_recursos_tecnicos=new RepositorioServicioRecursosTecnicos();
 
         $recursos_mediateca; // variable contenedora de los recursos
 
@@ -47,6 +48,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         if($si_tengo_que_filtrar==1){ 
             if($solapa==2){
 
+
             } 
             else{
             $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
@@ -55,6 +57,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
             }        
         }else{
             if($solapa==2){
+
 
             }
             else {
@@ -80,11 +83,13 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
              $respuesta->registros_total_3 = $estadistica_inicial->novedades;
 
             
-        }else if ($calculo_estadistica == 1){            
-            // aca se van a calcular las estadisticas de ser necesario 
-            $estadistica_solapa_2=null; // aca hay que poner el servicio de el microservicio que sea que nos devuelva la estadisica de la solapa 2;
+        }else if ($calculo_estadistica == 1){       
 
-            $estadisticas_filtradas = $this->query->get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos);
+            // aca se van a calcular las estadisticas de ser necesario 
+            //HAY QUE DESARROLLAR EL METODO get_estadistica_recursos_tecnicos();
+            $estadistica_solapa_2= $servicio_recursos_tecnicos->get_estadistica_recursos_tecnicos(); // aca hay que poner el servicio de el microservicio que sea que nos devuelva la estadisica de la solapa 2;
+
+            $estadisticas_filtradas = $this->query->get_estadistica_filtrado($recursos_mediateca->aux_cadena_filtros,$recursos_mediateca->lista_recursos_restringidos);
             $respuesta->registros_total_0 =  $estadisticas_filtradas->estadistica_documentos;
             $respuesta->registros_total_1 = $estadisticas_filtradas->estadistica_recursos_audiovisuales;
             $respuesta->registros_total_3 = $estadisticas_filtradas->estadistica_novedades;

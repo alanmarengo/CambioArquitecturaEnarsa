@@ -212,15 +212,16 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
 
     
             // por cada registro, se agrega un objeto recurso al array contenedor 
-            $recurso = new RecursoTecnico($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id,$ico);
+            $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id,$ico);
             array_push($array_recursos_tecnicos,$recurso);                    
         }
         // faltaria estadistica de la solapa para devolver en mediateca, tentativamente ira la variable total_registros. ya que es total de registros 
-        return new Recursos($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos,$total_registros);         
+        return new RecursosTecnicos($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos);         
     } // fin function get_recursos_tecnicos 
 
     public function get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad)
     {
+        
             //HACER LOGICA RECURSOS RESTRINGIDOS.
         $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
 

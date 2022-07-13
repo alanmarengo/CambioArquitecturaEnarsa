@@ -15,15 +15,7 @@ class RepositorioServicioRecursosTecnicos implements IRepositorioServicioRecurso
 
     public function get_recursos_tecnicos($lista_recursos_restringidos, $current_page, $page_size)
     {
-
-        $respuesta= new Respuesta(); // objeto que recopilara la informacion        
-        $respuesta->current_page = $current_page;
-        $respuesta->rec_per_page = $page_size;
-
-        $recursos_tecnicos = $this->query->get_recursos_tecnicos($lista_recursos_restringidos, $current_page, $page_size);
-        $respuesta->recordset = $recursos_tecnicos->recursos;
-        
-        echo "hola";
+        return $this->query->get_recursos_tecnicos($lista_recursos_restringidos, $current_page, $page_size);
     }
 
 }
