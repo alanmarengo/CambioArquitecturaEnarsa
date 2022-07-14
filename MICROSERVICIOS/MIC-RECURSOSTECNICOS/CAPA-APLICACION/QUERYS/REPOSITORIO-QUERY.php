@@ -18,7 +18,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
 
         // armo una cadena para usar como subconsulta en la query principal 
-        /*
+        
         for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
         {       
            if($x==count($lista_recursos_restringidos)-1){
@@ -27,19 +27,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
            }else{
                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
            }       
-        }  */ // este for esta adaptado al array que recibira realmente 
-
-        // for con array de prueba para verificar los datos 
-
-        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
-        {       
-           if($x==count($lista_recursos_restringidos)-1){
-               
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x].")";
-           }else{
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x].",";
-           }       
-        }
+        }   
 
         //LOGICA DE PAGINADOR
         $aux_consulta_paginador= <<<EOD
@@ -114,7 +102,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         
         $total_registros = $conexion_rec_tecnicos->get_consulta($CONSULTA_PAGINADOR);
 
-        $cant_paginas= ceil(intval($total_registros[0]['total_registros'], 10)/$page_size) + 1;
+        $cant_paginas= ceil(intval($total_registros[0]['total_registros'], 10)/$page_size) ;
         $inicio = ($current_page - 1) * $page_size;         
 
         $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;

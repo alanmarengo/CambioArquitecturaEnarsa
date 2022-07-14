@@ -18,8 +18,9 @@ class RepositorioServicioRecursosTecnicos implements IRepositorioServicioRecurso
         return $this->query->get_recursos_tecnicos($lista_recursos_restringidos, $current_page, $page_size);
     }
 
-}
+    public function get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad)
+    {
+        return $this->query->get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
+    }
 
-$recursos_tecnicos = new RepositorioServicioRecursosTecnicos();
-$array_test = array (1,2,3,4,5); 
-$recursos_tecnicos->get_recursos_tecnicos($array_test,1,20);
+}
