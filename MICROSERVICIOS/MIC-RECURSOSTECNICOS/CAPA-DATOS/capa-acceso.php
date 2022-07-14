@@ -36,7 +36,7 @@ class ConexionRecursosTecnicos {
         $resultado = $consulta->fetchall(PDO::FETCH_ASSOC);
         
         return $resultado; // 
-    }
+    } //
 }
 
  // $prueba_conexion = new ConexionMediateca();
