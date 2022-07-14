@@ -6,7 +6,7 @@ class RecursosTecnicos{
     public $CantidadPaginas;
 
 
-    public function __construct($recursos,$CantidadPaginas,$lista_recursos_restringidos,$estadistica_solapa){
+    public function __construct($recursos,$CantidadPaginas,$lista_recursos_restringidos){
         $this->recursos=$recursos;
         $this->CantidadPaginas=$CantidadPaginas;
         $this->lista_recursos_restringidos=$lista_recursos_restringidos;
