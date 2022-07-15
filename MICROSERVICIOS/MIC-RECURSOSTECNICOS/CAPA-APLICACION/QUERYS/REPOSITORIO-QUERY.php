@@ -227,7 +227,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
 
         //LOGICA DE PAGINADOR
         $aux_consulta_paginador= <<<EOD
-                                    SELECT COUNT(*) FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
+                                    SELECT COUNT(*) AS total_registros FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
                                     G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
                                     G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
                                     10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
@@ -449,7 +449,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         // faltaria estadistica de la solapa para devolver en mediateca, tentativamente ira la variable total_registros. ya que es total de registros 
         
         //  RecursosTecnicosFiltrado($recursos,$CantidadPaginas,$lista_recursos_restringidos,$aux_cadena_filtros)
-        return new RecursosTecnicosFiltrado($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos,$aux_cadena_filtros);       
+        return new RecursosTecnicosFiltrado($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos,$this->get_string_filtros($extension_consulta_filtro_recursos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad));       
     }
 
 
