@@ -225,90 +225,6 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
            }       
         }   
 
-        // validacion de filtros 
-        $aux_cadena_filtros = ""; // variable contenedora, almacenara un string con todas las adeciones de filtros a la consulta principal
-
-        if(!empty($qt)) // variable que viene del buscador.
-        {            
-            $aux_cadena_filtros .= " AND ( lower(unaccent(u.origen_search_text)) LIKE  lower(unaccent('%".$qt."%'))"; // este ya esta 
-            $aux_cadena_filtros .= " OR lower(unaccent(e.estudios_palabras_clave)) LIKE  lower(unaccent('%".$qt."%'))"; // este y los de abajo se buscan en MIC-CATALOGO.estudios 
-            $aux_cadena_filtros .= " OR lower(unaccent(e.nombre)) LIKE  lower(unaccent('%".$qt."%')) ";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.equipo)) LIKE  lower(unaccent('%".$qt."%')) ";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.institucion)) LIKE  lower(unaccent('%".$qt."%')) ";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.responsable)) LIKE  lower(unaccent('%".$qt."%')) ) "; 
-             
-        }
-        
-        switch ($tipo_temporalidad) { // dependiendo del valor de $tipo_temporalidad, el filtro de fecha se hace en campos diferentes
-                    case 0:
-                        if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
-                        {
-                            $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta)  
-                                                    OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";  // SE buscan en MIC-CATALOGO".cod_temporalidad'
-                        
-                        }else{ 
-                            if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
-                            {
-                                $aux_cadena_filtros .= "  AND (('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
-                                                        OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";// MIC-CATALOGO".cod_temporalidad'
-        
-                            }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
-                            {
-                                $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
-                                                        OR('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))"; // MIC-CATALOGO".cod_temporalidad'
-        
-                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
-                                $aux_cadena_filtros .= "";
-                            }
-        
-                        } break;
-                    case 1:
-                        if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
-                        {
-                            $aux_cadena_filtros .= " AND ((u.fecha_observatorio IS NOT NULL)   AND
-                                                          (u.fecha_observatorio BETWEEN ".$desde." AND ".$hasta."))"; // este campo ya esta 
-                            if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
-                            {
-                                $aux_cadena_filtros .= "  AND ((u.fecha_observatorio IS NOT NULL)  AND 
-                                                               (u.fecha_observatorio <= ".$hasta."))"; // este campo ya esta 
-        
-                            }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
-                            {
-                                $aux_cadena_filtros .= "  AND ((u.fecha_observatorio IS NOT NULL)  AND 
-                                                               (u.fecha_observatorio >= ".$desde."))"; // este campo ya esta 
-        
-                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
-                                $aux_cadena_filtros .= "";
-                            }
-                        } break;
-                    case 2:
-                        if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
-                        {
-                            $aux_cadena_filtros .= " AND ((u.recurso_fecha IS NOT NULL)   AND
-                                                          (u.recurso_fecha BETWEEN ".$desde." AND ".$hasta."))"; // estos campos ya estan
-                            if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
-                            {
-                                $aux_cadena_filtros .= "  AND ((u.recurso_fecha IS NOT NULL)  AND 
-                                                               (u.recurso_fecha <= ".$hasta."))"; // estos campos ya estan
-        
-                            }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
-                            {
-                                $aux_cadena_filtros .= "  AND ((u.recurso_fecha IS NOT NULL)  AND 
-                                                               (u.recurso_fecha >= ".$desde."))"; // estos campos ya estan
-        
-                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
-                                $aux_cadena_filtros .= "";
-                            }
-                        } break;
-        }
-                
-        if(!empty($proyecto)) { $aux_cadena_filtros .= " AND u.sub_proyecto_id = ".$proyecto; } // se busca en MIC-CATALOGO.estudios 
-        if(!empty($clase)) { $aux_cadena_filtros .= " AND sc.clase_id = ".$clase; } // se busca en la tabla MIC-CATALOGO.subclase  ->>> pendiente 
-        if(!empty($subclase)) { $aux_cadena_filtros .= " AND u.subclase_id =".$subclase; } // se busca en la tabla MIC-CATALOGO.subclase
-        if(!empty($tipo_doc)) { $aux_cadena_filtros .= " AND u.recurso_categoria_id = ".$tipo_doc; } // este ya esta 
-        
-        // fin validacion de filtros 
-
         //LOGICA DE PAGINADOR
         $aux_consulta_paginador= <<<EOD
                                     SELECT COUNT(*) FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
@@ -398,7 +314,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                         EOD; 
 
         
-        $CONSULTA_PAGINADOR = $aux_consulta_paginador.' '.$extension_consulta_filtro_recursos.' '.$aux_cadena_filtros;
+        $CONSULTA_PAGINADOR = $aux_consulta_paginador.' '.$this->get_string_filtros($extension_consulta_filtro_recursos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
         
         //instancio una conexion 
         $conexion_rec_tecnicos = new ConexionRecursosTecnicos();
@@ -502,7 +418,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                             EOD;
         
         
-        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$aux_cadena_filtros.' '.$paginador;
+        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$this->get_string_filtros($extension_consulta_filtro_recursos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad).' '.$paginador;
         $recursos_tecnicos = $conexion_rec_tecnicos->get_consulta( $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS);
 
         //creo un array para guardar todos los recursos  tecnicos
@@ -534,6 +450,96 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         
         //  RecursosTecnicosFiltrado($recursos,$CantidadPaginas,$lista_recursos_restringidos,$aux_cadena_filtros)
         return new RecursosTecnicosFiltrado($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos,$aux_cadena_filtros);       
+    }
+
+
+    public function get_string_filtros($extension_consulta_filtro_recursos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad)
+    {
+       
+        // validacion de filtros 
+        $aux_cadena_filtros = ""; // variable contenedora, almacenara un string con todas las adeciones de filtros a la consulta principal
+
+        if(!empty($qt)) // variable que viene del buscador.
+        {            
+            $aux_cadena_filtros .= " AND ( lower(unaccent(u.origen_search_text)) LIKE  lower(unaccent('%".$qt."%'))"; // este ya esta 
+            $aux_cadena_filtros .= " OR lower(unaccent(e.estudios_palabras_clave)) LIKE  lower(unaccent('%".$qt."%'))"; // este y los de abajo se buscan en MIC-CATALOGO.estudios 
+            $aux_cadena_filtros .= " OR lower(unaccent(e.nombre)) LIKE  lower(unaccent('%".$qt."%')) ";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.equipo)) LIKE  lower(unaccent('%".$qt."%')) ";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.institucion)) LIKE  lower(unaccent('%".$qt."%')) ";
+            $aux_cadena_filtros .= " OR lower(unaccent(e.responsable)) LIKE  lower(unaccent('%".$qt."%')) ) "; 
+             
+        }
+        
+        switch ($tipo_temporalidad) { // dependiendo del valor de $tipo_temporalidad, el filtro de fecha se hace en campos diferentes
+                    case 0:
+                        if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
+                        {
+                            $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta)  
+                                                    OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";  // SE buscan en MIC-CATALOGO".cod_temporalidad'
+                        
+                        }else{ 
+                            if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                            {
+                                $aux_cadena_filtros .= "  AND (('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                        OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";// MIC-CATALOGO".cod_temporalidad'
+        
+                            }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                            {
+                                $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                        OR('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))"; // MIC-CATALOGO".cod_temporalidad'
+        
+                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                                $aux_cadena_filtros .= "";
+                            }
+        
+                        } break;
+                    case 1:
+                        if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
+                        {
+                            $aux_cadena_filtros .= " AND ((u.fecha_observatorio IS NOT NULL)   AND
+                                                          (u.fecha_observatorio BETWEEN ".$desde." AND ".$hasta."))"; // este campo ya esta 
+                            if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                            {
+                                $aux_cadena_filtros .= "  AND ((u.fecha_observatorio IS NOT NULL)  AND 
+                                                               (u.fecha_observatorio <= ".$hasta."))"; // este campo ya esta 
+        
+                            }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                            {
+                                $aux_cadena_filtros .= "  AND ((u.fecha_observatorio IS NOT NULL)  AND 
+                                                               (u.fecha_observatorio >= ".$desde."))"; // este campo ya esta 
+        
+                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                                $aux_cadena_filtros .= "";
+                            }
+                        } break;
+                    case 2:
+                        if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
+                        {
+                            $aux_cadena_filtros .= " AND ((u.recurso_fecha IS NOT NULL)   AND
+                                                          (u.recurso_fecha BETWEEN ".$desde." AND ".$hasta."))"; // estos campos ya estan
+                            if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                            {
+                                $aux_cadena_filtros .= "  AND ((u.recurso_fecha IS NOT NULL)  AND 
+                                                               (u.recurso_fecha <= ".$hasta."))"; // estos campos ya estan
+        
+                            }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                            {
+                                $aux_cadena_filtros .= "  AND ((u.recurso_fecha IS NOT NULL)  AND 
+                                                               (u.recurso_fecha >= ".$desde."))"; // estos campos ya estan
+        
+                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                                $aux_cadena_filtros .= "";
+                            }
+                        } break;
+        }
+                
+        if(!empty($proyecto)) { $aux_cadena_filtros .= " AND u.sub_proyecto_id = ".$proyecto; } // se busca en MIC-CATALOGO.estudios 
+        if(!empty($clase)) { $aux_cadena_filtros .= " AND sc.clase_id = ".$clase; } // se busca en la tabla MIC-CATALOGO.subclase  ->>> pendiente 
+        if(!empty($subclase)) { $aux_cadena_filtros .= " AND u.subclase_id =".$subclase; } // se busca en la tabla MIC-CATALOGO.subclase
+        if(!empty($tipo_doc)) { $aux_cadena_filtros .= " AND u.recurso_categoria_id = ".$tipo_doc; } // este ya esta 
+        
+        // fin validacion de filtros 
+        return  $extension_consulta_filtro_recursos.' '.$aux_cadena_filtros;     
     }
 
 
