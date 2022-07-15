@@ -94,7 +94,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
             // aca se van a calcular las estadisticas de ser necesario 
             //HAY QUE DESARROLLAR EL METODO get_estadistica_recursos_tecnicos();
-            $estadistica_solapa_2= $servicio_recursos_tecnicos->get_estadistica_recursos_tecnicos(); // aca hay que poner el servicio de el microservicio que sea que nos devuelva la estadisica de la solapa 2;
+            $estadistica_solapa_2= $servicio_recursos_tecnicos->get_estadistica_recursos_tecnicos($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica); // aca hay que poner el servicio de el microservicio que sea que nos devuelva la estadisica de la solapa 2;
 
             $estadisticas_filtradas = $this->query->get_estadistica_filtrado($recursos_mediateca->aux_cadena_filtros,$recursos_mediateca->lista_recursos_restringidos);
             $respuesta->registros_total_0 =  $estadisticas_filtradas->estadistica_documentos;

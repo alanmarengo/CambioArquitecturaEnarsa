@@ -210,21 +210,6 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
     public function get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad)
     {
         
-            //HACER LOGICA RECURSOS RESTRINGIDOS.
-        $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
-
-        // armo una cadena para usar como subconsulta en la query principal 
-      
-        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
-        {       
-           if($x==count($lista_recursos_restringidos)-1){
-               
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
-           }else{
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
-           }       
-        }   
-
         //LOGICA DE PAGINADOR
         $aux_consulta_paginador= <<<EOD
                                     SELECT COUNT(*) AS total_registros FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
@@ -314,7 +299,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                         EOD; 
 
         
-        $CONSULTA_PAGINADOR = $aux_consulta_paginador.' '.$this->get_string_filtros($extension_consulta_filtro_recursos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
+        $CONSULTA_PAGINADOR = $aux_consulta_paginador.' '.$this->get_string_filtros($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
         
         //instancio una conexion 
         $conexion_rec_tecnicos = new ConexionRecursosTecnicos();
@@ -418,7 +403,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                             EOD;
         
         
-        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$this->get_string_filtros($extension_consulta_filtro_recursos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad).' '.$paginador;
+        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$this->get_string_filtros($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad).' '.$paginador;
         $recursos_tecnicos = $conexion_rec_tecnicos->get_consulta( $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS);
 
         //creo un array para guardar todos los recursos  tecnicos
@@ -453,8 +438,24 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
     }
 
 
-    public function get_string_filtros($extension_consulta_filtro_recursos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad)
+    public function get_string_filtros($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad)
     {
+        /*  esta funcion armara la cadena de los recursos restringidos, sumado a la cadena de los filtros que se armara y
+         se juntara con la consulta principal deseada. 
+         crea un string desde la clausula WHERE adicionando los recursos restringidos y los filtros */
+        
+        $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
+        // armo una cadena para usar como subconsulta en la query principal 
+                
+        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        {       
+           if($x==count($lista_recursos_restringidos)-1){
+               
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+           }else{
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+           }       
+        }   
        
         // validacion de filtros 
         $aux_cadena_filtros = ""; // variable contenedora, almacenara un string con todas las adeciones de filtros a la consulta principal
@@ -540,6 +541,108 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         
         // fin validacion de filtros 
         return  $extension_consulta_filtro_recursos.' '.$aux_cadena_filtros;     
+    }
+
+    public function get_estadistica_recursos_tecnicos($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica)
+    {
+       
+       // defino la consulta principal
+
+       $aux_consulta_recursos = <<<EOD
+                                    SELECT COUNT(*) FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
+                                    G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
+                                    G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
+                                    10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
+                                    G.recurso_desc, G.recurso_titulo, NULL::date AS recurso_fecha,
+                                    NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
+                                    NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,
+                                    (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
+                                    'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
+                                    NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
+                                    FROM dblink('dbname=MIC-GEOVISORES
+                                    hostaddr=179.43.126.101 
+                                    user=postgres 
+                                    password=plahe100%
+                                    port=5432',
+                                    'SELECT c.origen_id_especifico, c.origen_search_text, 
+                                            c.subclase_id, c.estudios_id, 
+                                            c.cod_esia_id, c.cod_temporalidad_id, 
+                                            c.objetos_id, c.fecha_observatorio, 
+                                            l.preview_desc  AS recurso_desc,
+                                            l.preview_titulo  AS recurso_titulo       
+                                    FROM "MIC-GEOVISORES".catalogo c
+                                    INNER JOIN "MIC-GEOVISORES".layer l on l.layer_id=c.origen_id_especifico') 
+                                                    as G (origen_id_especifico bigint, origen_search_text text, subclase_id bigint, estudios_id bigint, 
+                                                    cod_esia_id bigint, cod_temporalidad_id bigint, objetos_id bigint, fecha_observatorio date, recurso_desc text, recurso_titulo text)
+                                    
+                                    UNION ALL
+                                    SELECT 'Estadistica'::text AS origen, 2 AS origen_id, 
+                                            dt.dt_id AS origen_id_especifico, dt.dt_titulo AS origen_search_text, 
+                                            NULL::bigint AS subclase_id, NULL::bigint AS estudios_id, 
+                                            NULL::bigint AS cod_esia_id, NULL::bigint AS cod_temporalidad_id, 
+                                            NULL::bigint AS objetos_id, dt.fecha_observatorio, 29::bigint AS recurso_categoria_id,
+                                            'Estadísticas'::text AS recurso_categoria_desc,  dt_desc AS recurso_desc, dt_titulo AS recurso_titulo, 
+                                            NULL::date AS recurso_fecha, NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
+                                            NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
+                                            'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
+                                            NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
+                                            FROM dblink('dbname=MIC-ESTADISTICAS
+                                                            hostaddr=179.43.126.101 
+                                                            user=postgres 
+                                                            password=plahe100%
+                                                            port=5432',
+                                                            'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
+                                                            as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)
+                                    
+                                    UNION ALL
+                                    SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+                                            r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
+                                            r.subclase_id,r.estudios_id,NULL::bigint AS cod_esia_id,r.cod_temporalidad_id,
+                                            NULL::bigint AS objetos_id,r.fecha_observatorio,r.recurso_categoria_id,
+                                            rc.recurso_categoria_desc,r.recurso_desc,r.recurso_titulo,r.recurso_fecha,   
+                                            r.recurso_autores, r.recurso_path_url,  r.recurso_size,r.territorio_id,
+                                            f.tipo_formato_id, f.visualizacion_tipo_id,f.formato_desc,f.formato_extension, 
+                                            vt.visualizacion_tipo_desc,tf.tipo_formato_desc,tf.tipo_formato_solapa, r.sub_proyecto_id as sub_proyecto_id 
+                                            FROM "MIC-MEDIATECA".recurso r
+                                            LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+                                            LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
+                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+                                            LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                            LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
+                                            WHERE tf.tipo_formato_solapa = 2 ) as u 
+                                INNER JOIN dblink('dbname=MIC-CATALOGO
+                                hostaddr=179.43.126.101 
+                                user=postgres 
+                                password=plahe100%
+                                port=5432',
+                                'SELECT estudios_id, estudios_palabras_clave,nombre,equipo,institucion,responsable
+                                FROM "MIC-CATALOGO".estudios') 
+                                as e(estudios_id bigint, estudios_palabras_clave text, nombre text, equipo text, institucion text, responsable text)
+                                ON u.estudios_id = e.estudios_id
+                                INNER JOIN dblink('dbname=MIC-CATALOGO
+                                hostaddr=179.43.126.101 
+                                user=postgres 
+                                password=plahe100%
+                                port=5432',
+                                'SELECT cod_temporalidad_id,desde AS tempo_desde, hasta AS tempo_hasta FROM "MIC-CATALOGO".cod_temporalidad')
+                                as ct(cod_temporalidad_id bigint, tempo_desde date, tempo_hasta date) ON u.cod_temporalidad_id = ct.cod_temporalidad_id
+                                INNER JOIN dblink('dbname=MIC-CATALOGO
+                                hostaddr=179.43.126.101 
+                                user=postgres 
+                                password=plahe100%
+                                port=5432',
+                                'SELECT subclase_id, clase_id FROM "MIC-CATALOGO".subclase')
+                                as sc(subclase_id bigint,clase_id bigint) ON u.subclase_id = sc.subclase_id
+                                EOD;      
+        
+        $CONSULTA_DEFINITIVA_ESTADISTICA_RT =  $aux_consulta_recursos.' '.$this->get_string_filtros($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
+        
+        //instancio una conexion 
+        $conexion_rec_tecnicos = new ConexionRecursosTecnicos();
+        
+        $total_registros = $conexion_rec_tecnicos->get_consulta($CONSULTA_DEFINITIVA_ESTADISTICA_RT);
+        
+        return  $total_registros ;
     }
 
 
