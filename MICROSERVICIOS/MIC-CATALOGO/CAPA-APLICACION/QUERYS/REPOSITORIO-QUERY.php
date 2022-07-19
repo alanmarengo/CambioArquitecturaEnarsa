@@ -13,7 +13,7 @@ class RepositorioQuery implements IRepositorioQuery{
             //aca instancio a la conexion y hago toda la query y la retorno.
             $conexion = new ConexionCatalogo();
             $query = 'SELECT t.fec_bbdd_date, t.territorio_simpli,t.fec_bbdd,t.descripcion FROM "MIC-CATALOGO".territorio t WHERE t.territorio_id = '.$territorio_id;
-            return $conexion->get_consulta($query);
+            return $conexion->get_consulta($query); // 
     }
 
 
