@@ -45,26 +45,28 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
 
 
-        $consulta_definitiva = "SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
-                                r.recurso_id AS origen_id_especifico,    
-                                r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
-                                NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
-                                NULL::bigint AS objetos_id, r.recurso_categoria_id, r.tipo_recurso_id, 
-                                r.formato_id, r.recurso_titulo, r.recurso_desc, r.recurso_fecha, 
-                                r.recurso_autores, r.recurso_path_url, r.recurso_size, r.territorio_id, 
-                                tr.tipo_recurso_desc, rc.recurso_categoria_desc, f.tipo_formato_id, 
-                                f.visualizacion_tipo_id, f.formato_desc, f.formato_extension, 
-                                vt.visualizacion_tipo_desc,tf.tipo_formato_solapa, 
-                                tf.tipo_formato_desc, r.sub_proyecto_id as sub_proyecto_id, r.fecha_observatorio
-                                FROM ".'"MIC-MEDIATECA".recurso r
-                                LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
-                                LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
-                                LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
-                                LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
-                                WHERE tf.tipo_formato_solapa = '.$solapa.' '.$extension_consulta_filtro_recursos.' '.$paginador.';';
+        $consulta_definitiva = <<<EOD
+                                    SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+                                    r.recurso_id AS origen_id_especifico,    
+                                    r.recurso_titulo AS origen_search_text, r.subclase_id, r.estudios_id, 
+                                    NULL::bigint AS cod_esia_id, r.cod_temporalidad_id, 
+                                    NULL::bigint AS objetos_id, r.recurso_categoria_id, r.tipo_recurso_id, 
+                                    r.formato_id, r.recurso_titulo, r.recurso_desc, r.recurso_fecha, 
+                                    r.recurso_autores, r.recurso_path_url, r.recurso_size, r.territorio_id, 
+                                    tr.tipo_recurso_desc, rc.recurso_categoria_desc, f.tipo_formato_id, 
+                                    f.visualizacion_tipo_id, f.formato_desc, f.formato_extension, 
+                                    vt.visualizacion_tipo_desc,tf.tipo_formato_solapa, 
+                                    tf.tipo_formato_desc, r.sub_proyecto_id as sub_proyecto_id, r.fecha_observatorio
+                                    FROM "MIC-MEDIATECA".recurso r
+                                    LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+                                    LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
+                                    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+                                    LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                    LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
+                                    WHERE tf.tipo_formato_solapa =  
+                                    EOD;        
+        $consulta_definitiva .= ' '.$solapa.' '.$extension_consulta_filtro_recursos.' '.$paginador;        
        
-        
         // instancio una nueva conexion 
         $conexion = new ConexionMediateca();
         
@@ -125,7 +127,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
     public function get_estadistica_inicial()
     {
-        $consulta_estadistica_inicial = 'SELECT * FROM "MIC-MEDIATECA".estadistica_inicial        ';
+        $consulta_estadistica_inicial = 'SELECT * FROM "MIC-MEDIATECA".estadistica_inicial ';
 
         $conexion = new ConexionMediateca();
 
@@ -508,8 +510,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
 } // fin repositorio mediateca
 
-$test = new RepositorioQueryMediateca();
-echo $test->get_estadistica_inicial();
+//$test = new RepositorioQueryMediateca();
+// echo $test->get_estadistica_inicial();
 
 
   

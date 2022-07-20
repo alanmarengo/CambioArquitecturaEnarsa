@@ -151,11 +151,13 @@ class RepositorioQuery implements IRepositorioQuery{
             switch($lista_filtros_solapa[$x])
             {  
                 case 0:                                                                                                            //CONSEGUIR COMO SEA QUE ENTRE EL CASE DE ALLA ARRIBA
-                    $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,sp.sub_proyecto_desc::TEXT AS desc,
+                    $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,
+                                      sp.sub_proyecto_desc::TEXT AS desc,
                                         CASE
                                             WHEN t.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
                                             ELSE t.sub_proyecto_id
-                                        END  AS valor_id ,COUNT(*)::BIGINT AS total 
+                                        END  AS valor_id ,
+                                        COUNT(*)::BIGINT AS total 
                                     FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
                                                 'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                     FROM ".'"MIC-MEDIATECA".recurso t 
@@ -167,7 +169,7 @@ class RepositorioQuery implements IRepositorioQuery{
                                     LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                    WHERE t.tipo_formato_solapa = '.$solapa.$auxiliar_extensiones_filtros;    
+                                    WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros;    
                     break;               
 
                 case 1: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
@@ -185,7 +187,7 @@ class RepositorioQuery implements IRepositorioQuery{
                                     LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                    WHERE t.tipo_formato_solapa = '.$solapa.$auxiliar_extensiones_filtros; //SIEMPRE CONCATENAR LOS FILTROS DE RECURSOS RESTRINGIDOS
+                                    WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros; //SIEMPRE CONCATENAR LOS FILTROS DE RECURSOS RESTRINGIDOS
 
                                     //SI TENGO QUE FILTRAR ==1
                                     //QUERY_PARCIAL . = $AUX_CADENA_FILTROS.
@@ -205,7 +207,7 @@ class RepositorioQuery implements IRepositorioQuery{
                                         LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                         LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                         LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                        WHERE t.tipo_formato_solapa = '.$solapa.$auxiliar_extensiones_filtros; 
+                                        WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros; 
                         break;    
                 case 3:
                     $query_parcial = "SELECT  ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,'tema'::TEXT AS desc,clase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
@@ -220,7 +222,7 @@ class RepositorioQuery implements IRepositorioQuery{
                                         LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                         LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                         LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                        WHERE t.tipo_formato_solapa ='.$solapa.$auxiliar_extensiones_filtros; 
+                                        WHERE t.tipo_formato_solapa ='.$solapa.' '.$auxiliar_extensiones_filtros; 
                     break;   
                 case 4:
                     $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,subclase_desc::TEXT AS desc,t.subclase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
@@ -235,7 +237,7 @@ class RepositorioQuery implements IRepositorioQuery{
                                         LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                         LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                         LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                        WHERE t.tipo_formato_solapa = '.$solapa.$auxiliar_extensiones_filtros;
+                                        WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros;
                     break;  
                 case 5:
                     $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,recurso_categoria_desc::TEXT AS desc,recurso_categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
@@ -250,7 +252,7 @@ class RepositorioQuery implements IRepositorioQuery{
                     LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                    WHERE t.tipo_formato_solapa = '.$solapa.$auxiliar_extensiones_filtros;
+                    WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros;
                     break;                      
             }
             
@@ -275,17 +277,21 @@ class RepositorioQuery implements IRepositorioQuery{
         
         $QUERY_RETURN = "("; // variable contenedora de la union de filtros
 
-        $auxiliar_extensiones_filtros = ""; // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario, sino no hay que filtrar. solo ira vacio.
+        // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario, sino no hay que filtrar. solo ira vacio.
+       
+        $auxiliar_extensiones_filtros = $lista_recursos_restringidos;
+       
         if($si_tengo_que_filtrar == 1)
         {
-            $auxiliar_extensiones_filtros = ' '.$aux_cadena_filtros.' '.$lista_recursos_restringidos;
+            $auxiliar_extensiones_filtros .= ' '.$aux_cadena_filtros;
         }
 
         for($x=0;$x<=count($lista_filtros_solapa)-1; $x++) // cada filtro_id que exista en la lista 
         {            
             switch($lista_filtros_solapa[$x])
             {  
-                case 0:                                                                                                            //CONSEGUIR COMO SEA QUE ENTRE EL CASE DE ALLA ARRIBA
+                case 0:  
+                     /*                                                                                                           //CONSEGUIR COMO SEA QUE ENTRE EL CASE DE ALLA ARRIBA
                     $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,sp.sub_proyecto_desc::TEXT AS desc,
                                         CASE
                                             WHEN t.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
@@ -365,6 +371,9 @@ class RepositorioQuery implements IRepositorioQuery{
                                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
                                     WHERE t.tipo_formato_solapa = '.$solapa.$auxiliar_extensiones_filtros;    
+
+
+                                    */
                     break;               
 
                 case 1: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
@@ -380,7 +389,7 @@ class RepositorioQuery implements IRepositorioQuery{
                                     WHERE t.tipo_formato_solapa = '.$solapa.$auxiliar_extensiones_filtros; //SIEMPRE CONCATENAR LOS FILTROS DE RECURSOS RESTRINGIDOS
 
                                     //SI TENGO QUE FILTRAR ==1
-                                    //QUERY_PARCIAL . = $AUX_CADENA_FILTROS.
+                                    //QUERY_PARCIAL . = $AUX_CADENA_FILTROS. 
                     break;
                 case 2: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
                         $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
@@ -504,5 +513,3 @@ class RepositorioQuery implements IRepositorioQuery{
 
 }
 
-//$test = new RepositorioQuery();
-//print_r( $test->get_filtros(0,"(1,2,3)",1));
