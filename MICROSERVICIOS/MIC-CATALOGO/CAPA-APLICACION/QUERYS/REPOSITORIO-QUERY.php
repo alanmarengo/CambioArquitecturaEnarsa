@@ -170,6 +170,34 @@ class RepositorioQuery implements IRepositorioQuery{
                                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
                                     WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros;    
+
+
+                                /* consulta final de ejemplo
+                                
+                                SELECT 0::BIGINT AS filtro_id,
+                                    sp.sub_proyecto_desc::TEXT AS desc,
+                                    CASE
+                                        WHEN t.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
+                                    ELSE t.sub_proyecto_id 
+                                    END  AS valor_id,
+                                    COUNT(*)::BIGINT AS total 
+                                FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                            'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                            FROM "MIC-MEDIATECA".recurso t 
+                                            LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
+                                            LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
+                                            as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
+                                LEFT JOIN "MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
+                                LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
+                                LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
+                                LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id 
+                                WHERE t.tipo_formato_solapa = 0 AND t.recurso_id NOT IN (1,2,3,4) 
+                                GROUP BY sp.sub_proyecto_desc,valor_id                        
+                                
+                                
+                                */
+
                     break;               
 
                 case 1: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
