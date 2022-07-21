@@ -209,6 +209,20 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
 
     public function get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad)
     {
+                
+         $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
+         // armo una cadena para usar como subconsulta en la query principal 
+                 
+         for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+         {       
+            if($x==count($lista_recursos_restringidos)-1){
+                
+                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+            }else{
+                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+            }       
+         }   
+        
         
         //LOGICA DE PAGINADOR
         $aux_consulta_paginador= <<<EOD
@@ -299,7 +313,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                         EOD; 
 
         
-        $CONSULTA_PAGINADOR = $aux_consulta_paginador.' '.$this->get_string_filtros($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
+        $CONSULTA_PAGINADOR = $aux_consulta_paginador.' '.$extension_consulta_filtro_recursos.' '.$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
         
         //instancio una conexion 
         $conexion_rec_tecnicos = new ConexionRecursosTecnicos();
@@ -403,7 +417,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                             EOD;
         
         
-        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$this->get_string_filtros($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad).' '.$paginador;
+        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad).' '.$paginador;
         $recursos_tecnicos = $conexion_rec_tecnicos->get_consulta( $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS);
 
         //creo un array para guardar todos los recursos  tecnicos
@@ -434,29 +448,13 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         // faltaria estadistica de la solapa para devolver en mediateca, tentativamente ira la variable total_registros. ya que es total de registros 
         
         //  RecursosTecnicosFiltrado($recursos,$CantidadPaginas,$lista_recursos_restringidos,$aux_cadena_filtros)
-        return new RecursosTecnicosFiltrado($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos,$this->get_string_filtros($extension_consulta_filtro_recursos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad));       
+        return new RecursosTecnicosFiltrado($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos,$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad));       
     }
 
 
-    public function get_string_filtros($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad)
+    public function get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad)
     {
-        /*  esta funcion armara la cadena de los recursos restringidos, sumado a la cadena de los filtros que se armara y
-         se juntara con la consulta principal deseada. 
-         crea un string desde la clausula WHERE adicionando los recursos restringidos y los filtros */
         
-        $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
-        // armo una cadena para usar como subconsulta en la query principal 
-                
-        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
-        {       
-           if($x==count($lista_recursos_restringidos)-1){
-               
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
-           }else{
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
-           }       
-        }   
-       
         // validacion de filtros 
         $aux_cadena_filtros = ""; // variable contenedora, almacenara un string con todas las adeciones de filtros a la consulta principal
 
@@ -540,11 +538,24 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         if(!empty($tipo_doc)) { $aux_cadena_filtros .= " AND u.recurso_categoria_id = ".$tipo_doc; } // este ya esta 
         
         // fin validacion de filtros 
-        return  $extension_consulta_filtro_recursos.' '.$aux_cadena_filtros;     
+        return  $aux_cadena_filtros;     
     }
 
     public function get_estadistica_recursos_tecnicos($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica)
     {
+
+        $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
+        // armo una cadena para usar como subconsulta en la query principal 
+                
+        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        {       
+           if($x==count($lista_recursos_restringidos)-1){
+               
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+           }else{
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+           }       
+        }   
        
        // defino la consulta principal
 
@@ -635,7 +646,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                 as sc(subclase_id bigint,clase_id bigint) ON u.subclase_id = sc.subclase_id
                                 EOD;      
         
-        $CONSULTA_DEFINITIVA_ESTADISTICA_RT =  $aux_consulta_recursos.' '.$this->get_string_filtros($lista_recursos_restringidos,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
+        $CONSULTA_DEFINITIVA_ESTADISTICA_RT =  $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
         
         //instancio una conexion 
         $conexion_rec_tecnicos = new ConexionRecursosTecnicos();

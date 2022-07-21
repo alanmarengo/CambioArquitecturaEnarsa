@@ -51,6 +51,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
             if($solapa==2){ // si la solapa ingresada es Recursos Tecnicos (solapa 2)                
 
                 $recursos_mediateca = $servicio_recursos_tecnicos->get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
+                $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->aux_cadena_filtros,$recursos_mediateca->lista_recursos_restringidos,$si_tengo_que_filtrar);
             } 
             else{ // sino, si es cualquiera de las otras solapas... (0,1,3) hago lo siguiente 
 
@@ -140,7 +141,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
  // print_r($recursos_mediateca);
 
   // test solapa 2 - rec tec 
-   $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,2,1,20,"","","","","","","","","",0,""); // test solapa cero, sin filtros 
+   $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,2,1,20,"","","","","","","","","",0,""); // test solapa dos, sin filtros 
    print_r($recursos_mediateca);
 
  // test solapa 3 - novedades 

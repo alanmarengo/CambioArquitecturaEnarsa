@@ -58,7 +58,7 @@ class Respuesta{
     public $registros_total_2;
     public $registros_total_3;
     public $rec_per_page;
-    public $current_page = 20;
+    public $current_page ;
 
     public function __construct(){
         
