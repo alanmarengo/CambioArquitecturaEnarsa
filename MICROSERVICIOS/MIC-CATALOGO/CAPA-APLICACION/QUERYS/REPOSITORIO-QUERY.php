@@ -99,7 +99,7 @@ class RepositorioQuery implements IRepositorioQuery{
 
             // ejecutar consulta final, para obtener lista de filtros 
 
-            $conexion = New ConexionCatalogo();
+            $conexion = New ConexionCatalogo(); //
             //echo $QUERY_DEFINITIVA;
 
             $resultado_final_filtros = $conexion->get_consulta($QUERY_DEFINITIVA);
