@@ -15,9 +15,6 @@ class RepositorioQuery implements IRepositorioQuery{
             $query = 'SELECT t.fec_bbdd_date, t.territorio_simpli,t.fec_bbdd,t.descripcion FROM "MIC-CATALOGO".territorio t WHERE t.territorio_id = '.$territorio_id;
             return $conexion->get_consulta($query); //  //
     }
-
-
-
     
     public function get_filtros($solapa,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar){ 
       
@@ -41,11 +38,9 @@ class RepositorioQuery implements IRepositorioQuery{
         $lista_filtros_solapa_0=[0,1,3,4];
         $lista_filtros_solapa_1=[0,3,4,5];
         $lista_filtros_solapa_2=[0,2,3,4];
-        $lista_filtros_solapa_3=[0,3,4];
-        
+        $lista_filtros_solapa_3=[0,3,4];        
         
         $QUERY_DEFINITIVA = ""; // variable contenedora de consulta final a ejecutar. 
-
       
             switch($solapa)
             {       
@@ -124,8 +119,6 @@ class RepositorioQuery implements IRepositorioQuery{
                 array_push($filtros,$filtro);
                 
             }
-
-
         
         $conexion->desconectar(); // cierro la conexion 
 
@@ -564,9 +557,6 @@ class RepositorioQuery implements IRepositorioQuery{
 
 
     }
-
-
-
 
     public function ConstruirQueryFiltro($filtro_id){
         
