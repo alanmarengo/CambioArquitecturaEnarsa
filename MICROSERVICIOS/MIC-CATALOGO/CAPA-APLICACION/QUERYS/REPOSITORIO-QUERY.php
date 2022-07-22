@@ -605,7 +605,7 @@ class RepositorioQuery implements IRepositorioQuery{
         }
     }
 
-    public function ConstruirQueryFiltroRecursosTecnicos($filtro_id){
+    public function ConstruirQueryFiltroRecursosTecnicos($filtro_id){ //
         
         //FILTRO ID 0
         $CONSULTA_PROYECTO=' GROUP BY sp.sub_proyecto_desc,valor_id '; // nota: reemplazo el valor sub_proyecto_id_principal por la variable valor_ir(contienen el mismo valor y se obtiene de la misma manera, cambia el nombre nomas)
