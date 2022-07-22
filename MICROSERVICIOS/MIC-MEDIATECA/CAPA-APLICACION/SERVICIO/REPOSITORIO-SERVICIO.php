@@ -141,7 +141,8 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
  // print_r($recursos_mediateca);
 
   // test solapa 2 - rec tec 
-   $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,2,1,20,"","","","","","","","","",0,""); // test solapa dos, sin filtros 
+  // get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica)
+   $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",2,1,20,"","","","","","","","","",0,0); // test solapa dos, sin filtros 
    print_r($recursos_mediateca);
 
  // test solapa 3 - novedades 
