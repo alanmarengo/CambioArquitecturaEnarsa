@@ -556,7 +556,7 @@ class RepositorioQuery implements IRepositorioQuery{
 
         } 
 
-        echo $QUERY_RETURN;
+        //echo $QUERY_RETURN;
             
         return $QUERY_RETURN;
 
