@@ -269,7 +269,7 @@ class RepositorioQuery implements IRepositorioQuery{
                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                 LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                 LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
-                            as T (recurso_id bigint, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
+                            as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
                     LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                     LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id

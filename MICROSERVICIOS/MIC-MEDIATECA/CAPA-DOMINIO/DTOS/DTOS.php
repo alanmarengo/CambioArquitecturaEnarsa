@@ -47,10 +47,8 @@ class EstadisticasFiltros{
 
 class Respuesta{
     public $recordset;
-    public $filtros;
-    public $paginas;
+    public $filtros;    
     public $solapa;
-    public $pagina;
     public $estudio_nombre;
     public $mode_label;
     public $registros_total_0;

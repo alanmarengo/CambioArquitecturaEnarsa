@@ -14,7 +14,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
     public function get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size){
 
-        $extension_consulta_filtro_recursos = "AND r.recurso_id NOT IN (";
+        $extension_consulta_filtro_recursos = " AND r.recurso_id NOT IN (";
 
         // armo una cadena para usar como subconsulta en la query principal 
         for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
