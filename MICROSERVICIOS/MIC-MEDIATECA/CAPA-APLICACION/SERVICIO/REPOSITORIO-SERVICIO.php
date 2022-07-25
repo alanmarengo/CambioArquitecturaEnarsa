@@ -1,11 +1,15 @@
 <?php
 
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/INTERFACE-REPOSITORIO-SERVICIO/INTERFACE-REPOSITORIO-SERVICIO.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-APLICACION/QUERY/REPOSITORIO-QUERY.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-USUARIO/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIOS.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-CATALOGO/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/DTOS/DTOS.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-RECURSOSTECNICOS/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+ require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\INTERFACE-REPOSITORIO-SERVICIO\INTERFACE-REPOSITORIO-SERVICIO.php');
+ require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-APLICACION\QUERY\REPOSITORIO-QUERY.php');
+ require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIOS.php');
+ require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php');
+ require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\DTOS\DTOS.php');
+ require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php');
+
+//$rola = dirname(__FILE__,4); no tocar es un ejemplo de como cponseguir la ruta absoluta
+
+
 
 //INJECTAR  SERVICIO MIC-RECURSOS TECNICOS
 
@@ -133,8 +137,8 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
  // si no hay que filtrar 
  // test solapa 0 - documentos 
-  // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",0,1,20,"","","","","","","","","",0,""); // test solapa cero, sin filtros 
-  // print_r($recursos_mediateca);
+   $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",0,1,20,"","","","","","","","","",0,""); // test solapa cero, sin filtros 
+   print_r($recursos_mediateca);
 
  // test solapa 1  - recursos audivisuales
  // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",1,1,20,"","","","","","","","","",0,"","");
