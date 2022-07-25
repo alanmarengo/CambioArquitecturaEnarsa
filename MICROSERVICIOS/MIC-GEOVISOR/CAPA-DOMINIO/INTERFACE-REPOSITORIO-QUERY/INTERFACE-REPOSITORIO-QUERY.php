@@ -1,4 +1,4 @@
 <?php
-interface IRepositorioQuery{
-    
+interface IRepositorioQueryGeovisor{
+    public function ListaProyectos();
 }
