@@ -151,8 +151,41 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
  // si hay que filtrar
  // test solapa 0 - documentos 
- // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,0,1,20,"imagen","","","","","","","","",1,""); // test solapa cero, sin filtros 
- // print_r($recursos_mediateca);
+// get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica)
+
+
+
+// TEST FILTRO QT   --   FILTRO DE PALABRAS QUE VUELVEN DEL BUSCADOR 
+
+// SOLAPA 0
+//$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",0,1,20,"imagen","","","","","","","","",1,""); // test solapa cero, sin filtros 
+//print_r($recursos_mediateca);
+
+  // SOLAPA 1 
+//$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",1,1,20,"imagen","","","","","","","","",1,""); // test solapa cero, sin filtros 
+//print_r($recursos_mediateca);
+
+    // SOLAPA 2
+//$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",2,1,20,"imagen","","","","","","","","",1,""); // test solapa cero, sin filtros 
+//print_r($recursos_mediateca);
+
+
+    // SOLAPA 3
+// $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",3,1,20,"imagen","","","","","","","","",1,""); // test solapa cero, sin filtros 
+// print_r($recursos_mediateca);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  // test solapa 1  - recursos audivisuales
  // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,1,1,20,"","","","","","","","","",1,"");
