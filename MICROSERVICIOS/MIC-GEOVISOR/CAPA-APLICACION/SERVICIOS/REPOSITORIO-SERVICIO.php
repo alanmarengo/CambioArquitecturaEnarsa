@@ -20,9 +20,6 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
         $this->query= new RepositorioQueryGeovisor();
     }
     
-
-
-
     public function Get_Layer_Security($user_id, $layer_id)
     {
 
@@ -50,6 +47,14 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
         return $this->query->ListaProyectos();
     }
 
+    public function DrawAbr() 
+    {               
+        $this->query->DrawAbr();
+        
+    }
+
+
+
 
 }
 
@@ -57,3 +62,4 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
 $test = new RepositorioServicioGeovisor();
 //$test->ListaProyectos();
 //echo $test->Get_Layer_Security("", 36453);
+$test->DrawAbr();
