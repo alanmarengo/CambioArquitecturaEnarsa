@@ -64,3 +64,14 @@ class Respuesta{
 
 
 }
+
+
+class Coincidencia{
+    var $alias;
+    var $palabra_clave;
+ 
+    public function __construct($alias,$palabra_clave){
+      $this->alias=$alias;
+      $this->palabra_clave=$palabra_clave;
+    }
+ }

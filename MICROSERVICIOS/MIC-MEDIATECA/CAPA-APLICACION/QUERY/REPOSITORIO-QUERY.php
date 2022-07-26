@@ -405,12 +405,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         // se retorna un objeto json de los recursos 
         //RecursosFiltros($recursos,$aux_cadena_filtros,$CantidadPaginas,$EstadisticasFiltros,$lista_recursos_restringidos)
     return new RecursosFiltros($array_recursos_mediateca_filtrados,$aux_cadena_filtros,$cant_paginas,$estadisticas_filtrado, $extension_consulta_filtro_recursos); /* cantidad de paginas*/
-    
-  
+      
     }
-
-
-
 
     public function get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos)
     {
@@ -503,6 +499,37 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
     return new EstadisticasFiltros($estadistica_documentos,$estadistica_recursos_audiovisuales,$estadistica_novedades);
     
+    }
+
+
+    public function busqueda_mediateca($str_filtro_mediateca){
+
+        $sql= <<<EOD
+                SELECT ARC.alias_filtro,ARC.palabra_clave
+                FROM "MIC-MEDIATECA".alias_recursos_clave as ARC
+                WHERE unaccent(LOWER(ARC.alias_filtro)) LIKE unaccent(LOWER('%$str_filtro_mediateca%'))
+                ORDER BY ARC.alias_filtro ASC        
+                EOD;
+          
+
+        $conexion = new ConexionMediateca();        
+        //realizo la consulta            
+        $consulta = $conexion->get_consulta($sql);   
+      
+        //creo un array para guardar todos los datos 
+        $coincidencias = Array();
+      
+        // recorro el arreglo con los datos de la consulta 
+        for($x=0; $x<=count($consulta)-1; $x++)
+        {            
+            $alias_filtro= $consulta[$x]['alias_filtro'];
+            $palabra_clave= $consulta[$x]['palabra_clave'];
+
+            array_push($coincidencias,new Coincidencia($alias_filtro,$palabra_clave));                  
+        }
+        
+        return $coincidencias;
+        
     }
 
 
