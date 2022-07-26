@@ -60,5 +60,32 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		
 	}
 
+	public function DrawAbr()
+	{
+		$query_string = <<<EOD
+                            SELECT * FROM dblink('dbname=MIC-CATALOGO
+                            hostaddr=179.43.126.101 
+                            user=postgres 
+                            password=plahe100%
+                            port=5432',
+                            'SELECT clase_id,clase_desc,color_hex,color_head,cod_clase_alf FROM "MIC-CATALOGO".clase ORDER BY clase_id ASC') 
+                            as dt(clase_id integer, clase_desc text, color_hex text, color_head text, cod_clase_alf text)
+                        EOD;
+
+		$conexion = new ConexionGeovisores(); 
+
+		//realizo la consulta 
+		$r = $conexion->get_consulta($query_string);
+		print_r($r);
+
+		for($x=0; $x<=count($r)-1; $x++)
+		{  
+			echo '<div class="abr panel-abr" data-color="#31cbfd" data-bgcolor="#FFFFFF" data-active="0" data-cid="'.$r[$x]["clase_id"].'" title="'.$r[$x]["clase_desc"].'">
+                 <span>'.$r[$x]["cod_clase_alf"].'</span>
+            </div>' ;
+		}	    
+
+	}
+
 }
 
