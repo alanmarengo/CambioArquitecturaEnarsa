@@ -23,17 +23,27 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
 
 
 
-    public function Get_Layer_Security($user_id, $layer_id){
-        $lista_recursos_restringidos = array();   
+    public function Get_Layer_Security($user_id, $layer_id)
+    {
+
+        $lista_recursos_restringidos = array(); 
+
         if(empty($user_id)){ $user_id = -1; } // si el id de usuario viene vacio, se le pone -1.
 
         if($user_id!=-1){
-            $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos_user($user_id);
+            $lista_recursos_restringidos = $this->servicio_usuario->get_recursos_restringidos_user($user_id);
         }else{
-            $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos();
+            $lista_recursos_restringidos = $this->servicio_usuario->get_recursos_restringidos();
         }
 
-        //if layer_id esta en   $lista_recursos_restringidos  entonces devuelvo true, sino devuelvo false;
+        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        {
+           if($lista_recursos_restringidos[$x]['objeto_id'] == $layer_id)
+           {
+               return true;
+           }            
+        }
+        return false;
     }   
 
     public function ListaProyectos(){
@@ -45,4 +55,5 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
 
 
 $test = new RepositorioServicioGeovisor();
-$test->ListaProyectos();
+//$test->ListaProyectos();
+//echo $test->Get_Layer_Security("", 36453);
