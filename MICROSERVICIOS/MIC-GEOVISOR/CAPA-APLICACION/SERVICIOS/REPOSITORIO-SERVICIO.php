@@ -1,6 +1,10 @@
 <?php
-require_once('C:/xampp/htdocs/atic/obs_nueva_arq/obs_op/MICROSERVICIOS/MIC-GEOVISOR/CAPA-DOMINIO/INTERFACE-SERVICIOS/REPOSITORIO-INTERFACE-SERVICIO.php');
-require_once('C:/xampp/htdocs/atic/obs_nueva_arq/obs_op/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/QUERYS/REPOSITORIO-QUERY.php');
+
+// (dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\INTERFACE-REPOSITORIO-SERVICIO\INTERFACE-REPOSITORIO-SERVICIO.php')
+require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DOMINIO\INTERFACE-REPOSITORIO-SERVICIO\INTERFACE-REPOSITORIO-SERVICIO.php');
+require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-APLICACION\QUERYS\REPOSITORIO-QUERY.php');
+require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIOS.php');
+
 
 //INJECTAR MICROSERVICIO USUARIO
 
@@ -11,7 +15,7 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
     //lo mismo con la querry
 
 
-    public function _construct(){
+    public function __construct(){
         $this->servicio_usuario=new RepositorioServicioUsuario();
         $this->query= new RepositorioQueryGeovisor();
     }
@@ -32,16 +36,13 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
         //if layer_id esta en   $lista_recursos_restringidos  entonces devuelvo true, sino devuelvo false;
     }   
 
-    public function ListarProyectos(){
-        return $this->query->ListarProyectos();
+    public function ListaProyectos(){
+        return $this->query->ListaProyectos();
     }
 
 
-
-
-
-
-
-
-
 }
+
+
+$test = new RepositorioServicioGeovisor();
+$test->ListaProyectos();
