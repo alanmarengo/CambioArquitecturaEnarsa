@@ -1,18 +1,14 @@
 <?php
 
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-RECURSOSTECNICOS/CAPA-DOMINIO/INTERFACE-QUERYS/REPOSITORIO-INTERFACE-QUERY.php');
-
-
-//INJECTAR LA CONEXION
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-RECURSOSTECNICOS/CAPA-DATOS/capa-acceso.php');
-
-//INJECTAR DTO
-//INJECTAR ENTIDADES
+require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS/CAPA-DOMINIO/INTERFACE-QUERYS/REPOSITORIO-INTERFACE-QUERY.php');
+require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS/CAPA-DATOS/capa-acceso.php');
+require_once(dirname(__FILE__,4).'\\MIC-RECURSOSTECNICOS/CAPA-DOMINIO/DTOS/DTOS.php');
+require_once(dirname(__FILE__,4).'\\MIC-RECURSOSTECNICOS/CAPA-DOMINIO/ENTIDADES/ENTIDADES.php');
 
 
 class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecnicos{
 
-    public function get_recursos_tecnicos($lista_recursos_restringidos, $current_page, $page_size)
+    public function get_recursos_tecnicos($lista_recursos_restringidos, $current_page, $page_size, $order_by)
     {
         //HACER LOGICA RECURSOS RESTRINGIDOS.
         $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
@@ -28,6 +24,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
            }       
         }   
+    
 
         //LOGICA DE PAGINADOR
         $aux_consulta_paginador= <<<EOD
@@ -109,6 +106,19 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
 
         // fin paginador ---------------------------------
 
+        // ordenamiento
+        switch ($order_by)
+        {
+            case 0: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_titulo ASC"; break;
+            case 1: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_titulo DESC"; break;
+            case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break;
+            case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break;
+            case 4: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_fecha DESC"; break;
+            case 5: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_fecha DESC ASC"; break;
+            case 6: 	$ORDER ="  ORDER BY u.tipo_formato_solapa, u.fecha_observatorio DESC"; break;
+            //default: 	$ORDER = " ORDER BY tipo_formato_solapa,recurso_titulo ASC"; break;
+        };
+
         // OBTENCION DE RECURSOS
 
         $aux_consulta_recursos = <<<EOD
@@ -175,7 +185,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                 EOD;
         
         
-        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$paginador;
+        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$ORDER.' '.$paginador;
         $recursos_tecnicos = $conexion_rec_tecnicos->get_consulta( $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS);
 
         //creo un array para guardar todos los recursos  tecnicos
@@ -207,7 +217,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         return new RecursosTecnicos($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos);         
     } // fin function get_recursos_tecnicos 
 
-    public function get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad)
+    public function get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad, $order_by)
     {
                 
          $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
@@ -417,7 +427,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                             EOD;
         
         
-        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad).' '.$paginador;
+        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad).' '.$ORDER.' '.$paginador;
         $recursos_tecnicos = $conexion_rec_tecnicos->get_consulta( $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS);
 
         //creo un array para guardar todos los recursos  tecnicos

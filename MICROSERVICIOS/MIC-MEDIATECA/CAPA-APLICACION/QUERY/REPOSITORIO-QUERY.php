@@ -177,13 +177,13 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         switch ($order_by)
         {
-            case 0: 	$ORDER = " ORDER BY origen_id_especifico, r.recurso_titulo ASC"; break;
-            case 1: 	$ORDER = " ORDER BY origen_id_especifico, r.recurso_titulo DESC"; break;
+            case 0: 	$ORDER = " ORDER BY tipo_formato_solapa, r.recurso_titulo ASC"; break;
+            case 1: 	$ORDER = " ORDER BY tipo_formato_solapa, r.recurso_titulo DESC"; break;
             case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break; // quedan estos dos para revisar 
             case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break; // quedan estos dos para revisar 
-            case 4: 	$ORDER = " ORDER BY origen_id_especifico, r.fecha DESC"; break;
-            case 5: 	$ORDER = " ORDER BY origen_id_especifico, r.fecha ASC"; break;
-            case 6: 	$ORDER = " ORDER BY origen_id_especifico, r.fecha_observatorio DESC"; break;
+            case 4: 	$ORDER = " ORDER BY tipo_formato_solapa, r.fecha DESC"; break;
+            case 5: 	$ORDER = " ORDER BY tipo_formato_solapa, r.fecha ASC"; break;
+            case 6: 	$ORDER = " ORDER BY tipo_formato_solapa, r.fecha_observatorio DESC"; break;
             //default: 	$ORDER = " ORDER BY tipo_formato_solapa,recurso_titulo ASC"; break;
         };
 
