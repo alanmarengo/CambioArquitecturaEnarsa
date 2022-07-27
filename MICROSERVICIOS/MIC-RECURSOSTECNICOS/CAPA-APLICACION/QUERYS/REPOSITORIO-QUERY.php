@@ -336,6 +336,19 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;
 
         // fin paginador ---------------------------------
+        
+        // ordenamiento
+        switch ($order_by)
+        {
+            case 0: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_titulo ASC"; break;
+            case 1: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_titulo DESC"; break;
+            case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break;
+            case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break;
+            case 4: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_fecha DESC"; break;
+            case 5: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_fecha DESC ASC"; break;
+            case 6: 	$ORDER ="  ORDER BY u.tipo_formato_solapa, u.fecha_observatorio DESC"; break;
+            //default: 	$ORDER = " ORDER BY tipo_formato_solapa,recurso_titulo ASC"; break;
+        };
 
         // OBTENCION DE RECURSOS
 
