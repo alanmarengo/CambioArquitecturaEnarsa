@@ -133,7 +133,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
        return $this->query->busqueda_mediateca($str_filtro_mediateca);
 
-    }
+    } //
 
 
 
