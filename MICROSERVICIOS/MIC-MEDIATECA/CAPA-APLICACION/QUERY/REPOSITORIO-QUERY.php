@@ -1,10 +1,8 @@
 <?php
-
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/INTERFACE-REPOSITORIO-QUERY/INTERFACE-REPOSITORIO-QUERY.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DATOS/capa-acceso.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/ENTIDADES/ENTIDADES.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-MEDIATECA/CAPA-DOMINIO/DTOS/DTOS.php');
-
+require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\INTERFACE-REPOSITORIO-QUERY\INTERFACE-REPOSITORIO-QUERY.php');
+require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DATOS\capa-acceso.php');
+require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\ENTIDADES\ENTIDADES.php');
+require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\DTOS\DTOS.php');
 
 //INJECTAR EL ARCHIVO ENTIDADES.php DE ESTE MICROSERVICIO
 
@@ -12,7 +10,7 @@ require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERV
 // COMENTARIO DE PRUEBA
 class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
-    public function get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size){
+    public function get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size,$order_by){
 
         $extension_consulta_filtro_recursos = " AND r.recurso_id NOT IN (";
 
@@ -26,6 +24,23 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
            }       
         }
+
+        // ordenamiento
+
+        switch ($order_by)
+		{
+			case 0: 	$ORDER = " ORDER BY origen_id_especifico, r.recurso_titulo ASC"; break;
+			case 1: 	$ORDER = " ORDER BY origen_id_especifico, r.recurso_titulo DESC"; break;
+			case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break; // quedan estos dos para revisar 
+			case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break; // quedan estos dos para revisar 
+			case 4: 	$ORDER = " ORDER BY origen_id_especifico, r.fecha DESC"; break;
+			case 5: 	$ORDER = " ORDER BY origen_id_especifico, r.fecha ASC"; break;
+			case 6: 	$ORDER = "  ORDER BY origen_id_especifico, r.fecha_observatorio DESC"; break;
+			//default: 	$ORDER = " ORDER BY tipo_formato_solapa,recurso_titulo ASC"; break;
+		};
+
+
+
 
         // variable paginado  
 
@@ -42,8 +57,6 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;
 
         // fin paginador ---------------------------------
-
-
 
         $consulta_definitiva = <<<EOD
                                     SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
@@ -64,8 +77,9 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                     LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                     LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                     WHERE tf.tipo_formato_solapa =  
-                                    EOD;        
-        $consulta_definitiva .= ' '.$solapa.' '.$extension_consulta_filtro_recursos.' '.$paginador;        
+                                    EOD; 
+
+        $consulta_definitiva .= ' '.$solapa.' '.$extension_consulta_filtro_recursos.' '.$ORDER.' '.$paginador;        
        
         // instancio una nueva conexion 
         $conexion = new ConexionMediateca();
@@ -144,7 +158,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
     }
 
 
-    public function get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad){
+    public function get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$order_by){
     
         $extension_consulta_filtro_recursos = "AND t.recurso_id NOT IN (";
 
@@ -158,6 +172,20 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
            }       
         }
+
+        // ordenamiento
+
+        switch ($order_by)
+        {
+            case 0: 	$ORDER = " ORDER BY origen_id_especifico, r.recurso_titulo ASC"; break;
+            case 1: 	$ORDER = " ORDER BY origen_id_especifico, r.recurso_titulo DESC"; break;
+            case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break; // quedan estos dos para revisar 
+            case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break; // quedan estos dos para revisar 
+            case 4: 	$ORDER = " ORDER BY origen_id_especifico, r.fecha DESC"; break;
+            case 5: 	$ORDER = " ORDER BY origen_id_especifico, r.fecha ASC"; break;
+            case 6: 	$ORDER = " ORDER BY origen_id_especifico, r.fecha_observatorio DESC"; break;
+            //default: 	$ORDER = " ORDER BY tipo_formato_solapa,recurso_titulo ASC"; break;
+        };
 
         // validacion de filtros 
 
@@ -358,7 +386,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                                                             proyecto_extent text,institucion_nombre text, institucion_tel text,
                                                                             institucion_contacto text, institucion_email text)  
                                                                     ON t.estudios_id_rec = e.estudios_id
-                                                WHERE t.tipo_formato_solapa = ".$solapa.' '.$aux_cadena_filtros.' '.$extension_consulta_filtro_recursos.' '.$paginador.';';
+                                                WHERE t.tipo_formato_solapa = ".$solapa.' '.$aux_cadena_filtros.' '.$extension_consulta_filtro_recursos.' '.$ORDER.' '.$paginador.';';
        
         
         // instancio una nueva conexion 

@@ -23,7 +23,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 
     // funcion para traer todos los recursos de la mediateca 
-    public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica)
+    public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
     {
         $respuesta= new Respuesta(); // objeto que recopilara la informacion 
         $respuesta->solapa = $solapa ;
@@ -54,12 +54,12 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
             if($solapa==2){ // si la solapa ingresada es Recursos Tecnicos (solapa 2)                
 
-                $recursos_mediateca = $servicio_recursos_tecnicos->get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
+                $recursos_mediateca = $servicio_recursos_tecnicos->get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$order_by);
                 $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->aux_cadena_filtros,$recursos_mediateca->lista_recursos_restringidos,$si_tengo_que_filtrar);
             } 
             else{ // sino, si es cualquiera de las otras solapas... (0,1,3) hago lo siguiente 
 
-                $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
+                $recursos_mediateca=$this->query->get_recursos_filtrado($lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$order_by);
                 $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->aux_cadena_filtros,$recursos_mediateca->lista_recursos_restringidos,$si_tengo_que_filtrar);
                 $respuesta->cant_paginas = $recursos_mediateca->CantidadPaginas;  
 
@@ -69,12 +69,12 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
             if($solapa==2){ // // si la solapa ingresada es Recursos Tecnicos (solapa 2) 
 
-                $recursos_mediateca = $servicio_recursos_tecnicos->get_recursos_tecnicos($lista_recursos_restringidos, $current_page,$page_size);
+                $recursos_mediateca = $servicio_recursos_tecnicos->get_recursos_tecnicos($lista_recursos_restringidos, $current_page,$page_size,$order_by);
                 $filtros=$servicio_catalogo->get_filtros($solapa,"",$recursos_mediateca->lista_recursos_restringidos,$si_tengo_que_filtrar);
                 
             }else{ // sino, si es cualquiera de las otras solapas... (0,1,3) hago lo siguiente.
 
-                $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size);
+                $recursos_mediateca= $this->query->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size,$order_by);
                 $filtros=$servicio_catalogo->get_filtros($solapa,"",$recursos_mediateca->lista_recursos_restringidos,$si_tengo_que_filtrar); // si no hay que filtrar, se envia vacio en el parametro de los filtros. 
                 $respuesta->cant_paginas = $recursos_mediateca->CantidadPaginas;
             }
@@ -151,7 +151,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
  // si no hay que filtrar 
  // test solapa 0 - documentos 
-   $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",0,1,20,"","","","","","","","","",0,""); // test solapa cero, sin filtros 
+   $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",0,1,20,"","","","","","","","","",0,"",1); // test solapa cero, sin filtros 
    print_r($recursos_mediateca);
 
  // test solapa 1  - recursos audivisuales
