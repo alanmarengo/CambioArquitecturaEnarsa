@@ -76,7 +76,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 		//realizo la consulta 
 		$r = $conexion->get_consulta($query_string);
-		print_r($r);
+		//print_r($r);
 
 		for($x=0; $x<=count($r)-1; $x++)
 		{  
@@ -87,5 +87,46 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	}
 
+	public function DrawContainers()
+	{
+		$query_string = <<<EOD
+                            SELECT * FROM dblink('dbname=MIC-CATALOGO
+                            hostaddr=179.43.126.101 
+                            user=postgres 
+                            password=plahe100%
+                            port=5432',
+                            'SELECT clase_id,cod_nom,color_hex,color_head,cod_clase_alf FROM "MIC-CATALOGO".clase ORDER BY clase_id ASC') 
+                            as dt(clase_id integer, cod_nom text,color_hex text,color_head text,cod_clase_alf text)
+                        EOD;
+
+		$conexion = new ConexionGeovisores(); 
+
+		//realizo la consulta 
+		$r = $conexion->get_consulta($query_string);
+		//print_r($r);
+		
+		for($x=0; $x<=count($r)-1; $x++)
+			{				
+			?>				
+				<div class="layer-container" data-color="#31cbfd" data-cid="<?php echo $r[$x]["clase_id"]; ?>" style="border-color:#ffffff;">
+					<div class="layer-container-header" style="background-color:#31cbfd;">
+						<div class="pretty p-default p-curve p-toggle">
+							<input type="checkbox" class="layer-checkbox default-empty-checkbox" id="layer-checkbox-class-<?php echo $r[$x]["clase_id"]; ?>" data-layer="<?php // echo $r[$x]["layer_wms_layer"]; ?>" data-wms="<?php // echo $r[$x]["layer_wms_server"]; ?>"/>
+							<div class="state p-success p-on" title="Mostrar capa">
+								<i class="fa fa-eye"></i>
+							</div>
+							<div class="state p-danger p-off" title="Ocultar capa">
+								<i class="fa fa-eye-slash"></i>
+							</div>
+						</div>
+						<span><?php echo $r[$x]["cod_nom"]; ?> (<span id="abr-layer-count-<?php echo $r[$x]["clase_id"]; ?>" class="abr-layer-count"></span>)</span>		
+					</div>
+					<div class="layer-container-body scrollbar-content">
+						<?php DrawLayers($r[$x]["clase_id"]); ?>
+					</div>
+				</div>				
+				<?php				
+			}			
+		}
 }
 
