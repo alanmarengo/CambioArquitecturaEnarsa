@@ -1,6 +1,5 @@
 <?php
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-CATALOGO/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
-
+require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php');
 
 class Recurso{
     public $solapa = 2;

@@ -1,8 +1,8 @@
 <?php
 //INJECTAR LA QUERY DE RECURSOS TECNICOS
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-RECURSOSTECNICOS/CAPA-DOMINIO/INTERFACE-SERVICIOS/REPOSITORIO-INTERFACE-SERVICIO.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-RECURSOSTECNICOS/CAPA-APLICACION/QUERYS/REPOSITORIO-QUERY.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-RECURSOSTECNICOS/CAPA-DOMINIO/DTOS/DTOS.php');
+require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\INTERFACE-SERVICIOS\REPOSITORIO-INTERFACE-SERVICIO.php');
+require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-APLICACION\QUERYS\REPOSITORIO-QUERY.php');
+require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\DTOS\DTOS.php');
 
 class RepositorioServicioRecursosTecnicos implements IRepositorioServicioRecursosTecnicos{
 

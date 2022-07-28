@@ -1,9 +1,9 @@
 <?php
 
-require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS/CAPA-DOMINIO/INTERFACE-QUERYS/REPOSITORIO-INTERFACE-QUERY.php');
-require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS/CAPA-DATOS/capa-acceso.php');
-require_once(dirname(__FILE__,4).'\\MIC-RECURSOSTECNICOS/CAPA-DOMINIO/DTOS/DTOS.php');
-require_once(dirname(__FILE__,4).'\\MIC-RECURSOSTECNICOS/CAPA-DOMINIO/ENTIDADES/ENTIDADES.php');
+require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\INTERFACE-QUERYS\REPOSITORIO-INTERFACE-QUERY.php');
+require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DATOS\capa-acceso.php');
+require_once(dirname(__FILE__,4).'\\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\DTOS\DTOS.php');
+require_once(dirname(__FILE__,4).'\\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\ENTIDADES\ENTIDADES.php');
 
 
 class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecnicos{

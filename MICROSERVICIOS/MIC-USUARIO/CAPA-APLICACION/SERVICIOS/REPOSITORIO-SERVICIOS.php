@@ -1,10 +1,7 @@
 <?php
 
-
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-USUARIO/CAPA-DOMINIO/INTERFACE-SERVICIOS/REPOSITORIO-INTERFACE-SERVICIO.php');
-require_once('C:/xampp/htdocs/atic/nuevo_repo/CambioArquitecturaEnarsa/MICROSERVICIOS/MIC-USUARIO/CAPA-APLICACION/QUERYS/REPOSITORIO-QUERY.php');
-
-
+require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-DOMINIO\INTERFACE-SERVICIOS\REPOSITORIO-INTERFACE-SERVICIO.php');
+require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\QUERYS\REPOSITORIO-QUERY.php');
 
 class RepositorioServicioUsuario implements IRepositorioServicioUsuario{
     public $query;

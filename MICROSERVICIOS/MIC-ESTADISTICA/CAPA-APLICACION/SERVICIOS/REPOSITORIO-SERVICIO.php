@@ -1,6 +1,8 @@
 <?php
-require_once('C:/xampp/htdocs/atic/obs_nueva_arq/obs_op/MICROSERVICIOS/MIC-ESTADISTICA/CAPA-DOMINIO/INTERFACE-SERVICIOS/REPOSITORIO-INTERFACE-SERVICIO.php');
-require_once('C:/xampp/htdocs/atic/obs_nueva_arq/obs_op/MICROSERVICIOS/MIC-ESTADISTICA/CAPA-APLICACION/QUERYS/REPOSITORIO-QUERY.php');
+
+require_once(dirname(__FILE__,4).'\MIC-ESTADISTICA\CAPA-DOMINIO\INTERFACE-REPOSITORIO-SERVICIO\INTERFACE-REPOSITORIO-SERVICIO.php');
+require_once(dirname(__FILE__,4).'\MIC-ESTADISTICA\CAPA-APLICACION\QUERYS\REPOSITORIO-QUERY.php');
+
 
 class RepositorioServicioEstadistica implements IRepositorioServicioEstadistica{
 
