@@ -56,7 +56,9 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
         $this->query->DrawContainers();
     }
     
-
+    public function DrawLayers($clase_id){
+        $this->query->DrawLayers($clase_id);
+    }
 
 
 
@@ -66,4 +68,5 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
 $test = new RepositorioServicioGeovisor();
 //$test->ListaProyectos();
 //echo $test->Get_Layer_Security("", 36453);
-$test->DrawContainers();
+$valor = $test->DrawContainers();
+echo $valor;
