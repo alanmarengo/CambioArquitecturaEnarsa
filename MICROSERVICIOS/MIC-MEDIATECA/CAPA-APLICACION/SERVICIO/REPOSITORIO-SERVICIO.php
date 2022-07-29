@@ -143,7 +143,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
  //prueba de aplicacion 
  $obtener_recursos_mediateca = new RepositorioServicioMediateca();
  
- $obtener_recursos_mediateca->busqueda_mediateca("hola");
+ //$obtener_recursos_mediateca->busqueda_mediateca("hola");
  //$lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar
  //$user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar)
  // 
@@ -151,8 +151,8 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
  // si no hay que filtrar 
  // test solapa 0 - documentos 
-  // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",0,1,20,"","","","","","","","","",0,"",1); // test solapa cero, sin filtros 
-  // print_r($recursos_mediateca);
+   $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",0,1,20,"","","","","","","","","",0,"",1); // test solapa cero, sin filtros 
+   print_r($recursos_mediateca);
 
  // test solapa 1  - recursos audivisuales
  // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",1,1,20,"","","","","","","","","",0,"","");
