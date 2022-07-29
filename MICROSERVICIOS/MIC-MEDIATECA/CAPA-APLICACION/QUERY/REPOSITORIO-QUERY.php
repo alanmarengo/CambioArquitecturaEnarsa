@@ -39,6 +39,13 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 			//default: 	$ORDER = " ORDER BY tipo_formato_solapa,recurso_titulo ASC"; break;
 		};
 
+        if($order_by==6){
+            $filtro_fecha_observatorio= " AND r.fecha_observatorio IS NOT NULL";
+        }
+        else{
+            $filtro_fecha_observatorio="";
+        }
+
 
 
 
@@ -79,7 +86,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                     WHERE tf.tipo_formato_solapa =  
                                     EOD; 
 
-        $consulta_definitiva .= ' '.$solapa.' '.$extension_consulta_filtro_recursos.' '.$ORDER.' '.$paginador;        
+        $consulta_definitiva .= ' '.$solapa.' '.$extension_consulta_filtro_recursos.' '.$filtro_fecha_observatorio.' '.$ORDER.' '.$paginador;        
        
         // instancio una nueva conexion 
         $conexion = new ConexionMediateca();
@@ -186,6 +193,13 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             case 6: 	$ORDER = " ORDER BY tipo_formato_solapa, r.fecha_observatorio DESC"; break;
             //default: 	$ORDER = " ORDER BY tipo_formato_solapa,recurso_titulo ASC"; break;
         };
+
+        if($order_by==6){
+            $filtro_fecha_observatorio= " AND r.fecha_observatorio IS NOT NULL";
+        }
+        else{
+            $filtro_fecha_observatorio="";
+        }
 
         // validacion de filtros 
 
@@ -386,7 +400,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                                                             proyecto_extent text,institucion_nombre text, institucion_tel text,
                                                                             institucion_contacto text, institucion_email text)  
                                                                     ON t.estudios_id_rec = e.estudios_id
-                                                WHERE t.tipo_formato_solapa = ".$solapa.' '.$aux_cadena_filtros.' '.$extension_consulta_filtro_recursos.' '.$ORDER.' '.$paginador.';';
+                                                WHERE t.tipo_formato_solapa = ".$solapa.' '.$aux_cadena_filtros.' '.$extension_consulta_filtro_recursos.' '.$filtro_fecha_observatorio.' '.$ORDER.' '.$paginador.';';
        
         
         // instancio una nueva conexion 

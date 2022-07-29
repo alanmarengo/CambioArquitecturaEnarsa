@@ -119,6 +119,13 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
             //default: 	$ORDER = " ORDER BY tipo_formato_solapa,recurso_titulo ASC"; break;
         };
 
+        if($order_by==6){
+            $filtro_fecha_observatorio= " AND r.fecha_observatorio IS NOT NULL";
+        }
+        else{
+            $filtro_fecha_observatorio="";
+        }
+
         // OBTENCION DE RECURSOS
 
         $aux_consulta_recursos = <<<EOD
@@ -185,7 +192,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                 EOD;
         
         
-        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$ORDER.' '.$paginador;
+        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$filtro_fecha_observatorio.' '.$ORDER.' '.$paginador;
         $recursos_tecnicos = $conexion_rec_tecnicos->get_consulta( $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS);
 
         //creo un array para guardar todos los recursos  tecnicos
@@ -349,6 +356,13 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         case 6: 	$ORDER ="  ORDER BY u.tipo_formato_solapa, u.fecha_observatorio DESC"; break;
         //default: 	$ORDER = " ORDER BY tipo_formato_solapa,recurso_titulo ASC"; break;
     };
+
+    if($order_by==6){
+        $filtro_fecha_observatorio= " AND r.fecha_observatorio IS NOT NULL";
+    }
+    else{
+        $filtro_fecha_observatorio="";
+    }
         
 
         // OBTENCION DE RECURSOS
@@ -441,7 +455,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                             EOD;
         
         
-        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad).' '.$ORDER.' '.$paginador;
+        $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad).' '.$filtro_fecha_observatorio.' '.$ORDER.' '.$paginador;
         $recursos_tecnicos = $conexion_rec_tecnicos->get_consulta( $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS);
 
         //creo un array para guardar todos los recursos  tecnicos
