@@ -52,6 +52,17 @@ class Recurso{
             $this->territorio_fec_bbdd = $InfoTerritorio[0]['fec_bbdd'];
 
         } 
+
+
+        //ACA PREGUNTAR SI ESTUDIOS_ID ES != NULL & != DE EMPTY 
+        //LLAMAR A SERVICIO CATALOGO AL METODO PARA RELLENAR ESTUDIOS.
+
+
+
+
+
+
+
     }
 
 
