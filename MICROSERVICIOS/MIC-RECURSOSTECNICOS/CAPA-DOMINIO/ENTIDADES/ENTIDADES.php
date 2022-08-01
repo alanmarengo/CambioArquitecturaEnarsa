@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php');
 
-class Recurso{
+class RecursoTecnico{
     public $solapa = 2;
     public $origen_id = null;
     public $id_recurso = null;

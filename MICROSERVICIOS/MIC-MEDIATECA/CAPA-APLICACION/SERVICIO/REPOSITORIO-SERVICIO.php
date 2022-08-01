@@ -40,11 +40,13 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         }else{
             $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos();
         }
+        
 
-        $servicio_catalogo = new RepositorioServicioCatalogo();
-        $servicio_recursos_tecnicos= new RepositorioServicioRecursosTecnicos();
+        $servicio_catalogo = new RepositorioServicioCatalogo();        
 
         $recursos_mediateca; // variable contenedora de los recursos
+
+        $servicio_recursos_tecnicos; // variable que contendra los servicios del micro recursos tecnicos. en caso de ser necesario. 
 
         $filtros; // variable contenedora de los filtros 
 
@@ -53,7 +55,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         if($si_tengo_que_filtrar==1){ // si hay que aplicar filtros a los registros
 
             if($solapa==2){ // si la solapa ingresada es Recursos Tecnicos (solapa 2)                
-
+                $servicio_recursos_tecnicos= new RepositorioServicioRecursosTecnicos();
                 $recursos_mediateca = $servicio_recursos_tecnicos->get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$order_by);
                 $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->aux_cadena_filtros,$recursos_mediateca->lista_recursos_restringidos,$si_tengo_que_filtrar);
             } 
@@ -68,7 +70,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         }else{ // si no hay que aplicar filtros...
 
             if($solapa==2){ // // si la solapa ingresada es Recursos Tecnicos (solapa 2) 
-
+                $servicio_recursos_tecnicos= new RepositorioServicioRecursosTecnicos();
                 $recursos_mediateca = $servicio_recursos_tecnicos->get_recursos_tecnicos($lista_recursos_restringidos, $current_page,$page_size,$order_by);
                 $filtros=$servicio_catalogo->get_filtros($solapa,"",$recursos_mediateca->lista_recursos_restringidos,$si_tengo_que_filtrar);
                 
@@ -151,70 +153,50 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
  // si no hay que filtrar 
  // test solapa 0 - documentos 
-   $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",0,1,20,"","","","","","","","","",0,"",1); // test solapa cero, sin filtros 
-   print_r($recursos_mediateca);
-
- // test solapa 1  - recursos audivisuales
- // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",1,1,20,"","","","","","","","","",0,"","");
- // print_r($recursos_mediateca);
-
-  // test solapa 2 - rec tec 
-  // get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica)
-   $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",2,1,20,"","","","","","","","","",0,0,1); // test solapa dos, sin filtros 
-   print_r($recursos_mediateca);
-
- // test solapa 3 - novedades 
- // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,3,1,20,"","","","","","","","","",0,"");
- // print_r($recursos_mediateca);
-
- // si hay que filtrar
- // test solapa 0 - documentos 
-// get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica)
+ // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+ //  $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 0, 1,20,"","","","","","","","","",0,0,1); // test solapa cero, sin filtros 
+ //  print_r($recursos_mediateca);
 
 
-
-// TEST FILTRO QT   --   FILTRO DE PALABRAS QUE VUELVEN DEL BUSCADOR 
-
-// SOLAPA 0
-//$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",0,1,20,"imagen","","","","","","","","",1,""); // test solapa cero, sin filtros 
-//print_r($recursos_mediateca);
-
-  // SOLAPA 1 
-//$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",1,1,20,"imagen","","","","","","","","",1,""); // test solapa cero, sin filtros 
-//print_r($recursos_mediateca);
-
-    // SOLAPA 2
-//$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",2,1,20,"imagen","","","","","","","","",1,""); // test solapa cero, sin filtros 
-//print_r($recursos_mediateca);
+ // test solapa 1 - recursos audiovisuales 
+ // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+ //  $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 1, 1,20,"","","","","","","","","",0,0,1); // test solapa cero, sin filtros 
+ //  print_r($recursos_mediateca);
 
 
-    // SOLAPA 3
-// $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",3,1,20,"imagen","","","","","","","","",1,""); // test solapa cero, sin filtros 
+// test solapa 2 - recursos tecnicos 
+ // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+// $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 2, 1,20,"","","","","","","","","",0,0,1); // test solapa cero, sin filtros 
 // print_r($recursos_mediateca);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
- // test solapa 1  - recursos audivisuales
- // $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,1,1,20,"","","","","","","","","",1,"");
- // print_r($recursos_mediateca);
-
- // test solapa 2 - documentos 
-  //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,2,1,20,"imagen","","","","","","","","",1,1); // test solapa cero, sin filtros 
-  //print_r($recursos_mediateca);
-
- // test solapa 3 - novedades 
- //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos(-1,3,1,20,"","","","","","","","","",1,"");
+// test solapa 3 - novedades
+ // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 3, 1,20,"","","","","","","","","",0,0,1); // test solapa cero, sin filtros 
  //print_r($recursos_mediateca);
 
 
+// si tengo que aplicar filtros 
+
+// filtro $qt -> corresponde al filtro del buscador 
+// test filtro $qt por solapa
+
+// test solapa 0 - documentos 
+ // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+// $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 0, 1,20,"estudio","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
+// print_r($recursos_mediateca);
+
+// test solapa 1 - recursos audiovisuales 
+ // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+// $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",1, 1,20,"foto","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
+// print_r($recursos_mediateca);
+
+// test solapa 2 - recursos tecnicos
+ // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",2, 1,20,"foto","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
+ //print_r($recursos_mediateca);
+
+ // test solapa 3 - novedades
+ // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+ $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",3, 1,20,"foto","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
+ print_r($recursos_mediateca);

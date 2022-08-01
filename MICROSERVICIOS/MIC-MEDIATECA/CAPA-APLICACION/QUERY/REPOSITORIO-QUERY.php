@@ -184,8 +184,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         switch ($order_by)
         {
-            case 0: 	$ORDER = " ORDER BY tipo_formato_solapa, r.recurso_titulo ASC"; break;
-            case 1: 	$ORDER = " ORDER BY tipo_formato_solapa, r.recurso_titulo DESC"; break;
+            case 0: 	$ORDER = " ORDER BY tipo_formato_solapa, recurso_titulo ASC"; break;
+            case 1: 	$ORDER = " ORDER BY tipo_formato_solapa, recurso_titulo DESC"; break;
             case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break; // quedan estos dos para revisar 
             case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break; // quedan estos dos para revisar 
             case 4: 	$ORDER = " ORDER BY tipo_formato_solapa, r.fecha DESC"; break;
@@ -216,69 +216,76 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
              
         }
 
-        switch ($tipo_temporalidad) { // dependiendo del valor de $tipo_temporalidad, el filtro de fecha se hace en campos diferentes
-            case 0:
-                if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
-                {
-                    $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
-                                            OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";  
-                
-                }else{ 
-                    if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
-                    {
-                        $aux_cadena_filtros .= "  AND (('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
-                                                OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";
+        if(!empty($tipo_temporalidad)){
 
-                    }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+            switch ($tipo_temporalidad) { // dependiendo del valor de $tipo_temporalidad, el filtro de fecha se hace en campos diferentes
+                case 0:
+                    if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
                     {
                         $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
-                                                OR('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";
-
-                    }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
-                        $aux_cadena_filtros .= "";
-                    }
-
-                } break;
-            case 1:
-                if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
-                {
-                    $aux_cadena_filtros .= " AND ((T.fecha_observatorio IS NOT NULL)   AND
-                                                  (T.fecha_observatorio BETWEEN ".$desde." AND ".$hasta."))";
-                    if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                                                OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";  
+                    
+                    }else{ 
+                        if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                        {
+                            $aux_cadena_filtros .= "  AND (('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                    OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";
+    
+                        }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                        {
+                            $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                    OR('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";
+    
+                        }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                            $aux_cadena_filtros .= "";
+                        }
+    
+                    } break;
+                case 1:
+                    if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
                     {
-                        $aux_cadena_filtros .= "  AND ((T.fecha_observatorio IS NOT NULL)  AND 
-                                                       (T.fecha_observatorio <= ".$hasta."))";
-
-                    }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                        $aux_cadena_filtros .= " AND ((T.fecha_observatorio IS NOT NULL)   AND
+                                                      (T.fecha_observatorio BETWEEN ".$desde." AND ".$hasta."))";
+                        if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                        {
+                            $aux_cadena_filtros .= "  AND ((T.fecha_observatorio IS NOT NULL)  AND 
+                                                           (T.fecha_observatorio <= ".$hasta."))";
+    
+                        }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                        {
+                            $aux_cadena_filtros .= "  AND ((T.fecha_observatorio IS NOT NULL)  AND 
+                                                           (T.fecha_observatorio >= ".$desde."))";
+    
+                        }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                            $aux_cadena_filtros .= "";
+                        }
+                    } break;
+                case 2:
+                    if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
                     {
-                        $aux_cadena_filtros .= "  AND ((T.fecha_observatorio IS NOT NULL)  AND 
-                                                       (T.fecha_observatorio >= ".$desde."))";
+                        $aux_cadena_filtros .= " AND ((T.recurso_fecha IS NOT NULL)   AND
+                                                      (T.recurso_fecha BETWEEN ".$desde." AND ".$hasta."))";
+                        if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                        {
+                            $aux_cadena_filtros .= "  AND ((T.recurso_fecha IS NOT NULL)  AND 
+                                                           (T.recurso_fecha <= ".$hasta."))";
+    
+                        }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                        {
+                            $aux_cadena_filtros .= "  AND ((T.recurso_fecha IS NOT NULL)  AND 
+                                                           (T.recurso_fecha >= ".$desde."))";
+    
+                        }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                            $aux_cadena_filtros .= "";
+                        }
+                    } break;
+            }
+            
 
-                    }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
-                        $aux_cadena_filtros .= "";
-                    }
-                } break;
-            case 2:
-                if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
-                {
-                    $aux_cadena_filtros .= " AND ((T.recurso_fecha IS NOT NULL)   AND
-                                                  (T.recurso_fecha BETWEEN ".$desde." AND ".$hasta."))";
-                    if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
-                    {
-                        $aux_cadena_filtros .= "  AND ((T.recurso_fecha IS NOT NULL)  AND 
-                                                       (T.recurso_fecha <= ".$hasta."))";
 
-                    }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
-                    {
-                        $aux_cadena_filtros .= "  AND ((T.recurso_fecha IS NOT NULL)  AND 
-                                                       (T.recurso_fecha >= ".$desde."))";
+        } 
 
-                    }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
-                        $aux_cadena_filtros .= "";
-                    }
-                } break;
-        }
-        
+
         if(!empty($proyecto)) { $aux_cadena_filtros .= " AND e.sub_proyecto_id = ".$proyecto; }
         if(!empty($clase)) { $aux_cadena_filtros .= " AND sc.clase_id = ".$clase; }
         if(!empty($subclase)) { $aux_cadena_filtros .= "AND sc.subclase_id =".$subclase; }
@@ -408,6 +415,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         //echo $consulta_definitiva;
         
         //realizo la consulta            
+        //echo $consulta_definitiva;
         $recursos_mediateca_filtrados = $conexion->get_consulta($consulta_definitiva);   
 
         //creo un array para guardar todos los recursos 

@@ -217,7 +217,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
 
     
             // por cada registro, se agrega un objeto recurso al array contenedor 
-            $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id,$ico);
+            $recurso = new RecursoTecnico($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id,$ico);
             array_push($array_recursos_tecnicos,$recurso);                    
         }
         // faltaria estadistica de la solapa para devolver en mediateca, tentativamente ira la variable total_registros. ya que es total de registros 
@@ -480,7 +480,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
 
     
             // por cada registro, se agrega un objeto recurso al array contenedor 
-            $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id,$ico);
+            $recurso = new RecursoTecnico($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id,$ico);
             array_push($array_recursos_tecnicos,$recurso);                    
         }
         // faltaria estadistica de la solapa para devolver en mediateca, tentativamente ira la variable total_registros. ya que es total de registros 

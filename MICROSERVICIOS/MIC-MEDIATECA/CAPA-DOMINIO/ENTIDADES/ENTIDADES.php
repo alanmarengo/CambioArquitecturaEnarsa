@@ -41,7 +41,7 @@ class Recurso{
         $this->territorio_fec_bbdd;       
 
         // si id_territorio es distinto de vacio, se llama al metodo para completar la informacion 
-        if($territorio_id != null){
+        if(!empty($territorio_id)){
 
             $RepoCatalogo= new RepositorioServicioCatalogo();
             $InfoTerritorio = $RepoCatalogo->get_info_territorio($this->territorio_id);
