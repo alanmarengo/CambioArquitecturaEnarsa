@@ -378,6 +378,48 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 	}
 
 
+	function DrawLayersSearch($pattern) // esta funcion recibira un string como parametro
+	{
+		// variable contenedora de consulta a realizar
+		$query_string = <<<EOD
+						SELECT DISTINCT * FROM "MIC-GEOVISORES".vw_layers WHERE layer_desc ILIKE '%$pattern%' ORDER BY layer_desc ASC		
+						EOD;
+		
+		$conexion = new ConexionGeovisores(); 
+
+		//realizo la consulta 
+		$resultado = $conexion->get_consulta($query_string);
+		//print_r($resultado);
+
+
+		// variable contenedora de respuesta final 
+		$output = "<ul>";
+		
+		if(!empty($resultado))
+		{
+			for($x=0; $x<=count($r)-1; $x++)
+			{						
+				$low_desc = strtolower($resultado[$x]["layer_desc"]);
+				$low_pattern = strtolower($pattern);
+			
+				$desc = str_replace($low_pattern,"<span class=\"panel-highlighted-list-item\">".$low_pattern."</span>",$low_desc);
+			
+				$output .= "<li>";
+				$output .= "<a href=\"javascript:void(0);\" onclick=\"geomap.panel.AddLayer(" . $resultado[$x]["clase_id"] . "," . $resultado[$x]["layer_id"] . "); $('#panel-busqueda-geovisor').hide();\">" . $desc . "</a>";
+				$output .= "</li>";
+			}
+		
+		}else{		
+			$output .= "<li>No se encontraron resultados para su búsqueda</li>";		
+		}
+		
+		$output .= "</ul>";
+
+		return $output;
+		
+	}
+
+
 
 
 

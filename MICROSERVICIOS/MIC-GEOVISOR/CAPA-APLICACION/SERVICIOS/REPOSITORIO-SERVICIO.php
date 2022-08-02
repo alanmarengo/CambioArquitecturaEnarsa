@@ -49,17 +49,20 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
 
     public function DrawAbr() 
     {               
-        $this->query->DrawAbr();        
+        return $this->query->DrawAbr();        
     }
 
     public function DrawContainers(){
-        $this->query->DrawContainers();
+        return $this->query->DrawContainers();
     }
     
     public function DrawLayers($clase_id){
-        $this->query->DrawLayers($clase_id);
+        return $this->query->DrawLayers($clase_id);
     }
 
+    public function DrawLayersSearch($pattern){
+        return $this->query->DrawLayersSearch($pattern);
+    }
 
 
 }
@@ -70,3 +73,4 @@ $test = new RepositorioServicioGeovisor();
 //echo $test->Get_Layer_Security("", 36453);
 // $valor = $test->DrawContainers();
 // echo $valor;
+$test->DrawLayersSearch("holamundo");
