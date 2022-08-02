@@ -377,7 +377,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 			}			
 	}
 
-	function DrawLayersSearch($pattern) // esta funcion recibira un string como parametro
+	public function DrawLayersSearch($pattern) // esta funcion recibira un string como parametro
 	{
 		// variable contenedora de consulta a realizar
 		$query_string = <<<EOD
@@ -418,9 +418,59 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		
 	}
 
+	function DrawDatasetSearch($pattern) // esta funcion recibira un string como parametro
+	{
+
+		// variable contenedora de consulta a realizar
+		$query_string = <<<EOD
+						SELECT * FROM dblink('dbname=MIC-ESTADISTICAS
+											hostaddr=179.43.126.101 
+											user=postgres 
+											password=plahe100%
+											port=5432',
+											'SELECT DISTINCT * FROM "MIC-ESTADISTICAS".vw_dt') 
+											as dt( dt_id bigint, clase_id bigint, dt_titulo text, dt_desc text, dt_table_source text, dt_geom_base_table text,
+													dt_geom_column_display text, clase_desc text, clase_cod text, cod_nom text, descripcion text,
+													cod_temp text, fec_bbdd text, color_hex text, cod_clase_alf text, color_head text)
+											WHERE dt_titulo ILIKE '%$pattern%' ORDER BY dt_titulo ASC
+		EOD; // cierre string consulta 
+			
+		$output = "<ul>";
+
+		$conexion = new ConexionGeovisores(); 
+
+		//realizo la consulta 
+		$resultado = $conexion->get_consulta($query_string);
+		//print_r($resultado);
 
 
+		// variable contenedora de respuesta final 
+		$output = "<ul>";
+		
+		if(!empty($resultado))
+		{
+			for($x=0; $x<=count($resultado)-1; $x++)
+			{	
 
+				$low_desc = strtolower($resultado[$x]["dt_titulo"]);
+				$low_pattern = strtolower($pattern);
+				
+				$desc = str_replace($low_pattern,"<span class=\"panel-highlighted-list-item\">".$low_pattern."</span>",$low_desc);
+				
+				$output .= "<li>";
+				$output .= "<a href=\"javascript:void(0);\" onclick=\"$('.panel-abr[data-cid=".$resultado[$x]["clase_id"]."]').trigger('click'); $('#panel-busqueda-geovisor').hide();\">" . $desc . "</a>";
+				$output .= "</li>";				
+	
+			}
+		
+		}else{		
+			$output .= "<li>No se encontraron resultados para su búsqueda</li>";		
+		}
+		
+		$output .= "</ul>";
+
+		return $output;		
+	}
 
 
 
