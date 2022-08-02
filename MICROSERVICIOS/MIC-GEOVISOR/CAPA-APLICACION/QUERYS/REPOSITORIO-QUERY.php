@@ -418,7 +418,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		
 	}
 
-	function DrawDatasetSearch($pattern) // esta funcion recibira un string como parametro
+	public function DrawDatasetSearch($pattern) // esta funcion recibira un string como parametro
 	{
 
 		// variable contenedora de consulta a realizar
@@ -472,35 +472,56 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		return $output;		
 	}
 
+	public function DrawProyectos() 
+	{			
+		// variable contenedora de consulta a realizar
+		$query_string = <<<EOD
 
+						SELECT * FROM dblink('dbname=MIC-CATALOGO
+						hostaddr=179.43.126.101 
+						user=postgres 
+						password=plahe100%
+						port=5432',
+						'SELECT * FROM "MIC-CATALOGO".sub_proyecto') 
+						as e( sub_proyecto_id bigint, proyecto_id bigint, sub_proyecto_desc text)
+						WHERE sub_proyecto_id IN ( SELECT DISTINCT e.sub_proyecto_id  
+						FROM "MIC-GEOVISORES".catalogo c
+						LEFT JOIN dblink('dbname=MIC-CATALOGO
+								hostaddr=179.43.126.101 
+								user=postgres 
+								password=plahe100%
+								port=5432',
+								'SELECT estudios_id, sub_proyecto_id FROM "MIC-CATALOGO".vw_estudio') 
+						as e(estudios_id bigint, sub_proyecto_id bigint) ON c.estudios_id = e.estudios_id )
+						ORDER BY sub_proyecto_desc ASC		
+		
+					EOD;
 
+		$conexion = new ConexionGeovisores(); 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		//realizo la consulta 
+		$resultado = $conexion->get_consulta($query_string);
+		//print_r($resultado);
+			
+		if(!empty($resultado))
+		{
+			for($x=0; $x<=count($resultado)-1; $x++)
+				{	?>
+					
+					<div class="popup-panel-tree-item">
+						<div class="pretty p-icon p-curve">
+							<input type="checkbox" class="basic-filter-checkbox default-empty-checkbox" data-spid="<?php echo $resultado[$x]["sub_proyecto_id"]; ?>"/>
+							<div class="state">
+								<i class="icon mdi mdi-check" onclick="$(this).parent().prev('input[type=checkbox]').trigger('click');"></i>
+								<label><?php echo $resultado[$x]["sub_proyecto_desc"]; ?></label>
+							</div>
+						</div>
+					</div>
+			
+				<?php			
+				}		
+		}
+	}
 
 
 
