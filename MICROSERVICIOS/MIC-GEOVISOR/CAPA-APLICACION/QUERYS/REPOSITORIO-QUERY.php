@@ -377,7 +377,6 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 			}			
 	}
 
-
 	function DrawLayersSearch($pattern) // esta funcion recibira un string como parametro
 	{
 		// variable contenedora de consulta a realizar
