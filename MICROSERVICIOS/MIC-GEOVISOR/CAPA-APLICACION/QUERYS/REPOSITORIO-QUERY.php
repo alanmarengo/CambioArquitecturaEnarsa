@@ -523,8 +523,55 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		}
 	}
 
+	public function DrawComboSimple($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid)
+	{
+		// nota, queda pendiente lo de editar las variables $schema y $table, para que apunten al lugar correspondientes
+		// en teoria, no se cambiaran, pero para tener en cuenta! 
 
+		$query_string = "SELECT $id,$desc FROM $schema.$table ORDER BY $desc ASC";
 
+		$conexion = new ConexionGeovisores(); 
+
+		//realizo la consulta 
+		$respuesta = $conexion->get_consulta($query_string);
+		//print_r($r);
+
+		if(!empty($respuesta))
+		{
+			?>
+		
+			<select class="selectpicker" data-width="100%" 
+				<?php 
+					if($hname) {
+						echo "name=\"$hname\"";
+					}
+					if($hid) {
+						echo "id=\"$hid\"";
+					} ?> >
+				<?php
+
+					if ($opini) 
+					{	?>
+							
+						<option value="<?php echo $opini_val; ?>"><?php echo $opini_label; ?></option>
+							
+					<?php
+
+						for($x=0; $x<=count($respuesta)-1; $x++)
+						{	?>
+					
+							<option value="<?php echo $respuesta[$x][$id]; ?>"><?php echo $respuesta[$x][$desc]; ?> </option>
+						
+					<?php
+							
+						}	
+					} ?>
+		
+			</select>		
+			<?php				
+		}
 	}
 
 
+
+} // fin interface 
