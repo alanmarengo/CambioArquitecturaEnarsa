@@ -7,4 +7,5 @@ interface IRepositorioServicioGeovisor{
     public function DrawLayers($clase_id);
     public function DrawLayersSearch($pattern);
     public function DrawDatasetSearch($pattern);
+    public function DrawProyectos();
 }
