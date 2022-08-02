@@ -67,8 +67,13 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
     public function DrawDatasetSearch($pattern){
         return $this->query->DrawDatasetSearch($pattern);
     }
+
     public function DrawProyectos(){
         return $this->query->DrawProyectos();
+    }
+
+    public function DrawComboSimple($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid){
+        return $this->query->DrawComboSimple($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid);
     }
 }
 
