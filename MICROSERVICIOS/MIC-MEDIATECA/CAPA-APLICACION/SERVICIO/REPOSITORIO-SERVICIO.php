@@ -145,11 +145,6 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
  //prueba de aplicacion 
  $obtener_recursos_mediateca = new RepositorioServicioMediateca();
  
- //$obtener_recursos_mediateca->busqueda_mediateca("hola");
- //$lista_recursos_restringidos, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar
- //$user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar)
- // 
- // $user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$filtro_id
 
  // si no hay que filtrar 
  // test solapa 0 - documentos 
@@ -198,5 +193,5 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
  // test solapa 3 - novedades
  // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
- $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",3, 1,20,"foto","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
- print_r($recursos_mediateca);
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",3, 1,20,"foto","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
+ //print_r($recursos_mediateca);
