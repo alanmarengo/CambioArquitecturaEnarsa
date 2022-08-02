@@ -64,7 +64,9 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
         return $this->query->DrawLayersSearch($pattern);
     }
 
-
+    public function DrawDatasetSearch($pattern){
+        return $this->query->DrawDatasetSearch($pattern);
+    }
 }
 
 
@@ -73,4 +75,6 @@ $test = new RepositorioServicioGeovisor();
 //echo $test->Get_Layer_Security("", 36453);
 // $valor = $test->DrawContainers();
 // echo $valor;
-$test->DrawLayersSearch("holamundo");
+//$test->DrawLayersSearch("holamundo");
+
+echo $test->DrawDatasetSearch("hola mundo");
