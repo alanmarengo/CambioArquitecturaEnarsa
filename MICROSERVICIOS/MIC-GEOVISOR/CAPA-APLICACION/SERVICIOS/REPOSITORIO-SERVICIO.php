@@ -75,6 +75,13 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
     public function DrawComboSimple($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid){
         return $this->query->DrawComboSimple($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid);
     }
+
+    public function DrawComboSimpleFN($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid,$fn){
+        return $this->query->DrawComboSimpleFN($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid,$fn);
+    }
+
+
+
 }
 
 

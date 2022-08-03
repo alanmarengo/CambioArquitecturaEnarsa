@@ -9,4 +9,5 @@ interface IRepositorioServicioGeovisor{
     public function DrawDatasetSearch($pattern);
     public function DrawProyectos();
     public function DrawComboSimple($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid);
+    public function DrawComboSimpleFN($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid,$fn);
 }
