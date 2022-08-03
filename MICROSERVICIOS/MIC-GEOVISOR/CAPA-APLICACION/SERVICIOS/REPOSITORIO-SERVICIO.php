@@ -84,6 +84,10 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
         return $this->query->DrawComboSimpleClase($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid);
     }
 
+    public function GetLayerLabel($layer_name){
+        return $this->query->GetLayerLabel($layer_name);
+    }
+
 
 }
 
