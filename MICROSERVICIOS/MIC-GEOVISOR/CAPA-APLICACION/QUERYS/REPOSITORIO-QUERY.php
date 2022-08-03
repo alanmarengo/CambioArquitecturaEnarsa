@@ -623,6 +623,58 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		
 	}
 
+	public function DrawComboSimpleClase($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid) 
+	{
 
+		// variable contenedora de consulta a realizar
+		$query_string =	'SELECT '.$id.','.$desc.' FROM "MIC-GEOVISORES".vw_filtros_avanzados_subclase GROUP BY clase_id,clase_desc ORDER BY $desc ASC';		
+			
+		$conexion = new ConexionGeovisores(); 
+
+		//realizo la consulta 
+		$respuesta = $conexion->get_consulta($query_string);
+		//print_r($r);
+		?> 
+			
+		<select class="selectpicker" data-width="100%" onchange="load_sub_clase(this.options[this.selectedIndex].value);"
+			<?php 
+				if($hname) {
+					echo "name=\"$hname\"";
+				}
+				if($hid) {
+					echo "id=\"$hid\"";
+				}?>>
+			<?php
+		
+			if ($opini) {
+					
+				?>
+					
+			<option value="<?php echo $opini_val; ?>"><?php echo $opini_label; ?></option>
+					
+				<?php
+					
+			}
+
+		if(!empty($respuesta))
+		{
+			for($x=0; $x<=count($respuesta)-1; $x++)
+			{
+				?>
+			
+				<option value="<?php echo $r[$id]; ?>"><?php echo $r[$desc]; ?></option>
+						
+				<?php
+							
+			}
+
+		}		
+		?>
+		
+		</select> 
+		
+		<?php
+		
+	}
 
 } // fin interface 
