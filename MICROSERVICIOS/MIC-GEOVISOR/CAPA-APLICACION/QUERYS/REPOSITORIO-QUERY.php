@@ -677,4 +677,21 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		
 	}
 
+	public function GetLayerLabel($layer_name) 
+	{				
+		
+		$query_string = 'SELECT * FROM "MIC-GEOVISORES".vw_layers WHERE layer_wms_layer ='."'". $layer_name ."'";
+					
+		$conexion = new ConexionGeovisores(); 
+
+		//realizo la consulta 
+		$respuesta = $conexion->get_consulta($query_string);
+		//print_r($r);	
+				
+		$layer_desc = $respuesta[0]["layer_desc"];
+		
+		return $layer_desc;
+		
+	}
+
 } // fin interface 
