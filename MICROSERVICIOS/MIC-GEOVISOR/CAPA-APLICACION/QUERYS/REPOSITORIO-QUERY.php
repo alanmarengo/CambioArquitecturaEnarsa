@@ -694,4 +694,10 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		
 	}
 
+	public function filter_proyectos_basic($user_id, $proyectos, $geovisor)
+	{
+
+	}
+
+
 } // fin interface 
