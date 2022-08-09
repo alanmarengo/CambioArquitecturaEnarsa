@@ -34,7 +34,6 @@ class ConexionGeovisores {
     {
         $consulta = $this->conect->query($query);
         $resultado = $consulta->fetchall(PDO::FETCH_ASSOC);
-        $this->desconectar();
         return $resultado; // 
     }
 }
