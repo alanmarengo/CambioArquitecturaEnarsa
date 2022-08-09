@@ -88,6 +88,24 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
         return $this->query->GetLayerLabel($layer_name);
     }
 
+    public function filter_proyectos_basic($user_id, $proyectos, $geovisor)
+    {
+        $lista_recursos_restringidos = array(); 
+
+        if(empty($user_id)){ $user_id = -1; } // si el id de usuario viene vacio, se le pone -1.
+
+        if($user_id!=-1){
+            $lista_recursos_restringidos = $this->servicio_usuario->get_recursos_restringidos_user($user_id);
+        }else{
+            $lista_recursos_restringidos = $this->servicio_usuario->get_recursos_restringidos();
+        }
+
+        return $this->query->filter_proyectos_basic($lista_recursos_restringidos, $proyectos, $geovisor);
+
+    }
+
+    
+
 
 }
 
@@ -100,4 +118,4 @@ $test = new RepositorioServicioGeovisor();
 //$test->DrawLayersSearch("holamundo");
 
 //echo $test->DrawDatasetSearch("hola mundo");
-echo $test->DrawProyectos();
+echo $test->filter_proyectos_basic("", [5,3,9,1,8,2,4], -1);
