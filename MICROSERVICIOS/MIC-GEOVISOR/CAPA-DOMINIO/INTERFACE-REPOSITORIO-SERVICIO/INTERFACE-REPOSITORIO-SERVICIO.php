@@ -12,5 +12,5 @@ interface IRepositorioServicioGeovisor{
     public function DrawComboSimpleFN($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid,$fn);
     public function DrawComboSimpleClase($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid);
     public function GetLayerLabel($layer_name);
-    public function filter_proyectos_basic($lista_recursos_restringidos, $proyectos, $geovisor);
+    public function filter_proyectos_basic($user_id, $proyectos, $geovisor);
 }
