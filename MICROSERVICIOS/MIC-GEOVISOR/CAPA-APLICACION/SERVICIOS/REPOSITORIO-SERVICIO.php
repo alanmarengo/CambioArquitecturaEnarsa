@@ -92,8 +92,6 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
     {
         $lista_recursos_restringidos = array(); 
 
-        if(empty($user_id)){ $user_id = -1; } // si el id de usuario viene vacio, se le pone -1.
-
         if($user_id!=-1){
             $lista_recursos_restringidos = $this->servicio_usuario->get_recursos_restringidos_user($user_id);
         }else{
@@ -110,7 +108,7 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
 }
 
 
-$test = new RepositorioServicioGeovisor();
+//$test = new RepositorioServicioGeovisor();
 //$test->ListaProyectos();
 //echo $test->Get_Layer_Security("", 36453);
 // $valor = $test->DrawContainers();
@@ -118,4 +116,3 @@ $test = new RepositorioServicioGeovisor();
 //$test->DrawLayersSearch("holamundo");
 
 //echo $test->DrawDatasetSearch("hola mundo");
-echo $test->filter_proyectos_basic("", [5,3,9,1,8,2,4], -1);
