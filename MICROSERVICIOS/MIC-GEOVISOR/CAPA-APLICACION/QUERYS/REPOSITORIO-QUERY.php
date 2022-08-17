@@ -38,9 +38,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
     public function ListaProyectos()
 	{
-		// NOTA IMPORTANTE: por el momento la tabla Proyectos no exite en MIC-GEOVISORES porque tampoco existe en la bd AHRSC
-		// por lo que aparentemente esa tabla existe en la base de datos de produccion nada mas 
-		// una vez se replique esa tabla a la bd la funcion se ejecutara correctamente .
+		
         $query_string = 'SELECT proyecto_id,proyecto_titulo FROM "MIC-GEOVISORES".proyectos ORDER BY proyecto_titulo ASC'; 
 
 		$conexion = new ConexionGeovisores();        
@@ -918,10 +916,6 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 											  $adv_search_responsable_combo, $adv_search_esia_combo, $adv_search_objeto_combo, $geovisor){
 		
 		//  a partir de aca comienza la funcionalidad del metodo 
-		//$proyecto	
-		//($_POST["adv-search-proyecto-combo"] != "-1")){ $param["proyecto_id"] = $_POST["adv-search-proyecto-combo"]; }
-
-		//($_POST["adv-search-responsable-combo"] != "-1")) { $param["responsable"] = $_POST["adv-search-responsable-combo"]; }
 
 		$extension_registros_restringidos = " WHERE C.origen_id_especifico NOT IN ( " ; 
 
@@ -1188,6 +1182,44 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		return $json_buffer_extent;
 	}
 
+	public function get_layer_extent($layer_id)
+	{
+		
+		$query_string = 'SELECT layer_schema,layer_table,layer_wms_layer 
+						 FROM "MIC-GEOVISORES".vw_layers WHERE layer_id = '. $layer_id . " LIMIT 1";
+
+		$conexion = new ConexionGeovisores(); 
+
+		//realizo la consulta 
+		$data = $conexion->get_consulta($query_string);
+
+		$query_string_2 = "SELECT 
+						st_xmin(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS minx,
+						st_ymin(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS miny,
+						st_xmax(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS maxx,
+						st_ymax(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS maxy
+						FROM \"" . trim($data[0]["layer_schema"]) . "\".\"" . ($data[0]["layer_table"]) . "\" T";
+
+		$extent = $conexion->get_consulta($query_string_2);
+
+		$json = "";
+
+		$json .= "{";
+		$json .= "\"minx\":\"" . $extent[0]["minx"] . "\",";
+		$json .= "\"miny\":\"" . $extent[0]["miny"] . "\",";
+		$json .= "\"maxx\":\"" . $extent[0]["maxx"] . "\",";
+		$json .= "\"maxy\":\"" . $extent[0]["maxy"] . "\"";
+		$json .= "}";
+
+		if($extent["minx"]=='') //Algo fue mal, intentamos obtener en extent desde el servicio WMS
+		{
+			$json = wms_get_layer_extent(trim($data[0]["layer_wms_layer"]));
+		};
+
+		$conexion = null;
+		return $json;
+
+	}
 
 
 
