@@ -119,6 +119,11 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
                                                        $adv_search_responsable_combo, $adv_search_esia_combo, $adv_search_objeto_combo, $geovisor );
 
     }
+
+    public function get_layer_extent($layer_id)
+    {
+        return $this->query->get_layer_extent($layer_id);
+    }
     
 
 
