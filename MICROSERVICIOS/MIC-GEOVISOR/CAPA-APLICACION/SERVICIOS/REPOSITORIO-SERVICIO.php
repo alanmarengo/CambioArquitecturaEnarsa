@@ -102,11 +102,27 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
 
     }
 
+    public function filter_proyectos_advanced($user_id, $adv_search_busqueda, $adv_search_fdesde, $adv_search_fhasta,
+                                              $adv_search_proyecto_combo, $adv_search_clase_combo, $adv_search_subclase_combo, 
+                                              $adv_search_responsable_combo, $adv_search_esia_combo, $adv_search_objeto_combo, $geovisor){
+   
+        $lista_recursos_restringidos = array(); 
+
+        if($user_id != -1){
+            $lista_recursos_restringidos = $this->servicio_usuario->get_recursos_restringidos_user($user_id);
+        }else{
+            $lista_recursos_restringidos = $this->servicio_usuario->get_recursos_restringidos();
+        }
+
+        return $this->query->filter_proyectos_advanced($lista_recursos_restringidos, $adv_search_busqueda, $adv_search_fdesde, $adv_search_fhasta, 
+                                                       $adv_search_proyecto_combo, $adv_search_clase_combo, $adv_search_subclase_combo, 
+                                                       $adv_search_responsable_combo, $adv_search_esia_combo, $adv_search_objeto_combo, $geovisor );
+
+    }
     
 
 
-}
-
+}               	
 
 //$test = new RepositorioServicioGeovisor();
 //$test->ListaProyectos();
@@ -116,3 +132,41 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
 //$test->DrawLayersSearch("holamundo");
 
 //echo $test->DrawDatasetSearch("hola mundo");
+
+//test implementacion filter_proyectos_advanced
+/*
+$test->filter_proyectos_advanced($user_id, $adv_search_busqueda, $adv_search_fdesde, $adv_search_fhasta,
+                                $adv_search_proyecto_combo, $adv_search_clase_combo, $adv_search_subclase_combo, 
+                                $adv_search_responsable_combo, $adv_search_esia_combo, $adv_search_objeto_combo, $geovisor);
+
+*/
+
+$test = new RepositorioServicioGeovisor();
+
+// teste filtro $adv_search_busqueda
+//$test->filter_proyectos_advanced(-1, "represa",'', '','', '', '','', '', '', 1);
+
+// test filtro $adv_search_fdesde, $adv_search_fhasta, siempre van juntos 
+$test->filter_proyectos_advanced(-1, "",'10/08/2022', '15/08/2022','', '', '','', '', '', 1); 
+ 
+
+// test filtro 
+//$test->filter_proyectos_advanced(-1, "",'', '','', '', '','', '', '', 1); 
+
+// test filtro 
+//$test->filter_proyectos_advanced(-1, "represa",'', '','', '', '','', '', '', 1); 
+
+// test filtro 
+//$test->filter_proyectos_advanced(-1, "represa",'', '','', '', '','', '', '', 1); 
+
+// test filtro 
+//$test->filter_proyectos_advanced(-1, "represa",'', '','', '', '','', '', '', 1); 
+
+// test filtro 
+//$test->filter_proyectos_advanced(-1, "represa",'', '','', '', '','', '', '', 1); 
+
+// test filtro 
+//$test->filter_proyectos_advanced(-1, "represa",'', '','', '', '','', '', '', 1); 
+
+// test filtro 
+//$test->filter_proyectos_advanced(-1, "represa",'', '','', '', '','', '', '', 1); 

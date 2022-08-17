@@ -771,13 +771,13 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		$respuesta = $conexion->get_consulta($get_layers_query_string);
 
 		// variable que se debe evaluar en el if !empty $respuesta[0]['layer_ids']
-		$test = '444,222,21,45,78,54,33,441';
+		//$test = '444,222,21,45,78,54,33,441';
 		$layers_ids = $respuesta[0]['layer_ids'];
-		if(!empty($test))
+		if(!empty($layers_ids))
 		{	
 			$query_string = "SELECT clase_id,subclase_id,clase_desc,subclase_desc 
 							FROM ".'"MIC-GEOVISORES"'.".vw_layers 
-							WHERE layer_id IN ($test)   
+							WHERE layer_id IN ($layers_ids)   
 							AND layer_id $extension_registros_restringidos  
 							GROUP BY clase_id,subclase_id,clase_desc,subclase_desc 
 							ORDER BY clase_desc ASC, subclase_desc ASC";
@@ -793,7 +793,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 				{			
 					$clase = $respuesta_2[$x]["clase_desc"];
 
-					if($x==count($respuesta_2)-1) // si es el primer registro
+					if($x==0) // si es el primer registro
 					{ 
 						?>				
 		
@@ -904,14 +904,244 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 		}else{
 				
-			?>
+		?>
 			
-			<p>No se encontraron capas asociadas a estos proyectos</p>
+		<p>No se encontraron capas asociadas a estos proyectos</p>
 			
-			<?php
-			}
-
+		<?php
 		}
 
+	}
+
+
+	public function filter_proyectos_advanced($lista_recursos_restringidos, $adv_search_busqueda, $adv_search_fdesde, $adv_search_fhasta,
+											  $adv_search_proyecto_combo, $adv_search_clase_combo, $adv_search_subclase_combo, 
+											  $adv_search_responsable_combo, $adv_search_esia_combo, $adv_search_objeto_combo, $geovisor){
+		
+		//  a partir de aca comienza la funcionalidad del metodo 
+		//$proyecto	
+		//($_POST["adv-search-proyecto-combo"] != "-1")){ $param["proyecto_id"] = $_POST["adv-search-proyecto-combo"]; }
+
+		//($_POST["adv-search-responsable-combo"] != "-1")) { $param["responsable"] = $_POST["adv-search-responsable-combo"]; }
+
+		$extension_registros_restringidos = " WHERE C.origen_id_especifico NOT IN ( " ; 
+
+        // armo una cadena para usar como subconsulta en la query principal 
+        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        {       
+           if($x==count($lista_recursos_restringidos)-1){
+               
+               $extension_registros_restringidos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+           }else{
+               $extension_registros_restringidos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+           }       
+        }
+
+		$aux_filtros_advanced = "";
+
+		// Armado de filtros
+		if(!empty($adv_search_busqueda))
+		{
+			$aux_filtros_advanced .= " AND C.origen_search_text ILIKE '%".$adv_search_busqueda."%'";
+		}
+
+		if(!empty($adv_search_fdesde) OR !empty($adv_search_fhasta)) // si alguna de las fechas no es vacia, agrega el string a la cadena.
+		{
+			$aux_filtros_advanced .= " AND (('".$adv_search_fdesde."'<=C.tempo_hasta) AND ('".$adv_search_fhasta."' >= C.tempo_desde))";		
+		}
+
+		if(!empty($adv_search_proyecto_combo)) 
+		{			
+			$aux_filtros_advanced .= " AND C.sub_proyecto_id IN ($adv_search_proyecto_combo)";		
+		}
+
+		if(!empty($adv_search_clase_combo) && $adv_search_clase_combo >=0) 
+		{
+			$aux_filtros_advanced .= " AND C.clase_id = ".$adv_search_clase_combo ;		
+		}
+
+		if(!empty($adv_search_subclase_combo) && $adv_search_subclase_combo >=0) 
+		{
+			$aux_filtros_advanced .= " AND C.subclase_id = ".$adv_search_subclase_combo ;		
+		}
+
+		if(!empty($adv_search_responsable_combo)) 
+		{
+			$aux_filtros_advanced .= " AND C.responsable = ".$adv_search_responsable_combo ;		
+		}
+
+		if(!empty($adv_search_esia_combo)) 
+		{
+			$aux_filtros_advanced .= " AND C.cod_esia_id = ".$adv_search_esia_combo ;		
+		}
+
+		if(!empty($adv_search_objeto_combo)) 
+		{
+			$aux_filtros_advanced .= " AND C.objetos_id = ".$adv_search_objeto_combo ;		
+		}
+
+		if($geovisor != -1)
+		{
+			$query_string_filtros_advanced = <<<EOD
+												SELECT string_agg(layer_id::text, ', ') AS layer_ids
+												FROM (SELECT DISTINCT L.* FROM "MIC-GEOVISORES".vw_catalogo_search C
+												INNER JOIN "MIC-GEOVISORES".vw_layers L ON C.origen_id_especifico=L.layer_id 
+												$extension_registros_restringidos $aux_filtros_advanced )T 
+												WHERE T.layer_id IN(SELECT layer_id FROM "MIC-GEOVISORES".geovisor_capa_inicial 
+																	WHERE geovisor_id =  $geovisor)
+							EOD;		
+		}else{
+			$query_string_filtros_advanced = <<<EOD
+											SELECT string_agg(layer_id::text, ', ') AS layer_ids
+											FROM (SELECT DISTINCT L.* FROM "MIC-GEOVISORES".vw_catalogo_search C
+											INNER JOIN "MIC-GEOVISORES".vw_layers L ON C.origen_id_especifico=L.layer_id 
+											$extension_registros_restringidos $aux_filtros_advanced )T 
+										EOD;			
+		}
+		 echo $query_string_filtros_advanced;
+
+		
+		$conexion = new ConexionGeovisores(); 
+
+		//realizo la consulta 
+		$respuesta = $conexion->get_consulta($query_string_filtros_advanced);
+
+		
+		$layer_ids = $respuesta[0]["layer_ids"];
+		if(empty($layer_ids))
+		{				
+			?>
+
+			<p>No se encontraron capas asociadas a estos proyectos</p>
+
+			<?php
+			
+		}else{
+
+			$query_string = <<<EOD
+			SELECT clase_id,subclase_id,clase_desc,subclase_desc 
+			FROM "MIC-GEOVISORES".vw_layers WHERE layer_id IN ( $layer_ids ) 
+			GROUP BY clase_id,subclase_id,clase_desc,subclase_desc 
+			ORDER BY clase_desc ASC, subclase_desc ASC;'
+			EOD;
+
+			$respuesta_2 = $conexion->get_consulta($query_string);
+
+			$clase = "";
+					
+			for($x=0; $x<=count($respuesta_2)-1; $x++)
+			{				
+				if ($clase != $respuesta_2[$x]["clase_desc"]) {
+					
+					$clase = $respuesta_2[$x]["clase_desc"];
+					
+					if ($x==0) 
+					{						
+						?>				
+						<div class="popup-panel-tree-item" data-state="0">
+							<div class="popup-panel-tree-item-header">
+								<i class="fas fa-folder popup-panel-tree-item-icon popup-icon"></i>
+								<a href="#" class="popup-panel-tree-item-label popup-text">
+									<span><?php echo $respuesta_2[$x]["clase_desc"]; ?></span>
+								</a>
+								<a href="#" class="simple-tree-pm-button">
+									<i class="fa fa-angle-down popup-panel-tree-item-icon-toggler popup-icon"></i>
+								</a>
+							</div>
+							
+							<div class="popup-panel-tree-item-subpanel">							
+						<?php	
+
+					}else{					
+
+						?>				
+						
+						</div>
+						</div>
+						
+						<div class="popup-panel-tree-item" data-state="0">
+							<div class="popup-panel-tree-item-header">
+								<i class="fas fa-folder popup-panel-tree-item-icon popup-icon"></i>
+								<a href="#" class="popup-panel-tree-item-label popup-text">
+									<span><?php echo $respuesta_2[$x]["clase_desc"]; ?></span>
+								</a>
+								<a href="#" class="simple-tree-pm-button">
+									<i class="fa fa-angle-down popup-panel-tree-item-icon-toggler popup-icon"></i>
+								</a>
+							</div>
+							
+							<div class="popup-panel-tree-item-subpanel">
+							
+						<?php
+						
+					}
+					
+				}
+
+				?>			
+		
+				<div class="popup-panel-tree-item" data-state="0">
+					
+					<div class="popup-panel-tree-item-header">
+						<i class="fa fa-layer-group popup-panel-tree-item-icon popup-icon"></i>
+						<a href="#" class="popup-panel-tree-item-label popup-text">
+							<span><?php echo $respuesta_2[$x]["subclase_desc"]; ?></span>
+						</a>
+						<a href="#" class="simple-tree-pm-button">
+							<i class="fa fa-angle-down popup-panel-tree-item-icon-toggler popup-icon"></i>
+						</a>
+					</div>
+						
+					<div class="popup-panel-tree-item-subpanel">
+						<ul>
+						
+							<?php
+							
+							$layer_query_string = 'SELECT DISTINCT clase_id,layer_id,tipo_layer_id,layer_desc,layer_wms_layer,layer_wms_server 
+												   FROM "MIC-GEOVISORES".vw_layers 
+												   WHERE clase_id = '.  $respuesta_2[$x]["clase_id"] . " 
+												   AND subclase_id = " .  $respuesta_2[$x]["subclase_id"] . " 
+												   AND layer_id IN (" . $layer_ids . ") ORDER BY layer_desc ASC";
+
+							$respuesta_3 = $conexion->get_consulta($layer_query_string);
+
+							for($x=0; $x<=count($respuesta_3)-1; $x++)
+							{	
+								?>
+								
+								<li>
+									<a href="#" onclick="geomap.panel.PreviewLayer(<?php echo $respuesta_3[$x]["layer_id"]; ?>)">
+											<?php echo $respuesta_3[$x]["layer_desc"]; ?>
+									</a>	
+								</li>				
+								
+								<?php
+							}
+							
+							?>
+							
+						</ul>
+						
+					</div>
+					
+				</div>
+
+				<?php		
+		
+				$results = true;
+
+			}
+			
+		}
+
+		?>
+		
+		</div>
+		</div>
+		
+		<?php
+	}
+
+	
 
 } // fin interface 
