@@ -46,16 +46,16 @@ if (isset($_POST) && !empty($_POST['action'])) // verifica que existan las varia
 
     if($_POST['action'] == 'filter-proyectos-advanced')    
     {
-       if(!empty($_POST['proyectos']) && !empty($_POST['geovisor']))
+       if(!empty($_POST['geovisor']))
        {
-        //echo $_POST['proyectos']."  ".$_POST['geovisor'];
-
-        $array_proyectos = array();
-        $array_proyectos = json_decode($_POST['proyectos']);
-
+        //echo".$_POST['geovisor'];
+        
         $servicio_geovisor = new RepositorioServicioGeovisor;
-
-        echo $servicio_geovisor->filter_proyectos_basic($user_id,  $array_proyectos, $_POST['geovisor']);
+    
+        echo $servicio_geovisor->filter_proyectos_advanced($user_id, $_POST["adv-search-busqueda"], $_POST["adv-search-fdesde"], 
+                                                           $_POST["adv-search-fhasta"],$_POST["adv-search-proyecto-combo"], $_POST["adv-search-subclase-combo"],
+                                                           $_POST["adv-search-responsable-combo"], $_POST["adv-search-esia-combo"],
+                                                           $_POST["adv-search-objeto-combo"], $_POST["geovisor"]);
 
         // vaciamos el objeto servicio_geovisor
         $servicio_geovisor = null; 
