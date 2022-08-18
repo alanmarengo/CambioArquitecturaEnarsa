@@ -14,4 +14,5 @@ interface IRepositorioQueryGeovisor{
     public function wms_get_layer_extent($str_layer_name);
     public function get_layer_extent($layer_id);
     public function get_coor_transformed($lon, $lat);
+    public function get_medicion($wkt, $type);
 }

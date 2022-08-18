@@ -128,6 +128,10 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
     public function get_coor_transformed($lon, $lat){
         return $this->query->get_coor_transformed($lon, $lat);
     }
+
+    public function get_medicion($wkt, $type){
+        return $this->query->get_medicion($wkt, $type);
+    }
     
 
 

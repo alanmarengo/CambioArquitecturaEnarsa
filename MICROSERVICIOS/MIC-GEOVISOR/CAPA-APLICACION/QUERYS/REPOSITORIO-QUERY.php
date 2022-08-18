@@ -1327,6 +1327,49 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	}
 
+	public function get_medicion($wkt, $type)
+	{
+		if ($type == "LineString") {
+
+			//$query_string = "SELECT ST_Length(ST_GeomFromText('".$wkt."')::geography,true) / 1000 AS km;";
+			$query_string = "SELECT ST_Length(st_transform(ST_GeomFromText('".$wkt."',3857),4326)::geography,true) / 1000 AS km;";
+			//echo $query_string;
+
+		}else{
+			
+			//$query_string = "SELECT ST_Perimeter(ST_GeomFromText('".$wkt."')) / 1000 AS km,ST_Area(ST_GeomFromText('".$wkt."')) / 1000 AS area;";
+			
+			//$query_string = "SELECT ST_Perimeter(ST_GeomFromText('".$wkt."')) / 1000 AS km,ST_Area(ST_Transform(ST_GeomFromText('".$wkt."',3857),4326)::geography) AS area;";
+			
+			$query_string = "SELECT ST_Perimeter(st_transform(ST_GeomFromText('".$wkt."',3857),4326)::geography) / 1000 AS km,ST_Area(ST_Transform(ST_GeomFromText('".$wkt."',3857),4326)::geography) AS area;";
+
+			//echo "<!--$query_string-->";
+			
+
+		}
+
+		$conexion = new ConexionGeovisores(); 
+
+		$data = $conexion->get_consulta($query_string);
+
+		$area = $data[0]["area"];
+
+		$data = explode(".",$data[0]["km"]);
+
+		$data = $data[0][0] . "." . substr($data[0][1],0,2);
+
+		if ($type == "LineString") 
+		{
+			echo "<p>Distancia: " . $data . " Km.</p>";
+			
+		}else{
+			
+			echo "<p>Área: " . $area . " m2.</p>";
+			echo "<p>Perímetro: " . $data . " Km.</p>";			
+		}
+
+	}
+
 }; // fin interface 
 
 
