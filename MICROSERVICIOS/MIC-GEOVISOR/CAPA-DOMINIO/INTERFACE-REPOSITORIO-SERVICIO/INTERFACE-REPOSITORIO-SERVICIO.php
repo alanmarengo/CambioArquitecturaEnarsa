@@ -15,4 +15,5 @@ interface IRepositorioServicioGeovisor{
     public function filter_proyectos_basic($user_id, $proyectos, $geovisor);
     public function get_layer_extent($layer_id);
     public function get_coor_transformed($lon, $lat);
+    public function get_medicion($wkt, $type);
 }
