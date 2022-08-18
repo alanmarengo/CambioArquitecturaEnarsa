@@ -7,7 +7,9 @@ require_once 'CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php';
 // el metodo requerido del micoservicio Geovisores
 
 // verifica usuario_id en la variable session y si no exitiste, user_id = -1, que corresponde al usuario publico.
-
+// $_POST['action'] = "get_coord_transformed";
+// $_POST["lon"] = 1000;
+// $_POST["lat"] = 1000;
 
 if (isset($_POST) && !empty($_POST['action'])) // verifica que existan las variables $_POST y action
 {
@@ -78,8 +80,21 @@ if (isset($_POST) && !empty($_POST['action'])) // verifica que existan las varia
         }
     }   
 
-   
+    if($_POST['action'] == 'get_coord_transformed')
+    {
+       if(!empty($_POST["lon"]) &&  !empty($_POST["lat"]))
+       {
+           $servicio_geovisor = new RepositorioServicioGeovisor;
 
+           echo "llegue bien a la funcion";
+
+           echo $servicio_geovisor->get_coord_transformed($_POST["lon"],$_POST["lat"]);
+
+           // vaciamos el objeto servicio_geovisor
+           $servicio_geovisor = null; 
+
+       }
+    }
 
 } else {
     

@@ -14,4 +14,5 @@ interface IRepositorioServicioGeovisor{
     public function GetLayerLabel($layer_name);
     public function filter_proyectos_basic($user_id, $proyectos, $geovisor);
     public function get_layer_extent($layer_id);
+    public function get_coor_transformed($lon, $lat);
 }

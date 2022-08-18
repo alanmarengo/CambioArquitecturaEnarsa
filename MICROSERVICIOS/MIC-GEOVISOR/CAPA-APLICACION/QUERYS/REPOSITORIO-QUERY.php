@@ -902,11 +902,11 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 		}else{
 				
-		?>
-			
-		<p>No se encontraron capas asociadas a estos proyectos</p>
-			
-		<?php
+			?>
+				
+			<p>No se encontraron capas asociadas a estos proyectos</p>
+				
+			<?php
 		}
 
 	}
@@ -991,7 +991,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 											$extension_registros_restringidos $aux_filtros_advanced )T 
 										EOD;			
 		}
-		 echo $query_string_filtros_advanced;
+		// echo $query_string_filtros_advanced;
 
 		
 		$conexion = new ConexionGeovisores(); 
@@ -1221,8 +1221,111 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	}
 
+	public function get_coor_transformed($lon, $lat)
+	{
+
+		// esta funcion utiliza una funcion de mod_geovisores
+		// la misma no se puede replicar por el tipo de dato GEOMETRY. replicar en bd de produccion. 
+		/*
+		
+		-- FUNCTION: "MIC-GEOVISORES".get_coord(bigint, double precision, double precision)
+
+		-- DROP FUNCTION IF EXISTS "MIC-GEOVISORES".get_coord(bigint, double precision, double precision);
+
+		CREATE OR REPLACE FUNCTION "MIC-GEOVISORES".get_coord(
+			epsg bigint,
+			_lon double precision,
+			_lat double precision)
+		RETURNS TABLE(nlon double precision, nlat double precision) 
+			LANGUAGE 'plpgsql'
+			COST 100
+			VOLATILE 
+			ROWS 1000
+		AS $BODY$
+		DECLARE
+			n_point GEOMETRY;
+			area	GEOMETRY;
+		BEGIN
+
+			n_point := ST_SetSRID(ST_MakePoint(_lon, _lat),3857);
+			--n_point := ST_MakePoint(_lon, _lat);
+			
+			CASE epsg
+				WHEN 100003 /* Lambert */ /* THEN
+					
+				SELECT ST_transform(the_geom,3857) INTO area FROM  "MIC-GEOVISORES".extent_coordenadas WHERE srid=epsg::TEXT;
+					
+				IF (ST_Within(n_point,area))THEN
+					n_point := ST_transform(n_point,100003);
+					
+					RETURN QUERY SELECT ST_X(n_point)AS _lon,ST_Y(n_point)AS nlat;
+				ELSE
+					RETURN QUERY SELECT 0.0::DOUBLE PRECISION AS _lon,0.0::DOUBLE PRECISION AS nlat;
+				END IF;
+				
+			WHEN 100001  /* Condor Cliff */ /* THEN
+				
+				SELECT ST_transform(the_geom,3857) INTO area FROM  "MIC-GEOVISORES".extent_coordenadas WHERE srid=epsg::TEXT;
+				
+				IF (ST_Within(n_point,area))THEN
+					n_point := ST_transform(n_point,100001);
+					RETURN QUERY SELECT ST_X(n_point)AS _lon,ST_Y(n_point)AS nlat;
+				ELSE
+					RETURN QUERY SELECT 0.0::DOUBLE PRECISION AS _lon,0.0::DOUBLE PRECISION AS nlat;
+				END IF;
+				
+			WHEN 100002 /* Barrancosa */ /*THEN
+				SELECT ST_transform(the_geom,3857) INTO area FROM  "MIC-GEOVISORES".extent_coordenadas WHERE srid=epsg::TEXT;
+				
+				IF (ST_Within(n_point,area))THEN
+					n_point := ST_transform(n_point,100002);
+					RETURN QUERY SELECT ST_X(n_point)AS _lon,ST_Y(n_point)AS nlat;
+				ELSE
+					RETURN QUERY SELECT 0.0::DOUBLE PRECISION AS _lon,0.0::DOUBLE PRECISION AS nlat;
+				END IF;
+				
+			ELSE
+				RETURN QUERY SELECT 0.0::DOUBLE PRECISION AS _lon,0.0::DOUBLE PRECISION AS nlat;
+		END CASE;
+
+		END;
+		$BODY$;
+
+		ALTER FUNCTION "MIC-GEOVISORES".get_coord(bigint, double precision, double precision)
+		OWNER TO postgres;		
+		
+		*/
 
 
+		$conexion = new ConexionGeovisores(); 
+
+		
+		$query_string = "SELECT * FROM mod_geovisores.get_coord(100001,$lon,$lat)";		
+		$data = $conexion->get_consulta($query_string);
+		$lon100001 = $data[0]["nlon"];
+		$lat100001 = $data[0]["nlat"];
+
+		$query_string = "SELECT * FROM mod_geovisores.get_coord(100002,$lon,$lat)";		
+		$data = $conexion->get_consulta($query_string);
+		$lon100002 = $data[0]["nlon"];
+		$lat100002 = $data[0]["nlat"];
+
+		$query_string = "SELECT * FROM mod_geovisores.get_coord(100003,$lon,$lat)";		
+		$data = $conexion->get_consulta($query_string);
+		$lon100003 = $data[0]["nlon"];
+		$lat100003 = $data[0]["nlat"];
+
+		$json = "{";
+
+		$json .= "\"coord100001\":{\"lon\":\"$lon100001\",\"lat\":\"$lat100001\",\"label\":\"Condor Cliff\"},";
+		$json .= "\"coord100002\":{\"lon\":\"$lon100002\",\"lat\":\"$lat100002\",\"label\":\"Barrancosa\"},";
+		$json .= "\"coord100003\":{\"lon\":\"$lon100003\",\"lat\":\"$lat100003\",\"label\":\"Lambert\"}";
+
+		$json .= "}";
+
+		return $json;
+
+	}
 
 }; // fin interface 
 
