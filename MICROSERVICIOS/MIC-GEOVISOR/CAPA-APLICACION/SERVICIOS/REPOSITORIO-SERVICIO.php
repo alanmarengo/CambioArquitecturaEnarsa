@@ -124,6 +124,10 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
     {
         return $this->query->get_layer_extent($layer_id);
     }
+
+    public function get_coor_transformed($lon, $lat){
+        return $this->query->get_coor_transformed($lon, $lat);
+    }
     
 
 
@@ -146,13 +150,13 @@ $test->filter_proyectos_advanced($user_id, $adv_search_busqueda, $adv_search_fde
 
 */
 
-$test = new RepositorioServicioGeovisor();
+//$test = new RepositorioServicioGeovisor();
 
 // teste filtro $adv_search_busqueda
 //$test->filter_proyectos_advanced(-1, "represa",'', '','', '', '','', '', '', 1);
 
 // test filtro $adv_search_fdesde, $adv_search_fhasta, siempre van juntos 
-$test->filter_proyectos_advanced(-1, "",'10/08/2022', '15/08/2022','', '', '','', '', '', 1); 
+//$test->filter_proyectos_advanced(-1, "",'10/08/2022', '15/08/2022','', '', '','', '', '', 1); 
  
 
 // test filtro 

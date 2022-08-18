@@ -13,4 +13,5 @@ interface IRepositorioQueryGeovisor{
     public function filter_proyectos_basic($lista_recursos_restringidos, $proyectos, $geovisor);
     public function wms_get_layer_extent($str_layer_name);
     public function get_layer_extent($layer_id);
+    public function get_coor_transformed($lon, $lat);
 }
