@@ -1385,6 +1385,21 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		}
 	}
 
+	public function get_layer_preview($layer_id)
+	{
+		$layer_id = $_POST["layer_id"];
+
+		$query_string = 'SELECT clase_id,preview_titulo,preview_desc,preview_link FROM "MIC-GEOVISORES".vw_layers WHERE layer_id = ' . $layer_id;
+
+		$conexion = new ConexionGeovisores(); 
+
+		$data = $conexion->get_consulta($query_string);
+			
+		echo '<p class="title" id="layer-preview-title">'.$data[0]["preview_titulo"].'</p>';
+		echo '<p class="content">'.$data["preview_desc"].'</p>';	
+	
+	}
+
 
 }; // fin interface 
 
