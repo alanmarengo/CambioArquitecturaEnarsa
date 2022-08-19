@@ -1407,13 +1407,13 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 // test
 
-$test = new RepositorioQueryGeovisor();
+//$test = new RepositorioQueryGeovisor();
 
 
 
 
 
-echo $test->get_buffer('raster', [1,2,3,4]);
+//echo $test->get_buffer('raster', [1,2,3,4]);
 //echo wms_get_layer_extent('ahrsc:area_lb'); //Demo
 
 
