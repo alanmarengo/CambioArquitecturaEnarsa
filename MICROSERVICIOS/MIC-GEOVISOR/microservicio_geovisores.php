@@ -122,9 +122,19 @@ if (isset($_POST) && !empty($_POST['action'])) // verifica que existan las varia
         }
     }
 
+    if($_POST['action'] == 'get_layer_preview')
+    {
+        if(!empty($_POST["layer_id"]))
+        {
+            $servicio_geovisor = new RepositorioServicioGeovisor;           
 
-
-
+            echo $servicio_geovisor->get_layer_preview($_POST["layer_id"]);
+ 
+            // vaciamos el objeto servicio_geovisor
+            $servicio_geovisor = null; 
+ 
+        }
+    }
 
 } else {
     

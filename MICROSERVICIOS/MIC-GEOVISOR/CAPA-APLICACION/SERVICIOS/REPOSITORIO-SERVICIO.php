@@ -136,6 +136,10 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
     public function get_buffer($wkt, $layers){
         return $this->query->get_buffer($wkt, $layers);
     }
+
+    public function get_layer_preview($layer_id){
+        return $this->query->get_layer_preview($layer_id);
+    }
     
 
 

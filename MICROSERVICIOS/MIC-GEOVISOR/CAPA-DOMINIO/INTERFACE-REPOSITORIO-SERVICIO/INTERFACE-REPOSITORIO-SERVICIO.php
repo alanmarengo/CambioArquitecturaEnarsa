@@ -17,4 +17,5 @@ interface IRepositorioServicioGeovisor{
     public function get_coor_transformed($lon, $lat);
     public function get_medicion($wkt, $type);
     public function get_buffer($wkt, $layers);
+    public function get_layer_preview($layer_id);
 }
