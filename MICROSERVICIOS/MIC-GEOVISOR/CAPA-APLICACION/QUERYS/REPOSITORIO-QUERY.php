@@ -1370,14 +1370,35 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	}
 
+	public function get_buffer($wkt, $layers)
+	{
+
+		$query_string = "SELECT * FROM ".'"MIC-GEOVISORES"'.".gfi_buffer('" . $wkt . "','" . implode(",",$layers) . "');";
+
+		$conexion = new ConexionGeovisores(); 
+
+		$respuesta = $conexion->get_consulta($query_string);
+
+		for($x=0; $x<=count($respuesta)-1; $x++)
+		{
+			echo $respuesta[$x]["img_tag"];
+		}
+	}
+
+
 }; // fin interface 
 
 
 
 // test
 
-//$test = new RepositorioQueryGeovisor();
-//echo $test->wms_get_layer_extent('ahrsc:area_lb');
+$test = new RepositorioQueryGeovisor();
+
+
+
+
+
+echo $test->get_buffer('raster', [1,2,3,4]);
 //echo wms_get_layer_extent('ahrsc:area_lb'); //Demo
 
 

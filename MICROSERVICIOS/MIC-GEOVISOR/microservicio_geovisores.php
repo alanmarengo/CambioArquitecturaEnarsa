@@ -108,6 +108,22 @@ if (isset($_POST) && !empty($_POST['action'])) // verifica que existan las varia
         }
     }
 
+    if($_POST['action'] == 'get_buffer')
+    {
+        if(!empty($_POST["wkt"]) && !empty($_POST["layers"]))
+        {
+            $servicio_geovisor = new RepositorioServicioGeovisor;           
+
+            echo $servicio_geovisor->get_buffer($_POST["wkt"],$_POST["layers"]);
+ 
+            // vaciamos el objeto servicio_geovisor
+            $servicio_geovisor = null; 
+ 
+        }
+    }
+
+
+
 
 
 } else {
