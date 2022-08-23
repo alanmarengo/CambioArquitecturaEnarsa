@@ -40,21 +40,21 @@ class ConexionMediateca {
     }
 }
 
-$test = New ConexionMediateca(); // se instancia un nuevo objeto de conexion a la mediateca
+//$test = New ConexionMediateca(); // se instancia un nuevo objeto de conexion a la mediateca
 
 // en caso de querer hacer uso de alguno de los metodos, se llaman a travez del operador  ->
 
 // si se quisiera realizar una consulta
 
-$contenedor_respuesta = $test->get_consulta('Aqui iria la consulta a ejecutar');
+//$contenedor_respuesta = $test->get_consulta('Aqui iria la consulta a ejecutar');
 
 // si se quisiera anular la conexion a la bd 
 
-$test->desconectar();
+//$test->desconectar();
 
 // si quisiera hacer uso de la query_string para db_link()
 
-$test->string_con_mic_catalogo; 
+//$test->string_con_mic_catalogo; 
 
 
 ?>

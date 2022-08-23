@@ -380,7 +380,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                                LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
                                                LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                                LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id) AS T
-                                               LEFT JOIN dblink('$conexion->string_con_mic_catalogo','SELECT * FROM "MIC-CATALOGO".cod_esia') 
+                                                   LEFT JOIN dblink('$conexion->string_con_mic_catalogo','SELECT * FROM "MIC-CATALOGO".cod_esia') 
                                                                AS ce (cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)  
                                                                ON t.cod_esia_id = ce.cod_esia_id
                                                LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
