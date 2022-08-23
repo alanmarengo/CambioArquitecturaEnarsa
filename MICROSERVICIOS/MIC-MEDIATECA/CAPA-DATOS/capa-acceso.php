@@ -8,11 +8,12 @@ class ConexionMediateca {
     private $port = "5432";
     private $database = "MIC-MEDIATECA";
     private $conect;
+    public $string_con_mic_catalogo = "dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432"; // string de conexion para uso en db link
 
     public function __construct()//instancia una nueva conexion
     {
         // pgsql:host=localhost;port=5432;dbname=testdb;   (ejemplo dns para pgsql )
-        $string_conn = "pgsql:host=" .$this->host.";port=".$this->port.";dbname=".$this->database;
+        $string_conn = "pgsql:host=$this->host;port=$this->port;dbname=$this->database";
         
         try 
         {

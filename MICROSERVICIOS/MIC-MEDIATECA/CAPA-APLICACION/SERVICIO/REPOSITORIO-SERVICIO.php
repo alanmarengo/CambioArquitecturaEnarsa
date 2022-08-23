@@ -178,8 +178,8 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 // test solapa 0 - documentos 
  // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
-// $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 0, 1,20,"estudio","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
-// print_r($recursos_mediateca);
+ $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 0, 1,20,"estudio","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
+ print_r($recursos_mediateca);
 
 // test solapa 1 - recursos audiovisuales 
  // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
@@ -192,6 +192,16 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
  //print_r($recursos_mediateca);
 
  // test solapa 3 - novedades
+ // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",3, 1,20,"foto","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
+ //print_r($recursos_mediateca);
+
+
+
+
+ // test obtencion de recursos cuando se aplican filtros en la mediateca 
+
+ // test solapa 0 - documentos 
  // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
  //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("",3, 1,20,"foto","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
  //print_r($recursos_mediateca);
