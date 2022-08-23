@@ -56,7 +56,7 @@ class Recurso{
 
 
 
-    //HOLA JUAN Y PABLO
+  
 }
 
 class EstadisticaInicial{
@@ -73,3 +73,6 @@ class EstadisticaInicial{
     }
 
 }
+
+
+

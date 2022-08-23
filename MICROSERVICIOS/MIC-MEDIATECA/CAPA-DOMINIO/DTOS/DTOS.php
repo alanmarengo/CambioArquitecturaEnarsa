@@ -29,8 +29,6 @@ class Recursos{
     }
 }
 
-
-
 class EstadisticasFiltros{
     public $estadistica_documentos;
     public $estadistica_recursos_audiovisuales;
