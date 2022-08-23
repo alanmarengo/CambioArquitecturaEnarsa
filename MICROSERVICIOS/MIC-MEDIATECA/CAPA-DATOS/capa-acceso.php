@@ -34,13 +34,27 @@ class ConexionMediateca {
     public function get_consulta(string $query)// ejecuta una consulta que recibe por parametro
     {
         $consulta = $this->conect->query($query);
-        $resultado = $consulta->fetchall(PDO::FETCH_ASSOC);
-        
+        $resultado = $consulta->fetchall(PDO::FETCH_ASSOC); // en este caso se define FETCH_ASSOC, 
+                                                            // de manera que la consulta devuelva un array asociativo.            
         return $resultado; // 
     }
 }
 
- // $prueba_conexion = new ConexionMediateca();
+$test = New ConexionMediateca(); // se instancia un nuevo objeto de conexion a la mediateca
+
+// en caso de querer hacer uso de alguno de los metodos, se llaman a travez del operador  ->
+
+// si se quisiera realizar una consulta
+
+$contenedor_respuesta = $test->get_consulta('Aqui iria la consulta a ejecutar');
+
+// si se quisiera anular la conexion a la bd 
+
+$test->desconectar();
+
+// si quisiera hacer uso de la query_string para db_link()
+
+$test->string_con_mic_catalogo; 
 
 
 ?>
