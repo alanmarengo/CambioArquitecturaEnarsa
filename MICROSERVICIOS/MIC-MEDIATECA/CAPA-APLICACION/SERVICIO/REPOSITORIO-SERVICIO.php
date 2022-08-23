@@ -27,13 +27,13 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         $respuesta->solapa = $solapa ;
         $respuesta->current_page = $current_page;
 
-        //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
+        
         $lista_recursos_restringidos = array();
         $servicio_usuario = new RepositorioServicioUsuario();
         
         if(empty($user_id)){ $user_id = -1; } // si el id de usuario viene vacio, se le pone -1.
 
-        if($user_id!=-1){
+        if($user_id!=-1){ //se obtiene la lista de recursos restringidos para cada usuario dependiento de su id.
             $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos_user($user_id);
         }else{
             $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos();
@@ -54,7 +54,9 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
             if($solapa==2){ // si la solapa ingresada es Recursos Tecnicos (solapa 2)                
                 $servicio_recursos_tecnicos= new RepositorioServicioRecursosTecnicos();
-                $recursos_mediateca = $servicio_recursos_tecnicos->get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$order_by);
+                $recursos_mediateca = $servicio_recursos_tecnicos->get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,
+                                                                                                    $clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$order_by);
+
                 $filtros=$servicio_catalogo->get_filtros($solapa,$recursos_mediateca->aux_cadena_filtros,$recursos_mediateca->lista_recursos_restringidos,$si_tengo_que_filtrar);
             } 
             else{ // sino, si es cualquiera de las otras solapas... (0,1,3) hago lo siguiente 
@@ -126,9 +128,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
     }
 
-    //AGREGAR NUEVA FUNCION DEL BUSCADOR ACA. EN LA INTERFACE SERIVICO, EN LA INTERFACE QUERY Y EN LA QUERY.
-    //CREAR EN DTO LA COINCIDENCIA.
-
+    // funcion para el buscador de palabras clave 
     public function busqueda_mediateca($str_filtro_mediateca){
 
        return $this->query->busqueda_mediateca($str_filtro_mediateca);
@@ -139,7 +139,7 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 } // fin clase RepositorioServicioMediateca  <-----------------
 
  //prueba de aplicacion 
- $obtener_recursos_mediateca = new RepositorioServicioMediateca();
+ //$obtener_recursos_mediateca = new RepositorioServicioMediateca();
  
 
  // si no hay que filtrar 
