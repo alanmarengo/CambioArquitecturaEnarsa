@@ -470,6 +470,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         $solapas=[0,1,3]; // solapas que ocuparan la misma consulta 
 
+        $conexion = new ConexionMediateca();   
+        
         // variable contenedora de la consulta que calculara las estadisticas 
         $consulta_estadistica_solapa = <<<EOD
                                             SELECT COUNT(*) as total FROM (SELECT *,CASE
@@ -492,21 +494,21 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                                     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
                                                     LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                                     LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id) AS T
-                                                    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                                    LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
                                                                     'SELECT * FROM "MIC-CATALOGO".cod_esia') 
                                                                     AS ce (cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)  
                                                                     ON t.cod_esia_id = ce.cod_esia_id
-                                                    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                                    LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
                                                                     'select cod_temp,desde AS tempo_desde, hasta AS tempo_hasta, descripcion AS tempo_desc from "MIC-CATALOGO".cod_temporalidad') 
                                                                     AS ct (cod_temp bigint ,tempo_desde  text,tempo_hasta  text,tempo_desc  text)  
                                                                     ON t.cod_temporalidad_id = ct.cod_temp
-                                                    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                                    LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
                                                                     'select subclase_id, clase_id, subclase_desc, subclase_cod, estado_subclase, 
                                                                             cod_unsubclase, descripcio, cod_nom, fec_bbdd from "MIC-CATALOGO".subclase') 
                                                                     AS sc (subclase_id bigint,clase_id bigint, subclase_desc text, subclase_cod text, estado_subclase bigint, 
                                                                         cod_unsubclase text, descripcio text, cod_nom text, fec_bbdd text)  
                                                                     ON T.subclase_id = sc.subclase_id
-                                                    LEFT JOIN dblink('dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                                    LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
                                                                     'SELECT e.estudios_id, e.estudios_palabras_clave, e.sub_proyecto_id, 
                                                                             e.estudio_estado_id,e.nombre,e.fecha, e.institucion,e.responsable,
                                                                             e.equipo, e.cod_oficial, e.descripcion, e.fecha_text_original,
@@ -532,7 +534,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         {
             $consulta_final_estadistica = $consulta_estadistica_solapa.' '.$solapas[$x].' '.$aux_cadena_filtros.' '.$extension_consulta_filtro_recursos.') as RR;';
                
-            $conexion = new ConexionMediateca();        
+          
             //realizo la consulta            
             $total_estadistica_solapa = $conexion->get_consulta($consulta_final_estadistica);
 
