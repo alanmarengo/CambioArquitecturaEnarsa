@@ -8,6 +8,10 @@ class ConexionRecursosTecnicos {
     private $port = "5432";
     private $database = "MIC-MEDIATECA";
     private $conect;
+    public $string_con_mic_geovisores = 'dbname=MIC-GEOVISORES hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
+    public $string_con_mic_estadisticas = 'dbname=MIC-ESTADISTICAS hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
+    public $string_con_mic_catalogo = 'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
+
 
     public function __construct()//instancia una nueva conexion
     {
