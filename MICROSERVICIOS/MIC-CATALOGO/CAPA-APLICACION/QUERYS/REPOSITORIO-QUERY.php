@@ -61,7 +61,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
                     break;                   
                 
-                case 2: //  en solapa 2 por el momento no se hace nada 
+                case 2:
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
                     'LEFT JOIN'.$this->ConstruirQueryUnionRecursosTecnicos($lista_filtros_solapa_2, 2,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
@@ -118,6 +118,8 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
 
         $QUERY_RETURN = "("; // variable contenedora de la union de filtros
 
+        $conect_mic_catalogo = new ConexionCatalogo;
+        
         $auxiliar_extensiones_filtros = ""; // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario,                                                    
        
         $auxiliar_extensiones_filtros = ' '.$aux_cadena_filtros.' '.$lista_recursos_restringidos; // se concatena el string de los filtros y los recursos restringidos
@@ -135,7 +137,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                             ELSE t.sub_proyecto_id
                                         END  AS valor_id ,
                                         COUNT(*)::BIGINT AS total 
-                                    FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                    FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                 'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id,
                                                  t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                 FROM "MIC-MEDIATECA".recurso t 
@@ -157,7 +159,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                     SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
                                         t.recurso_categoria_id::BIGINT AS valor_id,
                                         COUNT(*)::BIGINT AS total 
-                                    FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                    FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                             'SELECT t.recurso_id, t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                 FROM "MIC-MEDIATECA".recurso t 
                                             LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
@@ -177,7 +179,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                         SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
                                             t.recurso_categoria_id::BIGINT AS valor_id,
                                             COUNT(*)::BIGINT AS total 
-                                        FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                        FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                 'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                     FROM "MIC-MEDIATECA".recurso t 
                                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
@@ -194,7 +196,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                 case 3:
                     $query_parcial = <<<EOD
                                         SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,'tema'::TEXT AS desc,clase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
-                                        FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                        FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                     'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                         FROM "MIC-MEDIATECA".recurso t 
                                                     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
@@ -211,7 +213,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                 case 4:
                     $query_parcial = <<<EOD
                                         SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,subclase_desc::TEXT AS desc,t.subclase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
-                                        FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                        FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                     'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                         FROM "MIC-MEDIATECA".recurso t 
                                                     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
@@ -228,7 +230,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                 case 5:
                     $query_parcial = <<<EOD
                                     SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,recurso_categoria_desc::TEXT AS desc,recurso_categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
-                                    FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                    FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                 'SELECT t.recurso_id ,t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                     FROM "MIC-MEDIATECA".recurso t 
                                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
@@ -253,7 +255,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                 $QUERY_RETURN .= $query_parcial . $group_by . " UNION ALL ";
             }
             
-   
+            $conect_mic_catalogo = null;
 
         } 
             
@@ -263,6 +265,8 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
 
     public function ConstruirQueryUnionRecursosTecnicos($lista_filtros_solapa, $solapa,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar){
         
+        $conect_mic_catalogo = New ConexionCatalogo();
+
         $QUERY_RETURN = "("; // variable contenedora de la union de filtros
 
         // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario, sino no hay que filtrar. solo ira vacio.
@@ -286,11 +290,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                         (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
                                         'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                         NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                        FROM dblink('dbname=MIC-GEOVISORES
-                                        hostaddr=179.43.126.101 
-                                        user=postgres 
-                                        password=plahe100%
-                                        port=5432',
+                                        FROM dblink('$conect_mic_catalogo->string_con_mic_geovisores',
                                         'SELECT c.origen_id_especifico, c.origen_search_text, 
                                                 c.subclase_id, c.estudios_id, 
                                                 c.cod_esia_id, c.cod_temporalidad_id, 
@@ -313,19 +313,11 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                                 NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
                                                 'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                                 NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                                FROM dblink('dbname=MIC-ESTADISTICAS
-                                                                hostaddr=179.43.126.101 
-                                                                user=postgres 
-                                                                password=plahe100%
-                                                                port=5432',
+                                                FROM dblink('$conect_mic_catalogo->string_con_mic_estadisticas',
                                                                 'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
                                                                 as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)               
                                         UNION ALL
-                                        SELECT 'recurso mediateca'::text AS origen, r.* FROM dblink('dbname=MIC-MEDIATECA
-                                                                hostaddr=179.43.126.101 
-                                                                user=postgres 
-                                                                password=plahe100%
-                                                                port=5432',
+                                        SELECT 'recurso mediateca'::text AS origen, r.* FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                                 'SELECT  5::bigint AS origen_id, 
                                                                 r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
                                                                 r.subclase_id,r.estudios_id,NULL::bigint AS cod_esia_id,r.cod_temporalidad_id,
@@ -367,92 +359,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                         END  AS valor_id ,COUNT(*)::BIGINT AS total ";                   
 
                     $query_parcial .= ' '.$from.' '.$auxiliar_extensiones_filtros;
-                    break; 
-
-                     /*  //CONSEGUIR COMO SEA QUE ENTRE EL CASE DE ALLA ARRIBA
-                    $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,sp.sub_proyecto_desc::TEXT AS desc,
-                                        CASE
-                                            WHEN t.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
-                                            ELSE t.sub_proyecto_id
-                                        END  AS valor_id ,COUNT(*)::BIGINT AS total 
-                                    FROM dblink(
-                                        "".<<<EOD
-                                    SELECT * FROM 
-                            
-                                    ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
-                                    G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
-                                    G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
-                                    10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
-                                    G.recurso_desc, G.recurso_titulo, NULL::date AS recurso_fecha,
-                                    NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
-                                    NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,
-                                    (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
-                                    'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
-                                    NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                    FROM dblink('dbname=MIC-GEOVISORES
-                                    hostaddr=179.43.126.101 
-                                    user=postgres 
-                                    password=plahe100%
-                                    port=5432',
-                                    'SELECT c.origen_id_especifico, c.origen_search_text, 
-                                            c.subclase_id, c.estudios_id, 
-                                            c.cod_esia_id, c.cod_temporalidad_id, 
-                                            c.objetos_id, c.fecha_observatorio, 
-                                            l.preview_desc  AS recurso_desc,
-                                            l.preview_titulo  AS recurso_titulo       
-                                    FROM "MIC-GEOVISORES".catalogo c
-                                    INNER JOIN "MIC-GEOVISORES".layer l on l.layer_id=c.origen_id_especifico') 
-                                                    as G (origen_id_especifico bigint, origen_search_text text, subclase_id bigint, estudios_id bigint, 
-                                                    cod_esia_id bigint, cod_temporalidad_id bigint, objetos_id bigint, fecha_observatorio date, recurso_desc text, recurso_titulo text)
-                                    
-                                    UNION ALL
-                                    SELECT 'Estadistica'::text AS origen, 2 AS origen_id, 
-                                            dt.dt_id AS origen_id_especifico, dt.dt_titulo AS origen_search_text, 
-                                            NULL::bigint AS subclase_id, NULL::bigint AS estudios_id, 
-                                            NULL::bigint AS cod_esia_id, NULL::bigint AS cod_temporalidad_id, 
-                                            NULL::bigint AS objetos_id, dt.fecha_observatorio, 29::bigint AS recurso_categoria_id,
-                                            'Estadísticas'::text AS recurso_categoria_desc,  dt_desc AS recurso_desc, dt_titulo AS recurso_titulo, 
-                                            NULL::date AS recurso_fecha, NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
-                                            NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
-                                            'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
-                                            NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                            FROM dblink('dbname=MIC-ESTADISTICAS
-                                                            hostaddr=179.43.126.101 
-                                                            user=postgres 
-                                                            password=plahe100%
-                                                            port=5432',
-                                                            'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
-                                                            as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)
-                                    
-                                    UNION ALL
-                                    SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
-                                            r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
-                                            r.subclase_id,r.estudios_id,NULL::bigint AS cod_esia_id,r.cod_temporalidad_id,
-                                            NULL::bigint AS objetos_id,r.fecha_observatorio,r.recurso_categoria_id,
-                                            rc.recurso_categoria_desc,r.recurso_desc,r.recurso_titulo,r.recurso_fecha,   
-                                            r.recurso_autores, r.recurso_path_url,  r.recurso_size,r.territorio_id,
-                                            f.tipo_formato_id, f.visualizacion_tipo_id,f.formato_desc,f.formato_extension, 
-                                            vt.visualizacion_tipo_desc,tf.tipo_formato_desc,tf.tipo_formato_solapa, r.sub_proyecto_id as sub_proyecto_id 
-                                            FROM "MIC-MEDIATECA".recurso r
-                                            LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
-                                            LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
-                                            LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
-                                            WHERE tf.tipo_formato_solapa = 2 ) as u 
-                                            
-                                            EOD
-
-                                    )
-                                    LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
-                                    LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
-                                    LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
-                                    LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                    WHERE t.tipo_formato_solapa = '.$solapa.$auxiliar_extensiones_filtros;    
-
-
-                                    */
-                                  
+                    break;                                  
 
                 case 1: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
                     $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id, 
@@ -512,9 +419,9 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                 $group_by = $this->ConstruirQueryFiltroRecursosTecnicos($lista_filtros_solapa[$x]); // si no es el ultimo elemento, agregara UNION ALL
                 $QUERY_RETURN .= $query_parcial . $group_by . " UNION ALL ";
             }  
-
         } 
 
+        $conect_mic_catalogo = null;
         //echo $QUERY_RETURN;
             
         return $QUERY_RETURN;
@@ -525,15 +432,17 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
     }
 
     public function ConstruirQueryFiltro($filtro_id){
+
+        $conect_mic_catalogo = New ConexionCatalogo();
         
         //FILTRO ID 0
         $CONSULTA_PROYECTO=' GROUP BY sp.sub_proyecto_desc,valor_id '; // nota: reemplazo el valor sub_proyecto_id_principal por la variable valor_ir(contienen el mismo valor y se obtiene de la misma manera, cambia el nombre nomas)
         //FILTRO ID 1 
-        $CONSULTA_AREA_GESTION=" AND t.recurso_categoria_id IN (SELECT * FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+        $CONSULTA_AREA_GESTION=" AND t.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                                 'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=1'."') as g (recurso_categoria_id bigint))
                                  GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         //FILTRO ID 2
-        $CONSULTA_RECURSOS_TECNICOS=" AND t.recurso_categoria_id IN (SELECT * FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+        $CONSULTA_RECURSOS_TECNICOS=" AND t.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                                     'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=2'."') as g (recurso_categoria_id bigint))
                                       GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         //FILTRO ID 3 
@@ -541,9 +450,11 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         //FILTRO ID 4
         $CONSULTA_TEMA=' GROUP BY subclase_desc,t.subclase_id';
         //FILTRO ID 5
-        $CONSULTA_RECURSOS_AUDIOVISUALES= " AND t.recurso_categoria_id IN (SELECT * FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+        $CONSULTA_RECURSOS_AUDIOVISUALES= " AND t.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                                                                 'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=5'."') as g (recurso_categoria_id bigint))
                                             GROUP BY recurso_categoria_desc,recurso_categoria_id ";
+        
+        $conect_mic_catalogo = null;
         
         switch($filtro_id){
             case 0:
@@ -559,18 +470,21 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
             case 5:
                 return $CONSULTA_RECURSOS_AUDIOVISUALES;
         }
+
     }
 
     public function ConstruirQueryFiltroRecursosTecnicos($filtro_id){ //
+
+        $conect_mic_catalogo = New ConexionCatalogo();
         
         //FILTRO ID 0
         $CONSULTA_PROYECTO=' GROUP BY sp.sub_proyecto_desc,valor_id '; // nota: reemplazo el valor sub_proyecto_id_principal por la variable valor_ir(contienen el mismo valor y se obtiene de la misma manera, cambia el nombre nomas)
         //FILTRO ID 1 
-        $CONSULTA_AREA_GESTION=" AND u.recurso_categoria_id IN (SELECT * FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+        $CONSULTA_AREA_GESTION=" AND u.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                                 'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=1'."') as g (recurso_categoria_id bigint))
                                  GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         //FILTRO ID 2
-        $CONSULTA_RECURSOS_TECNICOS=" AND u.recurso_categoria_id IN (SELECT * FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+        $CONSULTA_RECURSOS_TECNICOS=" AND u.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                                     'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=2'."') as g (recurso_categoria_id bigint))
                                       GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         //FILTRO ID 3 
@@ -578,7 +492,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         //FILTRO ID 4
         $CONSULTA_TEMA=' GROUP BY subclase_desc,u.subclase_id';
         //FILTRO ID 5
-        $CONSULTA_RECURSOS_AUDIOVISUALES= " AND u.recurso_categoria_id IN (SELECT * FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+        $CONSULTA_RECURSOS_AUDIOVISUALES= " AND u.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
                                                                                                 'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=5'."') as g (recurso_categoria_id bigint))
                                             GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         
