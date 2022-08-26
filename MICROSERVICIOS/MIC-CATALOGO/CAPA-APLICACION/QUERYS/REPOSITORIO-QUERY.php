@@ -4,15 +4,19 @@ require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DATOS\capa-acceso.php');
 require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\DTOS\DTOS.php');
 //INCLUIR LA LIBRERIA DTO.
 
-class RepositorioQuery implements IRepositorioQuery{
+class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
 
     // metodo para obtener datos del territorio a partir del id 
     public function get_info_territorio($territorio_id)
     {
-            //aca instancio a la conexion y hago toda la query y la retorno.
+            //aca instancio a la conexion 
             $conexion = new ConexionCatalogo();
-            $query = 'SELECT t.fec_bbdd_date, t.territorio_simpli,t.fec_bbdd,t.descripcion FROM "MIC-CATALOGO".territorio t WHERE t.territorio_id = '.$territorio_id;
-            return $conexion->get_consulta($query); //  //
+
+            $query = 'SELECT t.fec_bbdd_date, t.territorio_simpli,t.fec_bbdd,t.descripcion 
+                      FROM "MIC-CATALOGO".territorio t 
+                      WHERE t.territorio_id = '.$territorio_id;
+
+            return $conexion->get_consulta($query); // retorno el resultado de la consulta ejecutada
     }
     
     public function get_filtros($solapa,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar){ 
@@ -33,7 +37,7 @@ class RepositorioQuery implements IRepositorioQuery{
         //TEMA/SUBTEMA: FILTRO_ID 4
         //RECURSOS AUDIOVISUALES: FILTRO ID 5
 
-        //DEPENDIENDO DE QUE SOLAPA ENTRE Y QUE FILTROS ID CALCULO ENTONCES:
+        //DEPENDIENDO DE QUE SOLAPA ENTRE Y QUE FILTROS ID CALCULO ENTONCES:        
         $lista_filtros_solapa_0=[0,1,3,4];
         $lista_filtros_solapa_1=[0,3,4,5];
         $lista_filtros_solapa_2=[0,2,3,4];
@@ -50,29 +54,12 @@ class RepositorioQuery implements IRepositorioQuery{
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
                     break;
 
-
-                    //    AND F.total!=0; <--- aun falta discriminar los valores 0, pero eso cuando hayan datos 
-                    //echo $QUERY_DEFINITIVA;
-                    //$QUERY_DEFINITIVA=str_replace("--QUERY_UNION",ConstruirQueryUnion($lista_filtros_solapa_0, 0, $filtro_id,$aux_cadena_filtros,$si_tengo_que_filtrar), $QUERY_DEFINITIVA);           
-                    //break;
-
                 case 1: 
 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
                     'LEFT JOIN'.$this->ConstruirQueryUnion($lista_filtros_solapa_1, 1,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar).
                     " ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC ";
-                    break;
-
-                    //$QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
-                    //'LEFT JOIN'.
-                    //'--QUERY_UNION'.
-                    //")A ON F.filtro_id=A.filtro_id AND F.valor_id = A.valor_id ORDER BY valor_desc ASC AND F.total!=0;";
-
-                    //$union = $this->ConstruirQueryUnion($lista_filtros_solapa_1, 1,$aux_cadena_filtros,$si_tengo_que_filtrar);
-
-                // $QUERY_DEFINITIVA=str_replace("--QUERY_UNION",, $QUERY_DEFINITIVA);           
-                    //break;
-                        //HACER LO MISMO QUE ARRIBA Y PROBAR TODO
+                    break;                   
                 
                 case 2: //  en solapa 2 por el momento no se hace nada 
                     $QUERY_DEFINITIVA = 'SELECT F.*,COALESCE(A.total,0) AS total FROM "MIC-CATALOGO".vw_filtros_values F '.
@@ -91,7 +78,6 @@ class RepositorioQuery implements IRepositorioQuery{
 
             }
 
-            // ejecutar consulta final, para obtener lista de filtros 
 
             $conexion = New ConexionCatalogo(); //
             //echo $QUERY_DEFINITIVA;
@@ -132,19 +118,17 @@ class RepositorioQuery implements IRepositorioQuery{
 
         $QUERY_RETURN = "("; // variable contenedora de la union de filtros
 
-        $auxiliar_extensiones_filtros = ""; // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario, sino no hay que filtrar. solo ira vacio.
-        
-        if($si_tengo_que_filtrar == 1)
-        {
-            $auxiliar_extensiones_filtros = ' '.$aux_cadena_filtros.' '.$lista_recursos_restringidos;
-        }
-
-        for($x=0;$x<=count($lista_filtros_solapa)-1; $x++) // cada filtro_id que exista en la lista 
+        $auxiliar_extensiones_filtros = ""; // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario,                                                    
+       
+        $auxiliar_extensiones_filtros = ' '.$aux_cadena_filtros.' '.$lista_recursos_restringidos; // se concatena el string de los filtros y los recursos restringidos
+      
+        for($x=0;$x<=count($lista_filtros_solapa)-1; $x++) // por cada filtro_id que exista en la lista 
         {            
             switch($lista_filtros_solapa[$x])
             {  
-                case 0:                                                                                                            //CONSEGUIR COMO SEA QUE ENTRE EL CASE DE ALLA ARRIBA
-                    $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,
+                case 0:                                                    
+                    $query_parcial = <<<EOD
+                                    SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,
                                       sp.sub_proyecto_desc::TEXT AS desc,
                                         CASE
                                             WHEN t.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
@@ -152,128 +136,111 @@ class RepositorioQuery implements IRepositorioQuery{
                                         END  AS valor_id ,
                                         COUNT(*)::BIGINT AS total 
                                     FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                                'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                                    FROM ".'"MIC-MEDIATECA".recurso t 
+                                                'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id,
+                                                 t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                                FROM "MIC-MEDIATECA".recurso t 
                                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                                 LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                                LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
-                                            as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                    LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
+                                                LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
+                                            as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, 
+                                                 sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
+                                    LEFT JOIN "MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                                     LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                    WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros;    
-
-
-                                /* consulta final de ejemplo
-                                
-                                SELECT 0::BIGINT AS filtro_id,
-                                    sp.sub_proyecto_desc::TEXT AS desc,
-                                    CASE
-                                        WHEN t.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
-                                    ELSE t.sub_proyecto_id 
-                                    END  AS valor_id,
-                                    COUNT(*)::BIGINT AS total 
-                                FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                            'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                            FROM "MIC-MEDIATECA".recurso t 
-                                            LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
-                                            LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
-                                            as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                LEFT JOIN "MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
-                                LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
-                                LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
-                                LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id 
-                                WHERE t.tipo_formato_solapa = 0 AND t.recurso_id NOT IN (1,2,3,4) 
-                                GROUP BY sp.sub_proyecto_desc,valor_id                        
-                                
-                                
-                                */
-
+                                    WHERE t.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros;
+                                    EOD; 
                     break;               
 
                 case 1: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
-                    $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
+                    $query_parcial = <<<EOD
+                                    SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
                                         t.recurso_categoria_id::BIGINT AS valor_id,
                                         COUNT(*)::BIGINT AS total 
                                     FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
                                             'SELECT t.recurso_id, t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                                FROM ".'"MIC-MEDIATECA".recurso t 
+                                                FROM "MIC-MEDIATECA".recurso t 
                                             LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                             LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
+                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
                                             as T (recurso_id bigint, origen_search_text text,estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                    LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
+                                    LEFT JOIN "MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                                     LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                     LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                    WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros; //SIEMPRE CONCATENAR LOS FILTROS DE RECURSOS RESTRINGIDOS
-
-                                    //SI TENGO QUE FILTRAR ==1
-                                    //QUERY_PARCIAL . = $AUX_CADENA_FILTROS.
+                                    WHERE t.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros;
+                                    EOD;                                                               
+                                 
                     break;
                 case 2: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
-                        $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
+                        $query_parcial = <<<EOD
+                                        SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
                                             t.recurso_categoria_id::BIGINT AS valor_id,
                                             COUNT(*)::BIGINT AS total 
                                         FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
                                                 'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                                    FROM ".'"MIC-MEDIATECA".recurso t 
+                                                    FROM "MIC-MEDIATECA".recurso t 
                                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                                 LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                                LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
+                                                LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
                                                 as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                        LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
+                                        LEFT JOIN "MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                                         LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                         LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                         LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                        WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros; 
+                                        WHERE t.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros; 
+                                        EOD;
                         break;    
                 case 3:
-                    $query_parcial = "SELECT  ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,'tema'::TEXT AS desc,clase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
+                    $query_parcial = <<<EOD
+                                        SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,'tema'::TEXT AS desc,clase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
                                         FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
                                                     'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                                        FROM ".'"MIC-MEDIATECA".recurso t 
+                                                        FROM "MIC-MEDIATECA".recurso t 
                                                     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                                     LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                                    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
+                                                    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
                                                 as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                        LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
+                                        LEFT JOIN "MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                                         LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                         LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                         LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                        WHERE t.tipo_formato_solapa ='.$solapa.' '.$auxiliar_extensiones_filtros; 
+                                        WHERE t.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros; 
+                                        EOD;
                     break;   
                 case 4:
-                    $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,subclase_desc::TEXT AS desc,t.subclase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
+                    $query_parcial = <<<EOD
+                                        SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,subclase_desc::TEXT AS desc,t.subclase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
                                         FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
                                                     'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                                        FROM ".'"MIC-MEDIATECA".recurso t 
+                                                        FROM "MIC-MEDIATECA".recurso t 
                                                     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
                                                     LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                                    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
+                                                    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
                                                 as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                        LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
+                                        LEFT JOIN "MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
                                         LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
                                         LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
                                         LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                                        WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros;
+                                        WHERE t.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros;
+                                        EOD;
                     break;  
                 case 5:
-                    $query_parcial = "SELECT ".$lista_filtros_solapa[$x]."::BIGINT AS filtro_id,recurso_categoria_desc::TEXT AS desc,recurso_categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
-                    FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
-                                'SELECT t.recurso_id ,t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                    FROM ".'"MIC-MEDIATECA".recurso t 
-                                LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
-                                LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id'."')
-                            as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                    LEFT JOIN ".'"MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
-                    LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
-                    LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
-                    LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
-                    WHERE t.tipo_formato_solapa = '.$solapa.' '.$auxiliar_extensiones_filtros;
+                    $query_parcial = <<<EOD
+                                    SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,recurso_categoria_desc::TEXT AS desc,recurso_categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
+                                    FROM dblink('dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432',
+                                                'SELECT t.recurso_id ,t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                                    FROM "MIC-MEDIATECA".recurso t 
+                                                LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
+                                                LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                                LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
+                                            as T (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
+                                    LEFT JOIN "MIC-CATALOGO".vw_estudio e ON t.estudios_id = e.estudios_id
+                                    LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = t.cod_temporalidad_id
+                                    LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = t.subclase_id
+                                    LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = t.subclase_id -- añadir tabla sub proyecto
+                                    WHERE t.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros;
+                                    EOD;
                     break;                      
             }
             

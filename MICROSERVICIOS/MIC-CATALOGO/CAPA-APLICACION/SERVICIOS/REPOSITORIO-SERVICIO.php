@@ -1,11 +1,12 @@
 <?php
 require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\INTERFACE-SERVICIO\REPOSITORIO-INTERFACE-SERVICIO.php');
 require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-APLICACION\QUERYS\REPOSITORIO-QUERY.php');
+
 class RepositorioServicioCatalogo implements IRepositorioServicioCatalogo{
     public $query;
 
     public function __construct(){
-        $this->query= new RepositorioQuery();    }
+        $this->query= new RepositorioQueryCatalogo();    }
 
 
     public function get_info_territorio($territorio_id){

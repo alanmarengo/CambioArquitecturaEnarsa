@@ -39,6 +39,13 @@ class ConexionCatalogo {
     }
 }
 
-// $prueba_conexion = new ConexionCatalogo();
+// se instancia una nueva conexion. 
+ // $prueba_conexion = new ConexionCatalogo();
+
+ // se realiza la o las consultas que se neseciten. se puede hacer mas de una por conexion. 
+ // $prueba_conexion->get_consulta('aqui va la consulta a realizar');
+
+ // y cuando no se realizaran mas consultas es aconsejable utilizar el metodo para destruir la clase. 
+ // $prueba_conexion->desconectar();
 
 ?>
