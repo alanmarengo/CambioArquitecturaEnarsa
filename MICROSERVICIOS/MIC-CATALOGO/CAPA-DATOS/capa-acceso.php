@@ -2,12 +2,16 @@
 
 // clase para conexion a bd 
 class ConexionCatalogo {
+
     private $host = "179.43.126.101";
     private $user = "postgres";
     private $pass = "plahe100%";
     private $port = "5432";
     private $database = "MIC-CATALOGO";
     private $conect;
+    public $string_con_mic_mediateca = 'dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
+    public $string_con_mic_geovisores = 'dbname=MIC-GEOVISORES hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
+    public $string_con_mic_estadisticas = 'dbname=MIC-ESTADISTICAS hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
 
     public function __construct()
     {
@@ -24,7 +28,6 @@ class ConexionCatalogo {
             echo "ERROR: ".$e->getMessage(); // y el tipo de error devuelto por la db.
         }
     }
-
     public function desconectar()// cierra la conexion creada. 
     {
         $this->conect = null;
