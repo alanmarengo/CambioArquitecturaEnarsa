@@ -1,26 +1,32 @@
 <?php
+
 require_once 'CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php';
-// archivo de evaluacion de peticiones POST
+
+
+// Archivo de evaluacion de peticiones POST
 // Este archivo sera el encargado las nueva peticiones post que reciba la pagina,
 // verificara la consistencia de los datos recibidos y llamara a los metodos necesarios segun corresponda a la peticion requerida 
 // todas las peticiones, de ahora en mas deberan adicionar una variable llamada "action" donde se especificara 
 // el metodo requerido del micoservicio Geovisores
 
 // verifica usuario_id en la variable session y si no exitiste, user_id = -1, que corresponde al usuario publico.
- $_POST['action'] = "get_medicion";
- $_POST["type"] = "LineString";
- $_POST["wkt"] = 1000;
+
+
+// variables de prueba 
+ //$_POST['action'] = "get_medicion";
+ //$_POST["type"] = "LineString";
+ //$_POST["wkt"] = 1000;
 
 if (isset($_POST) && !empty($_POST['action'])) // verifica que existan las variables $_POST y action
 {
-
+    /* se evaluara esta funcion cuando se determine como se recibira el id_user desde el front
     // se evalua el tipo de usuario
 	if ( (!empty($_SESSION)) && (!empty($_SESSION["user_info"]["user_id"]))) 
     {
         $user_id = $_SESSION["user_info"]["user_id"];
 
-    }else $user_id = -1 ; /* usuario publico, no hay perfil */
-
+    }else $user_id = -1 ; // usuario publico, no hay perfil 
+    */
 
     // -- a partir de esta parte, se definiran todos los metodos para implementacion
 
@@ -137,7 +143,7 @@ if (isset($_POST) && !empty($_POST['action'])) // verifica que existan las varia
     }
 
 } else {
-    
+        
     echo "No hay nada para Mostrar.";
 }
  
