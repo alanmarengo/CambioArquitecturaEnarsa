@@ -19,3 +19,7 @@ interface IRepositorioServicioGeovisor{
     public function get_buffer($wkt, $layers);
     public function get_layer_preview($layer_id);
 }
+
+
+
+

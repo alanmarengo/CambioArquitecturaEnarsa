@@ -1,20 +1,16 @@
 <?php
 
-// (dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\INTERFACE-REPOSITORIO-SERVICIO\INTERFACE-REPOSITORIO-SERVICIO.php')
+
 require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DOMINIO\INTERFACE-REPOSITORIO-SERVICIO\INTERFACE-REPOSITORIO-SERVICIO.php');
 require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-APLICACION\QUERYS\REPOSITORIO-QUERY.php');
 require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIOS.php');
 
 
-//INJECTAR MICROSERVICIO USUARIO
-
 class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
 
     public $servicio_usuario;
     public $query;
-    //lo mismo con la querry
-
-
+    
     public function __construct(){
         $this->servicio_usuario=new RepositorioServicioUsuario();
         $this->query= new RepositorioQueryGeovisor();

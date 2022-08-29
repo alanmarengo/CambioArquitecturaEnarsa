@@ -50,10 +50,14 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		{  
 			?>
 
-			<a class="dropdown-item" href="#" data-id="<?php echo  $consulta[$x]["proyecto_id"]; ?>"><?php echo  $consulta[$x]["proyecto_titulo"]; ?></a>          
+			<a class="dropdown-item" href="#" data-id="<?php echo  $consulta[$x]["proyecto_id"]; ?>">
+							<?php echo  $consulta[$x]["proyecto_titulo"]; ?>
+			</a>          
 		
 			<?php 
 		}
+
+		$conexion = null;
 	
 		
 	}
@@ -67,18 +71,15 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
                             'SELECT clase_id,clase_desc,color_hex,color_head,cod_clase_alf FROM "MIC-CATALOGO".clase ORDER BY clase_id ASC') 
                             as dt(clase_id integer, clase_desc text, color_hex text, color_head text, cod_clase_alf text)
                         EOD;
-
-		
-
 		//realizo la consulta 
 		$r = $conexion->get_consulta($query_string);
-		//print_r($r);
+
 
 		for($x=0; $x<=count($r)-1; $x++)
 		{  
 			echo '<div class="abr panel-abr" data-color="#31cbfd" data-bgcolor="#FFFFFF" data-active="0" data-cid="'.$r[$x]["clase_id"].'" title="'.$r[$x]["clase_desc"].'">
-                 <span>'.$r[$x]["cod_clase_alf"].'</span>
-            </div>' ;
+                 	<span>'.$r[$x]["cod_clase_alf"].'</span>
+           		 </div>' ;
 		}	    
 
 	}
@@ -140,13 +141,12 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 									LEFT JOIN "MIC-GEOVISORES".tipo_origen tipo_o ON tipo_o.tipo_origen_id = l.tipo_origen_id) A 
 								EOD;
 		// por ultimo, concatenamos el where
-		$consulta_definitiva .= " WHERE clase_id =  $clase_id  ORDER BY layer_desc ASC";
-
-		
+		$consulta_definitiva .= " WHERE clase_id =  $clase_id  ORDER BY layer_desc ASC";		
 
 		//realizo la consulta 
 		$r = $conexion->get_consulta($consulta_definitiva);
-		//print_r($r);
+
+
 		
 		for($x=0; $x<=count($r)-1; $x++)
 			{				
@@ -334,11 +334,11 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
                         EOD;
 
 		$conexion = new ConexionGeovisores(); 
-
 		//realizo la consulta 
 		$r = $conexion->get_consulta($query_string);
-		//print_r($r);
 		
+
+
 		for($x=0; $x<=count($r)-1; $x++)
 			{				
 			?>				
@@ -371,10 +371,8 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 						EOD;
 		
 		$conexion = new ConexionGeovisores(); 
-
 		//realizo la consulta 
 		$resultado = $conexion->get_consulta($query_string);
-		//print_r($resultado);
 
 
 		// variable contenedora de respuesta final 

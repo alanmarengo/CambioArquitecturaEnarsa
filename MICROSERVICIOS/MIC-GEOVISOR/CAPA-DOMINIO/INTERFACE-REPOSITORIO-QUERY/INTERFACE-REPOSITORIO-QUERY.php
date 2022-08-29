@@ -1,4 +1,5 @@
 <?php
+
 interface IRepositorioQueryGeovisor{
     public function ListaProyectos();
     public function DrawAbr();
@@ -18,3 +19,5 @@ interface IRepositorioQueryGeovisor{
     public function get_buffer($wkt, $layers);
     public function get_layer_preview($layer_id);
 }
+
+
