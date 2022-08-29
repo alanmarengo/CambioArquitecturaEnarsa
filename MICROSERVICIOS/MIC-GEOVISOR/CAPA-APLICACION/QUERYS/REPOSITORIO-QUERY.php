@@ -60,17 +60,15 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	public function DrawAbr()
 	{
+		$conexion = new ConexionGeovisores(); 
+
 		$query_string = <<<EOD
-                            SELECT * FROM dblink('dbname=MIC-CATALOGO
-                            hostaddr=179.43.126.101 
-                            user=postgres 
-                            password=plahe100%
-                            port=5432',
+                            SELECT * FROM dblink('$conexion->string_con_mic_catalogo',
                             'SELECT clase_id,clase_desc,color_hex,color_head,cod_clase_alf FROM "MIC-CATALOGO".clase ORDER BY clase_id ASC') 
                             as dt(clase_id integer, clase_desc text, color_hex text, color_head text, cod_clase_alf text)
                         EOD;
 
-		$conexion = new ConexionGeovisores(); 
+		
 
 		//realizo la consulta 
 		$r = $conexion->get_consulta($query_string);
@@ -88,6 +86,8 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 	public function DrawLayers($clase_id) 
 	{
 		$consulta_definitiva = 'SELECT DISTINCT clase_id,layer_id,tipo_layer_id,layer_desc,layer_wms_layer,layer_wms_server,layer_metadata_url FROM ';
+		
+		$conexion = new ConexionGeovisores(); 
 
 		// se le concatena la consulta equivalente a la vista vw_layers
 		$consulta_definitiva .= <<<EOD
@@ -128,29 +128,21 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 									e.cod_oficial
 									FROM "MIC-GEOVISORES".layer l
 									LEFT JOIN "MIC-GEOVISORES".catalogo c ON l.layer_id = c.origen_id_especifico
-									LEFT JOIN dblink('dbname=MIC-CATALOGO
-														hostaddr=179.43.126.101 
-														user=postgres 
-														password=plahe100%
-														port=5432',
+									LEFT JOIN dblink('$conexion->string_con_mic_calalogo',
 														'SELECT sc.subclase_id, sc.subclase_desc, sc.clase_id,  c.clase_desc,  c.cod_clase_alf
 														FROM "MIC-CATALOGO".subclase sc
 														JOIN "MIC-CATALOGO".clase c ON sc.clase_id = c.clase_id') 
 											as sc(subclase_id bigint, subclase_desc text, clase_id bigint, clase_desc text, cod_clase_alf text) ON sc.subclase_id = c.subclase_id
-									LEFT JOIN dblink('dbname=MIC-CATALOGO
-														hostaddr=179.43.126.101 
-														user=postgres 
-														password=plahe100%
-														port=5432',
+									LEFT JOIN dblink('$conexion->string_con_mic_calalogo',
 														'SELECT estudios_id, nombre, cod_oficial FROM "MIC-CATALOGO".estudios') 
 											as e(estudios_id bigint, nombre text, cod_oficial text) ON e.estudios_id = c.estudios_id
 									LEFT JOIN "MIC-GEOVISORES".tipo_layer tl ON tl.tipo_layer_id = l.tipo_layer_id
 									LEFT JOIN "MIC-GEOVISORES".tipo_origen tipo_o ON tipo_o.tipo_origen_id = l.tipo_origen_id) A 
 								EOD;
 		// por ultimo, concatenamos el where
-		$consulta_definitiva .= " WHERE clase_id = " . $clase_id . " ORDER BY layer_desc ASC";
+		$consulta_definitiva .= " WHERE clase_id =  $clase_id  ORDER BY layer_desc ASC";
 
-		$conexion = new ConexionGeovisores(); 
+		
 
 		//realizo la consulta 
 		$r = $conexion->get_consulta($consulta_definitiva);
@@ -336,11 +328,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 	public function DrawContainers()
 	{
 		$query_string = <<<EOD
-                            SELECT * FROM dblink('dbname=MIC-CATALOGO
-                            hostaddr=179.43.126.101 
-                            user=postgres 
-                            password=plahe100%
-                            port=5432',
+                            SELECT * FROM dblink('$conexion->string_con_mic_calalogo',
                             'SELECT clase_id,cod_nom,color_hex,color_head,cod_clase_alf FROM "MIC-CATALOGO".clase ORDER BY clase_id ASC') 
                             as dt(clase_id integer, cod_nom text,color_hex text,color_head text,cod_clase_alf text)
                         EOD;
@@ -419,13 +407,11 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 	public function DrawDatasetSearch($pattern) // esta funcion recibira un string como parametro
 	{
 
+		$conexion = new ConexionGeovisores();
+
 		// variable contenedora de consulta a realizar
 		$query_string = <<<EOD
-						SELECT * FROM dblink('dbname=MIC-ESTADISTICAS
-											hostaddr=179.43.126.101 
-											user=postgres 
-											password=plahe100%
-											port=5432',
+						SELECT * FROM dblink('$conexion->string_con_mic_estadisticas',
 											'SELECT DISTINCT * FROM "MIC-ESTADISTICAS".vw_dt') 
 											as dt( dt_id bigint, clase_id bigint, dt_titulo text, dt_desc text, dt_table_source text, dt_geom_base_table text,
 													dt_geom_column_display text, clase_desc text, clase_cod text, cod_nom text, descripcion text,
@@ -435,7 +421,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 			
 		$output = "<ul>";
 
-		$conexion = new ConexionGeovisores(); 
+		 
 
 		//realizo la consulta 
 		$resultado = $conexion->get_consulta($query_string);
@@ -472,30 +458,24 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	public function DrawProyectos() 
 	{			
+
+		$conexion = new ConexionGeovisores(); 
+
 		// variable contenedora de consulta a realizar
 		$query_string = <<<EOD
 
-						SELECT * FROM dblink('dbname=MIC-CATALOGO
-						hostaddr=179.43.126.101 
-						user=postgres 
-						password=plahe100%
-						port=5432',
+						SELECT * FROM dblink('$conexion->string_con_mic_catalogo',
 						'SELECT * FROM "MIC-CATALOGO".sub_proyecto') 
 						as e( sub_proyecto_id bigint, proyecto_id bigint, sub_proyecto_desc text)
 						WHERE sub_proyecto_id IN ( SELECT DISTINCT e.sub_proyecto_id  
 						FROM "MIC-GEOVISORES".catalogo c
-						LEFT JOIN dblink('dbname=MIC-CATALOGO
-								hostaddr=179.43.126.101 
-								user=postgres 
-								password=plahe100%
-								port=5432',
+						LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
 								'SELECT estudios_id, sub_proyecto_id FROM "MIC-CATALOGO".vw_estudio') 
 						as e(estudios_id bigint, sub_proyecto_id bigint) ON c.estudios_id = e.estudios_id )
 						ORDER BY sub_proyecto_desc ASC		
 		
 					EOD;
 
-		$conexion = new ConexionGeovisores(); 
 
 		//realizo la consulta 
 		$resultado = $conexion->get_consulta($query_string);
@@ -857,7 +837,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 							<?php
 							
 							$layer_query_string = "SELECT DISTINCT clase_id,layer_id,tipo_layer_id,layer_desc,layer_wms_layer,layer_wms_server 
-												   FROM mod_geovisores.vw_layers 
+												   FROM ".'"MIC-GEOVISORES"'.".vw_layers 
 												   WHERE clase_id = " . $respuesta_2[$x]["clase_id"] . 
 												   " AND subclase_id = " . $respuesta_2[$x]["subclase_id"] .
 													" AND layer_id IN (" . $layer_ids . ")  
