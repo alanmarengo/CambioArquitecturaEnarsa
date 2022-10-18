@@ -11,7 +11,6 @@ class RepositorioServicioIndicadores implements IRepositorioServicioIndicadores{
     public function __construct(){
         $this->query= new RepositorioQueryIndicadores();
     }
-
     
     public function DrawAbrInd($user_id)
     {         
@@ -29,7 +28,6 @@ class RepositorioServicioIndicadores implements IRepositorioServicioIndicadores{
         return $this->query->DrawAbrInd($lista_recursos_restringidos);
 
     } // fin DrawAbrInd
-
 
     public function DrawContainersInd($user_id)
     {
@@ -63,7 +61,6 @@ class RepositorioServicioIndicadores implements IRepositorioServicioIndicadores{
         return $this->query->DrawIndicadores($lista_recursos_restringidos,$user_id);
     } // fin DrawContainersInd
 
-
     public function DrawIndicadoresSearch($user_id,$pattern)
     {
         $lista_recursos_restringidos = array();
@@ -84,9 +81,6 @@ class RepositorioServicioIndicadores implements IRepositorioServicioIndicadores{
     public function ComboCruce(){
         $this->query->ComboCruce();
     }
-
-    // a partir de aca se definiran todos los servicios 
-
 
 }
 
