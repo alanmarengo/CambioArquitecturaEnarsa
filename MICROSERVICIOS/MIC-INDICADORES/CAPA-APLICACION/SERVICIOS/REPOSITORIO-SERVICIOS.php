@@ -64,7 +64,7 @@ class RepositorioServicioIndicadores implements IRepositorioServicioIndicadores{
     } // fin DrawContainersInd
 
 
-    function DrawIndicadoresSearch($user_id,$pattern)
+    public function DrawIndicadoresSearch($user_id,$pattern)
     {
         $lista_recursos_restringidos = array();
         $servicio_usuario = new RepositorioServicioUsuario();
@@ -81,7 +81,9 @@ class RepositorioServicioIndicadores implements IRepositorioServicioIndicadores{
         
     } // fin DrawIndicadoresSearch
 
-
+    public function ComboCruce(){
+        $this->query->ComboCruce();
+    }
 
     // a partir de aca se definiran todos los servicios 
 
@@ -89,7 +91,7 @@ class RepositorioServicioIndicadores implements IRepositorioServicioIndicadores{
 }
 
 
-$test = new RepositorioServicioIndicadores();
+//$test = new RepositorioServicioIndicadores();
 
 //$test->DrawAbrInd(-1);
-$test->DrawContainersInd(-1);
+//$test->DrawContainersInd(-1);
