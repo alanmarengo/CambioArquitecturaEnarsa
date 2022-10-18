@@ -2,12 +2,21 @@
 
 // clase para conexion a bd
 class ConexionIndicadores {
-    private $host = "179.43.126.101";
+    //private $host = "179.43.126.101";    
+    //private $pass = "plahe100%";
+
+    private $host = "localhost";
+    private $pass = "37159252";
+
+
     private $user = "postgres";
-    private $pass = "plahe100%";
     private $port = "5432";
     private $database = "MIC-INDICADORES";
     private $conect;
+    public $string_con_mic_catalogo = 'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
+    public $string_con_mic_estadisticas = 'dbname=MIC-ESTADISTICAS hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
+    //public $string_con_mic_catalogo = 'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
+    
 
     public function __construct() // crea una nueva instancia de conexion
     {
@@ -32,7 +41,7 @@ class ConexionIndicadores {
     {
         $consulta = $this->conect->query($query);
         $resultado = $consulta->fetchall(PDO::FETCH_ASSOC);
-        $this->desconectar();
+        //$this->desconectar();
         return $resultado; // 
     }
 }
