@@ -3,7 +3,11 @@
 
 interface IRepositorioServicioIndicadores{
     
-    // a partir de aca se definiran las interfaces de servicio
+    public function DrawAbrInd($user_id);
+    public function DrawContainersInd($user_id);
+    public function DrawIndicadores($user_id,$clase_id);
+    public function DrawIndicadoresSearch($user_id,$pattern);
+    public function ComboCruce();
 
 }
 

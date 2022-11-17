@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php');
+require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
 
 class RecursoTecnico{
     public $solapa = 2;

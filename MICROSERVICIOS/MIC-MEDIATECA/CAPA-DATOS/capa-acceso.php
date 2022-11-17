@@ -1,14 +1,15 @@
 <?php
+require_once(dirname(__FILE__,3).'\CRED\conf.php');
 
 // clase para conexion a bd
 class ConexionMediateca {
-    private $host = "179.43.126.101"; 
+    private $host = "localhost"; 
     private $user = "postgres";
-    private $pass = "plahe100%";
+    private $pass = "37159252";
     private $port = "5432";
     private $database = "MIC-MEDIATECA";
     private $conect;
-    public $string_con_mic_catalogo = "dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432"; // string de conexion para uso en db link
+    public $obj_conexion_db_externas; // objeto de conexion con credenciales. 
 
     public function __construct()//instancia una nueva conexion
     {
@@ -24,6 +25,8 @@ class ConexionMediateca {
             $this->conect = "Error en la conexion"; // si no es posible conectarse, mostrara el mensaje.
             echo "ERROR: ".$e->getMessage(); // y el tipo de error devuelto por la db.
         }
+
+        $this->obj_conexion_db_externas = New conect_db_link();
     }
 
     public function desconectar()// cierra la conexion creada. 
@@ -40,7 +43,7 @@ class ConexionMediateca {
     }
 }
 
-//$test = New ConexionMediateca(); // se instancia un nuevo objeto de conexion a la mediateca
+// $test = New ConexionMediateca(); // se instancia un nuevo objeto de conexion a la mediateca
 
 // en caso de querer hacer uso de alguno de los metodos, se llaman a travez del operador  ->
 
@@ -53,8 +56,9 @@ class ConexionMediateca {
 //$test->desconectar();
 
 // si quisiera hacer uso de la query_string para db_link()
-
-//$test->string_con_mic_catalogo; 
+// ejemplo en caso de requerir las credenciales del mic catalogo
+//$test->obj_conexion_db_externas->string_mic_catalogo;
+ 
 
 
 ?>

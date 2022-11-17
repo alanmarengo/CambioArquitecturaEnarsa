@@ -1,0 +1,8 @@
+Options All -Indexes
+
+#Evitar el acceso a las carpetas
+deny from all
+
+AuthName "Acceso Denegado"
+AuthType Basic
+

@@ -14,9 +14,9 @@ if((strpos($_SERVER["SCRIPT_FILENAME"],"wamp64")) || (strpos($_SERVER["SCRIPT_FI
 	
 }else{
 	
-	define("pg_server","127.0.0.1");
-	define("pg_user","postgres");
-	define("pg_password","plahe100%");
+	define("pg_server","isga-02.ieasa.com.ar");
+	define("pg_user","atic");
+	define("pg_password","atic%100");
 	define("pg_portv",5432);
 	define("pg_db",$db_name);
 	

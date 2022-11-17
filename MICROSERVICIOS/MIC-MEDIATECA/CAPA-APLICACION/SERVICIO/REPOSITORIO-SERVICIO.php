@@ -2,10 +2,10 @@
 
  require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\INTERFACE-REPOSITORIO-SERVICIO\INTERFACE-REPOSITORIO-SERVICIO.php');
  require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-APLICACION\QUERY\REPOSITORIO-QUERY.php');
- require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIOS.php');
- require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php');
+ require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
+ require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
  require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\DTOS\DTOS.php');
- require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php');
+ require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
 
 //$rola = dirname(__FILE__,4); no tocar es un ejemplo de como cponseguir la ruta absoluta
 
@@ -123,16 +123,6 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         return  $respuesta;
 
 
-        
-        //ACA IDENTIFICO UN FLAG DEL FRONT SI ES QUE DEBO CALCULAR O NO LAS ESTADISTICAS. SI NO LAS DEBO CALCULAR, LAS VOY A BUSCAR A BASE DE DATOS.
-        //SI LAS DEBO CALCULAR, DEBO CALCULAR LAS ESTADISTICAS CON LOS FILTROS, TANTO ACA EN MEDIATECA COMO EN LOS DEMAS MICROSERVICIOS.
-        //LA ENCARGADA DE DEVOLVER LOS FILTROS Y LAS ESTADISITCAS DE ESOS FILTROS SERA EL MICROSERVICIO CATALOGO
-
-        //aca abajo le pedimos a los otros microservicios sus recursos y estadisticas, en el caso de que la solapa sea la 2 o de que se halla accionado un filtro.
-
-        
-
-
     }
 
     // funcion para el buscador de palabras clave 
@@ -145,8 +135,12 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 } // fin clase RepositorioServicioMediateca  <-----------------
 
+
+
+// a partir de aqui, lo de abajo son pruebas de aplicacion.
+
  //prueba de aplicacion 
- $obtener_recursos_mediateca = new RepositorioServicioMediateca();
+ //$obtener_recursos_mediateca = new RepositorioServicioMediateca();
  
 
  // si no hay que filtrar 
@@ -181,8 +175,8 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
 // test solapa 0 - documentos 
  // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
- $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 0, 1,20,"estudio","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
- print_r($recursos_mediateca);
+ //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 0, 1,20,"estudio","","","","","","","","",1,0,1); // test solapa cero, sin filtros 
+ //print_r($recursos_mediateca);
 
 // test solapa 1 - recursos audiovisuales 
  // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)

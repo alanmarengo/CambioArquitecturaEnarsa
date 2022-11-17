@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\INTERFACE-QUERYS\REPOSITORIO-INTERFACE-QUERY.php');
+require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\INTERFACE-QUERY\REPOSITORIO-INTERFACE-QUERY.php');
 require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DATOS\capa-acceso.php');
 require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\DTOS\DTOS.php');
 //INCLUIR LA LIBRERIA DTO.
@@ -109,9 +109,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
 
         // se retorna un objeto json de los filtros 
         return $filtros; 
-
-        //EJECUTAR QUERY DEFINITIVA Y VAS A RECORRER ESE RESULTADO Y VAS A FORMAR Y DEVOLVER UNA LISTA DE FILTROSDTOS
-
+ 
     }
 
     public function ConstruirQueryUnion($lista_filtros_solapa, $solapa,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar){
@@ -137,7 +135,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                             ELSE t.sub_proyecto_id
                                         END  AS valor_id ,
                                         COUNT(*)::BIGINT AS total 
-                                    FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+                                    FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                 'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id,
                                                  t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                 FROM "MIC-MEDIATECA".recurso t 
@@ -159,7 +157,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                     SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
                                         t.recurso_categoria_id::BIGINT AS valor_id,
                                         COUNT(*)::BIGINT AS total 
-                                    FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+                                    FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                             'SELECT t.recurso_id, t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                 FROM "MIC-MEDIATECA".recurso t 
                                             LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
@@ -179,7 +177,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                         SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
                                             t.recurso_categoria_id::BIGINT AS valor_id,
                                             COUNT(*)::BIGINT AS total 
-                                        FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+                                        FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                 'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                     FROM "MIC-MEDIATECA".recurso t 
                                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
@@ -196,7 +194,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                 case 3:
                     $query_parcial = <<<EOD
                                         SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,'tema'::TEXT AS desc,clase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
-                                        FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+                                        FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                     'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                         FROM "MIC-MEDIATECA".recurso t 
                                                     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
@@ -213,7 +211,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                 case 4:
                     $query_parcial = <<<EOD
                                         SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,subclase_desc::TEXT AS desc,t.subclase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
-                                        FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+                                        FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                     'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                         FROM "MIC-MEDIATECA".recurso t 
                                                     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
@@ -230,7 +228,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                 case 5:
                     $query_parcial = <<<EOD
                                     SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,recurso_categoria_desc::TEXT AS desc,recurso_categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
-                                    FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+                                    FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                 'SELECT t.recurso_id ,t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
                                                     FROM "MIC-MEDIATECA".recurso t 
                                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
@@ -290,7 +288,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                         (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
                                         'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                         NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                        FROM dblink('$conect_mic_catalogo->string_con_mic_geovisores',
+                                        FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_geovisores}',
                                         'SELECT c.origen_id_especifico, c.origen_search_text, 
                                                 c.subclase_id, c.estudios_id, 
                                                 c.cod_esia_id, c.cod_temporalidad_id, 
@@ -313,11 +311,11 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                                 NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
                                                 'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                                 NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                                FROM dblink('$conect_mic_catalogo->string_con_mic_estadisticas',
+                                                FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_estadisticas}',
                                                                 'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
                                                                 as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)               
                                         UNION ALL
-                                        SELECT 'recurso mediateca'::text AS origen, r.* FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+                                        SELECT 'recurso mediateca'::text AS origen, r.* FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                                 'SELECT  5::bigint AS origen_id, 
                                                                 r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
                                                                 r.subclase_id,r.estudios_id,NULL::bigint AS cod_esia_id,r.cod_temporalidad_id,
@@ -438,11 +436,11 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         //FILTRO ID 0
         $CONSULTA_PROYECTO=' GROUP BY sp.sub_proyecto_desc,valor_id '; // nota: reemplazo el valor sub_proyecto_id_principal por la variable valor_ir(contienen el mismo valor y se obtiene de la misma manera, cambia el nombre nomas)
         //FILTRO ID 1 
-        $CONSULTA_AREA_GESTION=" AND t.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+        $CONSULTA_AREA_GESTION=" AND t.recurso_categoria_id IN (SELECT * FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                                 'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=1'."') as g (recurso_categoria_id bigint))
                                  GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         //FILTRO ID 2
-        $CONSULTA_RECURSOS_TECNICOS=" AND t.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+        $CONSULTA_RECURSOS_TECNICOS=" AND t.recurso_categoria_id IN (SELECT * FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                                     'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=2'."') as g (recurso_categoria_id bigint))
                                       GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         //FILTRO ID 3 
@@ -450,7 +448,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         //FILTRO ID 4
         $CONSULTA_TEMA=' GROUP BY subclase_desc,t.subclase_id';
         //FILTRO ID 5
-        $CONSULTA_RECURSOS_AUDIOVISUALES= " AND t.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+        $CONSULTA_RECURSOS_AUDIOVISUALES= " AND t.recurso_categoria_id IN (SELECT * FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                                                                 'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=5'."') as g (recurso_categoria_id bigint))
                                             GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         
@@ -480,11 +478,11 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         //FILTRO ID 0
         $CONSULTA_PROYECTO=' GROUP BY sp.sub_proyecto_desc,valor_id '; // nota: reemplazo el valor sub_proyecto_id_principal por la variable valor_ir(contienen el mismo valor y se obtiene de la misma manera, cambia el nombre nomas)
         //FILTRO ID 1 
-        $CONSULTA_AREA_GESTION=" AND u.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+        $CONSULTA_AREA_GESTION=" AND u.recurso_categoria_id IN (SELECT * FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                                 'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=1'."') as g (recurso_categoria_id bigint))
                                  GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         //FILTRO ID 2
-        $CONSULTA_RECURSOS_TECNICOS=" AND u.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+        $CONSULTA_RECURSOS_TECNICOS=" AND u.recurso_categoria_id IN (SELECT * FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                                     'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=2'."') as g (recurso_categoria_id bigint))
                                       GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         //FILTRO ID 3 
@@ -492,7 +490,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         //FILTRO ID 4
         $CONSULTA_TEMA=' GROUP BY subclase_desc,u.subclase_id';
         //FILTRO ID 5
-        $CONSULTA_RECURSOS_AUDIOVISUALES= " AND u.recurso_categoria_id IN (SELECT * FROM dblink('$conect_mic_catalogo->string_con_mic_mediateca',
+        $CONSULTA_RECURSOS_AUDIOVISUALES= " AND u.recurso_categoria_id IN (SELECT * FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_con_mic_mediateca}',
                                                                                                 'SELECT recurso_categoria_id FROM ".'"MIC-MEDIATECA".recurso_categoria WHERE recurso_categoria_filtro=5'."') as g (recurso_categoria_id bigint))
                                             GROUP BY recurso_categoria_desc,recurso_categoria_id ";
         

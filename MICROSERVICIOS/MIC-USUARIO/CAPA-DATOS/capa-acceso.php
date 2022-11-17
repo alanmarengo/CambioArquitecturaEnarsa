@@ -2,12 +2,12 @@
 
 // clase para conexion a bd
 class ConexionUsuario {
-    private $host = "179.43.126.101";
+    private $host = "localhost";
     private $user = "postgres";
-    private $pass = "plahe100%";
+    private $pass = "37159252";
     private $port = "5432";
     private $database = "MIC-USUARIO";
-    private $conect;
+    public $conect;
 
     public function __construct() // crea una nueva instancia de conexion
     {

@@ -4,7 +4,6 @@ require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DATOS\capa-acceso.php');
 require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\ENTIDADES\ENTIDADES.php');
 require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\DTOS\DTOS.php');
 
-//INJECTAR EL ARCHIVO ENTIDADES.php DE ESTE MICROSERVICIO
 
 
 // COMENTARIO DE PRUEBA
@@ -45,9 +44,6 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         else{
             $filtro_fecha_observatorio="";
         }
-
-
-
 
         // variable paginado  
 
@@ -118,9 +114,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
             $recurso = new Recurso($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id);
             array_push($array_recursos_mediateca,$recurso);
             
-        }
-
-        //CALCULAR EN ALGUN LUGAR CANTIDAD DE PAGINAS
+        }      
         
         $conexion->desconectar(); // cierro la conexion 
 
@@ -186,8 +180,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         {
             case 0: 	$ORDER = " ORDER BY tipo_formato_solapa, recurso_titulo ASC"; break;
             case 1: 	$ORDER = " ORDER BY tipo_formato_solapa, recurso_titulo DESC"; break;
-            case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break; // quedan estos dos para revisar 
-            case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break; // quedan estos dos para revisar 
+           // case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break; // quedan estos dos para revisar 
+           // case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break; // quedan estos dos para revisar 
             case 4: 	$ORDER = " ORDER BY tipo_formato_solapa, r.fecha DESC"; break;
             case 5: 	$ORDER = " ORDER BY tipo_formato_solapa, r.fecha ASC"; break;
             case 6: 	$ORDER = " ORDER BY tipo_formato_solapa, r.fecha_observatorio DESC"; break;
@@ -280,8 +274,6 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                         }
                     } break;
             }
-            
-
 
         } 
 
@@ -318,18 +310,18 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                 LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
                                 LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                 LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id) AS T
-                                LEFT JOIN dblink('$conexion->string_con_mic_catalogo', 'SELECT * FROM "MIC-CATALOGO".cod_esia') 
+                                LEFT JOIN dblink('{$conexion->obj_conexion_db_externas->string_con_mic_catalogo}', 'SELECT * FROM "MIC-CATALOGO".cod_esia') 
                                                                                     AS ce (cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)  
                                                                                     ON t.cod_esia_id = ce.cod_esia_id
-                                LEFT JOIN dblink('$conexion->string_con_mic_catalogo', 'SELECT cod_temp,desde AS tempo_desde, hasta AS tempo_hasta, descripcion AS tempo_desc FROM "MIC-CATALOGO".cod_temporalidad') 
+                                LEFT JOIN dblink('{$conexion->obj_conexion_db_externas->string_con_mic_catalogo}', 'SELECT cod_temp,desde AS tempo_desde, hasta AS tempo_hasta, descripcion AS tempo_desc FROM "MIC-CATALOGO".cod_temporalidad') 
                                                                                     AS ct (cod_temp bigint ,tempo_desde  text,tempo_hasta  text,tempo_desc  text)  
                                                                                     ON t.cod_temporalidad_id = ct.cod_temp
-                                LEFT JOIN dblink('$conexion->string_con_mic_catalogo','SELECT subclase_id, clase_id, subclase_desc, subclase_cod, estado_subclase, 
+                                LEFT JOIN dblink('{$conexion->obj_conexion_db_externas->string_con_mic_catalogo}','SELECT subclase_id, clase_id, subclase_desc, subclase_cod, estado_subclase, 
                                                                                           cod_unsubclase, descripcio, cod_nom, fec_bbdd FROM "MIC-CATALOGO".subclase') 
                                                                                     AS sc (subclase_id bigint,clase_id bigint, subclase_desc text, subclase_cod text, estado_subclase bigint, 
                                                                                         cod_unsubclase text, descripcio text, cod_nom text, fec_bbdd text)  
                                                                                     ON T.subclase_id = sc.subclase_id
-                                LEFT JOIN dblink('$conexion->string_con_mic_catalogo','SELECT e.estudios_id, e.estudios_palabras_clave, e.sub_proyecto_id, 
+                                LEFT JOIN dblink('{$conexion->obj_conexion_db_externas->string_con_mic_catalogo}','SELECT e.estudios_id, e.estudios_palabras_clave, e.sub_proyecto_id, 
                                                                                             e.estudio_estado_id,e.nombre,e.fecha, e.institucion,e.responsable,
                                                                                             e.equipo, e.cod_oficial, e.descripcion, e.fecha_text_original,
                                                                                             e.institucion_id, sp.proyecto_id,p.proyecto_desc,
@@ -380,20 +372,20 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                                LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
                                                LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                                LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id) AS T
-                                                   LEFT JOIN dblink('$conexion->string_con_mic_catalogo','SELECT * FROM "MIC-CATALOGO".cod_esia') 
+                                                   LEFT JOIN dblink('{$conexion->obj_conexion_db_externas->string_con_mic_catalogo}','SELECT * FROM "MIC-CATALOGO".cod_esia') 
                                                                AS ce (cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)  
                                                                ON t.cod_esia_id = ce.cod_esia_id
-                                               LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
+                                               LEFT JOIN dblink('{$conexion->obj_conexion_db_externas->string_con_mic_catalogo}',
                                                                 'SELECT cod_temp,desde AS tempo_desde, hasta AS tempo_hasta, descripcion AS tempo_desc from "MIC-CATALOGO".cod_temporalidad') 
                                                                AS ct (cod_temp bigint ,tempo_desde  text,tempo_hasta  text,tempo_desc  text)  
                                                                ON t.cod_temporalidad_id = ct.cod_temp
-                                               LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
+                                               LEFT JOIN dblink('{$conexion->obj_conexion_db_externas->string_con_mic_catalogo}',
                                                                 'SELECT subclase_id, clase_id, subclase_desc, subclase_cod, estado_subclase, 
                                                                        cod_unsubclase, descripcio, cod_nom, fec_bbdd from "MIC-CATALOGO".subclase') 
                                                                AS sc (subclase_id bigint,clase_id bigint, subclase_desc text, subclase_cod text, estado_subclase bigint, 
                                                                    cod_unsubclase text, descripcio text, cod_nom text, fec_bbdd text)  
                                                                ON T.subclase_id = sc.subclase_id
-                                               LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
+                                               LEFT JOIN dblink('{$conexion->obj_conexion_db_externas->string_con_mic_catalogo}',
                                                                 'SELECT e.estudios_id, e.estudios_palabras_clave, e.sub_proyecto_id, 
                                                                        e.estudio_estado_id,e.nombre,e.fecha, e.institucion,e.responsable,
                                                                        e.equipo, e.cod_oficial, e.descripcion, e.fecha_text_original,
@@ -494,21 +486,21 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
                                                     LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
                                                     LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                                     LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id) AS T
-                                                    LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
+                                                    LEFT JOIN dblink('{$conexion->obj_conexion_db_extermas->string_con_mic_catalogo}',
                                                                     'SELECT * FROM "MIC-CATALOGO".cod_esia') 
                                                                     AS ce (cod_esia_id bigint ,cap  text,titulo  text,orden_esia  text,ruta  text,cod_esia text)  
                                                                     ON t.cod_esia_id = ce.cod_esia_id
-                                                    LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
+                                                    LEFT JOIN dblink('{$conexion->obj_conexion_db_extermas->string_con_mic_catalogo}',
                                                                     'select cod_temp,desde AS tempo_desde, hasta AS tempo_hasta, descripcion AS tempo_desc from "MIC-CATALOGO".cod_temporalidad') 
                                                                     AS ct (cod_temp bigint ,tempo_desde  text,tempo_hasta  text,tempo_desc  text)  
                                                                     ON t.cod_temporalidad_id = ct.cod_temp
-                                                    LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
+                                                    LEFT JOIN dblink('{$conexion->obj_conexion_db_extermas->string_con_mic_catalogo}',
                                                                     'select subclase_id, clase_id, subclase_desc, subclase_cod, estado_subclase, 
                                                                             cod_unsubclase, descripcio, cod_nom, fec_bbdd from "MIC-CATALOGO".subclase') 
                                                                     AS sc (subclase_id bigint,clase_id bigint, subclase_desc text, subclase_cod text, estado_subclase bigint, 
                                                                         cod_unsubclase text, descripcio text, cod_nom text, fec_bbdd text)  
                                                                     ON T.subclase_id = sc.subclase_id
-                                                    LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
+                                                    LEFT JOIN dblink('{$conexion->obj_conexion_db_extermas->string_con_mic_catalogo}',
                                                                     'SELECT e.estudios_id, e.estudios_palabras_clave, e.sub_proyecto_id, 
                                                                             e.estudio_estado_id,e.nombre,e.fecha, e.institucion,e.responsable,
                                                                             e.equipo, e.cod_oficial, e.descripcion, e.fecha_text_original,

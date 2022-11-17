@@ -1,26 +1,23 @@
 <?php
 
+// importacion de archivo de credenciales para uso de db_link()
+require_once(dirname(__FILE__,3).'\CRED\conf.php');
+
 // clase para conexion a bd
 class ConexionIndicadores {
-    //private $host = "179.43.126.101";    
-    //private $pass = "plahe100%";
 
-    private $host = "localhost";
-    private $pass = "37159252";
-
-
+    private $host = "179.43.126.101";    
+    private $pass = "plahe100%";
     private $user = "postgres";
     private $port = "5432";
     private $database = "MIC-INDICADORES";
-    private $conect;
-    public $string_con_mic_catalogo = 'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
-    public $string_con_mic_estadisticas = 'dbname=MIC-ESTADISTICAS hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
-    //public $string_con_mic_catalogo = 'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
-    
+    private $conect;    
+    public $obj_conexion_db_externas; // objeto de conexion con credenciales. 
 
     public function __construct() // crea una nueva instancia de conexion
     {
-        // pgsql:host=localhost;port=5432;dbname=testdb;   (ejemplo dns para pgsql )
+
+        // pgsql:host=localhost;port=5432;dbname=testdb;   (ejemplo string conect para pgsql )
         $string_conn = "pgsql:host=" .$this->host.";port=".$this->port.";dbname=".$this->database;
         
         try 
@@ -32,6 +29,12 @@ class ConexionIndicadores {
             $this->conect = "Error en la conexion"; // si no es posible conectarse, mostrara el mensaje.
             echo "ERROR: ".$e->getMessage(); // y el tipo de error devuelto por la db.
         }
+
+        
+        // se importa el objeto con las credenciales definidas,
+        // y el objeto ConexionIndicadores podra hacer uso de las credenciales. 
+        $this->obj_conexion_db_externas = New conect_db_link();
+
     }
     public function desconectar()// cierra la conexion creada. 
     {
@@ -46,7 +49,7 @@ class ConexionIndicadores {
     }
 }
 
-// $prueba_conexion = new ConexionUsuario();
-
+//$prueba_conexion = new ConexionIndicadores();
+//$prueba_conexion->obj_conexion_db_externas->string_con_mic_catalogo;
 
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 require_once(dirname(__FILE__,4).'\MIC-INDICADORES\CAPA-DOMINIO\INTERFACE-QUERYS\REPOSITORIO-INTERFACE-QUERY.php');
 require_once(dirname(__FILE__,4).'\MIC-INDICADORES\CAPA-DATOS\capa-acceso.php');
 
@@ -10,7 +11,7 @@ class RepositorioQueryIndicadores implements IRepositorioQueryIndicadores{
     {
         // print_r($lista_recursos_restringidos);
        
-        $extension_recursos_restringidos = " AND r.recurso_id NOT IN (";
+        $extension_recursos_restringidos = " AND clase_id NOT IN (";
 
         // armo una cadena para usar como subconsulta en la query principal 
         for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
@@ -25,7 +26,7 @@ class RepositorioQueryIndicadores implements IRepositorioQueryIndicadores{
 
         $conexion = new ConexionIndicadores();
         $query_string = <<<EOD
-            SELECT * FROM dblink('$conexion->string_con_mic_catalogo',
+            SELECT * FROM dblink('{$conexion->obj_conexion_db_externas->string_con_mic_catalogo}',
             'SELECT clase_id,clase_desc,color_hex,color_head,cod_clase_alf FROM "MIC-CATALOGO".clase ORDER BY clase_id ASC')
             as t(clase_id integer, clase_desc text, color_hex text, color_head text, cod_clase_alf text);
         EOD; 
@@ -38,7 +39,7 @@ class RepositorioQueryIndicadores implements IRepositorioQueryIndicadores{
         {       
           // print_r($clase); 
         
-           $query_string_records = 'SELECT * FROM "MIC-INDICADORES".ind_panel WHERE clase_id = '. $clase["clase_id"] . " ORDER BY ind_titulo ASC"; // falta poner el and del filtro de los recursos restringidos. 
+           $query_string_records = 'SELECT * FROM "MIC-INDICADORES".ind_panel WHERE clase_id = '. $clase["clase_id"] . "  ORDER BY ind_titulo ASC"; // falta poner el and del filtro de los recursos restringidos. 
 		
            $resultado_consulta_records = $conexion->get_consulta($query_string_records);                
                            
@@ -62,7 +63,7 @@ class RepositorioQueryIndicadores implements IRepositorioQueryIndicadores{
 	{
 		 // print_r($lista_recursos_restringidos);
        
-		 $extension_recursos_restringidos = " AND r.recurso_id NOT IN (";
+		 $extension_recursos_restringidos = " AND recurso_id NOT IN (";
 
 		 // armo una cadena para usar como subconsulta en la query principal 
 		 for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
@@ -77,7 +78,7 @@ class RepositorioQueryIndicadores implements IRepositorioQueryIndicadores{
  
 		 $conexion = new ConexionIndicadores();
 		 $query_string = <<<EOD
-				SELECT * FROM dblink('$conexion->string_con_mic_catalogo','SELECT clase_id,cod_nom,color_hex,color_head,cod_clase_alf FROM "MIC-CATALOGO".clase ORDER BY clase_id ASC')
+				SELECT * FROM dblink('{$conexion->obj_conexion_db_externas->string_con_mic_catalogo}','SELECT clase_id,cod_nom,color_hex,color_head,cod_clase_alf FROM "MIC-CATALOGO".clase ORDER BY clase_id ASC')
 				as t(clase_id integer, clase_desc text, color_hex text, color_head text, cod_clase_alf text);
 		EOD; 
 		 
@@ -131,58 +132,38 @@ class RepositorioQueryIndicadores implements IRepositorioQueryIndicadores{
 
         $conexion = new ConexionIndicadores();
 
-        $query_string = <<<EOD
-            SELECT * FROM dblink('$conexion->string_con_mic_catalogo',
-            'SELECT SELECT DISTINCT * FROM "MIC-INDICADORES.ind_panel WHERE clase_id = $clase_id  ORDER BY ind_titulo ASC";') 
-            as t( tambien falta definir aca la lista de argumentos que va a recibir);
-        EOD; 
-		// todavia falta hacer la validacion de los recursos restringidos
+        $query_string = 'SELECT DISTINCT * FROM "MIC-INDICADORES".ind_panel WHERE clase_id = '.$clase_id.'  ORDER BY ind_titulo ASC';
         
         //echo $query_string; 
 
         $resultado_consulta = $conexion->get_consulta($query_string);
-
 		
 		if(!empty($resultado_consulta))
 		{			
 			foreach($resultado_consulta as $clase) 
 			{ 				
 				?>
-
-				<div class="layer-group" data-state="0" data-cid="<?php echo $clase["clase_id"]; ?>">
-					
-					<div class="layer-header">
-							
+				<div class="layer-group" data-state="0" data-cid="<?php echo $clase["clase_id"]; ?>">					
+					<div class="layer-header">							
 						<a href="#" class="layer-label" id="indicador-label-<?php echo $clase["ind_id"]; ?>" onclick="indicadores.loadIndicador(<?php echo $clase["ind_id"]; ?>,'<?php echo $clase["ind_titulo"]; ?>',<?php echo $clase["clase_id"]; ?>); $('.layer-label').removeClass('layer-label-active'); $(this).addClass('layer-label-active'); $('#nav-panel-arrow-a').trigger('click');">
 							<span><?php echo $clase["ind_titulo"]; ?></span>
-						</a>
-							
-					</div>
-					
-				</div>
-					
-				<?php
-					
+						</a>							
+					</div>					
+				</div>					
+				<?php					
 			}
 		
 		}else{
 			
-			?>
-			
-			<div class="layer-group" data-state="0" data-cid="<?php echo $clase["clase_id"]; ?>">
-				
-				<div class="layer-header">
-					
+			?>			
+			<div class="layer-group" data-state="0" data-cid="<?php echo $clase["clase_id"]; ?>">				
+				<div class="layer-header">					
 					<p>
-						<span>No se encontraron datasets asociados a esta clase.</span>
-					</p>
-					
-				</div>
-			
-			</div>
-			
-			<?php
-			
+						<span>No se encontraron paneles de indicadores asociados a esta clase.</span>
+					</p>					
+				</div>			
+			</div>			
+			<?php			
 		}
 		
 	}

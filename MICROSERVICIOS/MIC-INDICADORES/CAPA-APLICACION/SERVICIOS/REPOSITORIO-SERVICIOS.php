@@ -58,7 +58,7 @@ class RepositorioServicioIndicadores implements IRepositorioServicioIndicadores{
             $lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos();
         }    
         
-        return $this->query->DrawIndicadores($lista_recursos_restringidos,$user_id);
+        return $this->query->DrawIndicadores($lista_recursos_restringidos,$clase_id);
     } // fin DrawContainersInd
 
     public function DrawIndicadoresSearch($user_id,$pattern)

@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\INTERFACE-QUERYS\REPOSITORIO-INTERFACE-QUERY.php');
+require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\REPOSITORIO-INTERFACE-QUERYS\REPOSITORIO-INTERFACE-QUERY.php');
 require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DATOS\capa-acceso.php');
 require_once(dirname(__FILE__,4).'\\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\DTOS\DTOS.php');
 require_once(dirname(__FILE__,4).'\\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\ENTIDADES\ENTIDADES.php');
@@ -29,8 +29,8 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
           {
               case 0: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_titulo ASC"; break;
               case 1: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_titulo DESC"; break;
-              case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break;
-              case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break;
+              //case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break;
+              //case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break;
               case 4: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_fecha DESC"; break;
               case 5: 	$ORDER = " ORDER BY u.tipo_formato_solapa, u.recurso_fecha DESC ASC"; break;
               case 6: 	$ORDER ="  ORDER BY u.tipo_formato_solapa, u.fecha_observatorio DESC"; break;
@@ -60,7 +60,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                         (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
                         'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                         NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                        FROM dblink('$conexion_rec_tecnicos->string_con_mic_geovisores',
+                        FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_geovisores}',
                         'SELECT c.origen_id_especifico, c.origen_search_text, 
                                 c.subclase_id, c.estudios_id, 
                                 c.cod_esia_id, c.cod_temporalidad_id, 
@@ -83,7 +83,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                 NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
                                 'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                 NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                FROM dblink('$conexion_rec_tecnicos->string_con_mic_estadisticas',
+                                FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_estadisticas}',
                                                 'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
                                                 as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)
                         
@@ -132,7 +132,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                 (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
                                 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                 NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                FROM dblink('$conexion_rec_tecnicos->string_con_mic_geovisores',
+                                FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_geovisores}',
                                 'SELECT c.origen_id_especifico, c.origen_search_text, 
                                         c.subclase_id, c.estudios_id, 
                                         c.cod_esia_id, c.cod_temporalidad_id, 
@@ -155,7 +155,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                         NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
                                         'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                         NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                        FROM dblink('$conexion_rec_tecnicos->string_con_mic_estadisticas',
+                                        FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_estadisticas}',
                                                         'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
                                                         as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)                                
                                 UNION ALL
@@ -242,7 +242,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                     (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
                                     'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                     NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                    FROM dblink('$conexion_rec_tecnicos->string_con_mic_geovisores',
+                                    FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_geovisores}',
                                     'SELECT c.origen_id_especifico, c.origen_search_text, 
                                             c.subclase_id, c.estudios_id, 
                                             c.cod_esia_id, c.cod_temporalidad_id, 
@@ -265,7 +265,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                             NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
                                             'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                             NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                            FROM dblink('$conexion_rec_tecnicos->string_con_mic_estadisticas',
+                                            FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_estadisticas}',
                                                             'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
                                                             as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)
                                     
@@ -285,15 +285,15 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                             LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                             LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                             WHERE tf.tipo_formato_solapa = 2 ) as u 
-                            INNER JOIN dblink('$conexion_rec_tecnicos->string_con_mic_catalogo',
+                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
                             'SELECT estudios_id, estudios_palabras_clave,nombre,equipo,institucion,responsable
                                 FROM "MIC-CATALOGO".estudios') 
                             as e(estudios_id bigint, estudios_palabras_clave text, nombre text, equipo text, institucion text, responsable text)
                             ON u.estudios_id = e.estudios_id
-                            INNER JOIN dblink('$conexion_rec_tecnicos->string_con_mic_catalogo',
+                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
                             'SELECT cod_temporalidad_id,desde AS tempo_desde, hasta AS tempo_hasta FROM "MIC-CATALOGO".cod_temporalidad')
                             as ct(cod_temporalidad_id bigint, tempo_desde date, tempo_hasta date) ON u.cod_temporalidad_id = ct.cod_temporalidad_id
-                            INNER JOIN dblink('$conexion_rec_tecnicos->string_con_mic_catalogo',
+                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
                             'SELECT subclase_id, clase_id FROM "MIC-CATALOGO".subclase')
                             as sc(subclase_id bigint,clase_id bigint) ON u.subclase_id = sc.subclase_id
                         EOD; 
@@ -344,7 +344,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                     (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
                                     'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                     NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                    FROM dblink('$conexion_rec_tecnicos->string_con_mic_geovisores',
+                                    FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_geovisores}',
                                     'SELECT c.origen_id_especifico, c.origen_search_text, 
                                             c.subclase_id, c.estudios_id, 
                                             c.cod_esia_id, c.cod_temporalidad_id, 
@@ -367,7 +367,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                             NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
                                             'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                             NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                            FROM dblink('$conexion_rec_tecnicos->string_con_mic_estadisticas',
+                                            FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_estadisticas}',
                                                             'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
                                                             as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)
                                     
@@ -387,15 +387,15 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                             LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                             LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                             WHERE tf.tipo_formato_solapa = 2 ) as u 
-                            INNER JOIN dblink('$conexion_rec_tecnicos->string_con_mic_catalogo',
+                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
                             'SELECT estudios_id, estudios_palabras_clave,nombre,equipo,institucion,responsable
                                 FROM "MIC-CATALOGO".estudios') 
                             as e(estudios_id bigint, estudios_palabras_clave text, nombre text, equipo text, institucion text, responsable text)
                             ON u.estudios_id = e.estudios_id
-                            INNER JOIN dblink('$conexion_rec_tecnicos->string_con_mic_catalogo',
+                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
                             'SELECT cod_temporalidad_id,desde AS tempo_desde, hasta AS tempo_hasta FROM "MIC-CATALOGO".cod_temporalidad')
                             as ct(cod_temporalidad_id bigint, tempo_desde date, tempo_hasta date) ON u.cod_temporalidad_id = ct.cod_temporalidad_id
-                            INNER JOIN dblink('$conexion_rec_tecnicos->string_con_mic_catalogo',
+                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
                             'SELECT subclase_id, clase_id FROM "MIC-CATALOGO".subclase')
                             as sc(subclase_id bigint,clase_id bigint) ON u.subclase_id = sc.subclase_id
                             EOD;
@@ -557,7 +557,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                     (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
                                     'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                     NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                    FROM dblink('$conexion_rec_tecnicos->string_con_mic_geovisores',
+                                    FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_geovisores}',
                                     'SELECT c.origen_id_especifico, c.origen_search_text, 
                                             c.subclase_id, c.estudios_id, 
                                             c.cod_esia_id, c.cod_temporalidad_id, 
@@ -580,7 +580,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                             NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
                                             'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                             NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                            FROM dblink('$conexion_rec_tecnicos->string_con_mic_estadisticas',
+                                            FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_estadisticas}',
                                                             'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
                                                             as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)
                                     
@@ -600,15 +600,15 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                             LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
                                             LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                             WHERE tf.tipo_formato_solapa = 2 ) as u 
-                                INNER JOIN dblink('$conexion_rec_tecnicos->string_con_mic_catalogo',
+                                INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
                                 'SELECT estudios_id, estudios_palabras_clave,nombre,equipo,institucion,responsable
                                 FROM "MIC-CATALOGO".estudios') 
                                 as e(estudios_id bigint, estudios_palabras_clave text, nombre text, equipo text, institucion text, responsable text)
                                 ON u.estudios_id = e.estudios_id
-                                INNER JOIN dblink('$conexion_rec_tecnicos->string_con_mic_catalogo',
+                                INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
                                 'SELECT cod_temporalidad_id,desde AS tempo_desde, hasta AS tempo_hasta FROM "MIC-CATALOGO".cod_temporalidad')
                                 as ct(cod_temporalidad_id bigint, tempo_desde date, tempo_hasta date) ON u.cod_temporalidad_id = ct.cod_temporalidad_id
-                                INNER JOIN dblink('$conexion_rec_tecnicos->string_con_mic_catalogo',
+                                INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
                                 'SELECT subclase_id, clase_id FROM "MIC-CATALOGO".subclase')
                                 as sc(subclase_id bigint,clase_id bigint) ON u.subclase_id = sc.subclase_id
                 EOD;      

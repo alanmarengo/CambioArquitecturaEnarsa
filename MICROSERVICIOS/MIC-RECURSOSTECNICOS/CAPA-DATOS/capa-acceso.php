@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(__FILE__,3).'\CRED\conf.php');
+
 // clase para conexion a bd
 class ConexionRecursosTecnicos {
     private $host = "179.43.126.101"; 
@@ -8,10 +10,7 @@ class ConexionRecursosTecnicos {
     private $port = "5432";
     private $database = "MIC-MEDIATECA";
     private $conect;
-    public $string_con_mic_geovisores = 'dbname=MIC-GEOVISORES hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
-    public $string_con_mic_estadisticas = 'dbname=MIC-ESTADISTICAS hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
-    public $string_con_mic_catalogo = 'dbname=MIC-CATALOGO hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
-
+    public $obj_conexion_db_externas; // objeto de conexion con credenciales. 
 
     public function __construct()//instancia una nueva conexion
     {
@@ -27,6 +26,8 @@ class ConexionRecursosTecnicos {
             $this->conect = "Error en la conexion"; // si no es posible conectarse, mostrara el mensaje.
             echo "ERROR: ".$e->getMessage(); // y el tipo de error devuelto por la db.
         }
+
+        $this->obj_conexion_db_externas = New conect_db_link();
     }
 
     public function desconectar()// cierra la conexion creada. 
@@ -43,7 +44,9 @@ class ConexionRecursosTecnicos {
     } //
 }
 
- // $prueba_conexion = new ConexionMediateca();
+  //$prueba_conexion = new ConexionMediateca();
+  //$prueba_conexion->obj_conexion_db_externas->string_con_mic_catalogo;
 
+  
 
 ?>
