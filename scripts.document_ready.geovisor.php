@@ -73,7 +73,7 @@
 			
 		<?php }else{ ?>
 		
-			$("#navbar-tools h3").html("Geovisor General de IEASA");
+			$("#navbar-tools h3").html("GEOBI");
 		
 			<?php if (isset($_GET["l"])) { ?>
 			

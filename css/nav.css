@@ -33,7 +33,7 @@
 	
 	display:block;
 	width:100%;
-	height:100%;
+	/* height:100%; */
 	font-size:12px;
 	padding: 0 13px;
 	background-color:#eaeaed;
@@ -82,4 +82,14 @@
 	
 	z-index:200000;
 	
+}
+.navmenu ul li a.inactive{
+	color:rgb(161, 161, 161);
+	background-color: rgb(199, 199, 199);
+	cursor: default;
+}
+.navmenu ul li a.inactive:hover{
+	color:#666;
+	color:rgb(161, 161, 161);
+	background-color: rgb(199, 199, 199);
 }

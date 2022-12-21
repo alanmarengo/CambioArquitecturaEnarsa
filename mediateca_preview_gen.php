@@ -19,7 +19,7 @@ $dominio = $_SERVER['HTTP_HOST'];
 
 $file_server = '';
 
-if($dominio=='observatorio.ieasa.com.ar')
+if($dominio=='observatorio.energia-argentina.com.ar')
 {
 	$file_server = '/mnt/';
 }

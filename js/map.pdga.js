@@ -205,7 +205,8 @@ function ol_map() {
 			visible:true,
 			source: new ol.source.TileWMS({
 				//url: "https://observatorio.enarsa.ar/geoserver/ows?",
-				url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+				//url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+				url: "https://observatorio.energia-argentina.com.ar/geoserver/ows?",
 				params: {
 					'LAYERS': "ahrsc:vp_geo_limites_provinciales_sit_pga",
 					'VERSION': '1.1.1',
@@ -222,7 +223,9 @@ function ol_map() {
 			visible:true,
 			source: new ol.source.TileWMS({
 				//url: "https://observatorio.enarsa.ar/geoserver/ows?",
-				url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+				//url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+				url: "https://observatorio.energia-argentina.com.ar/geoserver/ows?",
+
 				params: {
 					'LAYERS': "ahrsc:polig_obra_pga",
 					'VERSION': '1.1.1',
@@ -240,7 +243,8 @@ function ol_map() {
 			visible:true,
 			source: new ol.source.TileWMS({
 				//url: "https://observatorio.enarsa.ar/geoserver/ows?",
-				url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+				//url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+				url: "https://observatorio.energia-argentina.com.ar/geoserver/ows?",
 				params: {
 					'LAYERS': "ahrsc:vp_geo_hihgr_cuencaaltarsc_otr1",
 					'VERSION': '1.1.1',
@@ -258,7 +262,8 @@ function ol_map() {
 			visible:true,
 			source: new ol.source.TileWMS({
 				//url: "https://observatorio.enarsa.ar/geoserver/ows?",
-				url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+				//url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+				url: "https://observatorio.energia-argentina.com.ar/geoserver/ows?",
 				params: {
 					'LAYERS': "ahrsc:vp_geo_hihgr_cuencamediabajarsc_otr1",
 					'VERSION': '1.1.1',
@@ -276,7 +281,8 @@ function ol_map() {
 			visible:true,
 			source: new ol.source.TileWMS({
 				//url: "https://observatorio.enarsa.ar/geoserver/ows?",
-				url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+				//url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+				url: "https://observatorio.energia-argentina.com.ar/geoserver/ows?",
 				params: {
 					'LAYERS': "ahrsc:vp_geo_hihgr_estuario_otr1",
 					'VERSION': '1.1.1',
@@ -1164,7 +1170,8 @@ function ol_map() {
 				visible:true,
 				singleTile: true,
 				source: new ol.source.TileWMS({
-					url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+					//url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+					url: "http://observatorio.energia-argentina.com.ar:8080/geoserver/ows?",
 					params: {
 						'LAYERS': capa,//'intervalos_polygons',
 						'id':query_id,
@@ -1452,7 +1459,8 @@ function ol_map() {
 					name:'get_buffer',
 					visible:false,
 					source: new ol.source.TileWMS({
-						url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+						//url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+						url: "http://observatorio.energia-argentina.com.ar:8080/geoserver/ows?",
 						params: {
 							'LAYERS': 'get_buffer',
 							'VERSION': '1.1.1',

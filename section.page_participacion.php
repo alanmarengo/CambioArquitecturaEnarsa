@@ -26,7 +26,7 @@
                     Una de las características destacadas de los aprovechamientos hidroeléctricos del río Santa Cruz es el amplio acceso a la información del proyecto para todos los públicos. 
                     <br />
                     <br />
-                    Además de los instrumentos usuales, como el sitio web <a target="_blank" href="http://hidrosantacruz.com.ar/">hidrosantacruz.com.ar</a>, las relaciones con la comunidad, la interacción con distintos actores públicos y privados del territorio y la información brindada a la prensa, entre otros, IEASA ha desarrollado una herramienta específica y muy potente para la gestión de la información: El <a target="_blank" href="./page_acercade.php">Observatorio AHRSC</a>, una plataforma web multidimensional que integra la información de los aspectos técnicos de la obra y de las disciplinas ambientales involucradas en el proceso, aportando además herramientas para el tratamiento y manejo de la información.
+                    Además de las relaciones con la comunidad, la interacción con distintos actores públicos y privados del territorio y la información brindada a la prensa, entre otros, Energía Argentina ha desarrollado una herramienta específica y muy potente para la gestión de la información: El <a target="_blank" href="./page_acercade.php">Observatorio AHRSC</a>, una plataforma web multidimensional que integra la información de los aspectos técnicos de la obra y de las disciplinas ambientales involucradas en el proceso, aportando además herramientas para el tratamiento y manejo de la información.
                     <br />
                     <br />
                     La plataforma es un instrumento moderno de apoyo a la gestión del proyecto. Organiza y resguarda la información, facilita su seguimiento y control y permite realizar análisis integrales y multidimensionales para la generación de nuevo conocimiento. A través de esta plataforma se fortalece la difusión de las acciones y resultados vinculados al proyecto y la generación de redes colaborativas con personas e instituciones.
@@ -37,7 +37,7 @@
                     La plataforma integra investigaciones e informes generados por los especialistas de las distintas temáticas, consultores externos vinculados con el proyecto, incluyendo imágenes, registros audiovisuales, información georreferenciada, noticias, datos estadísticos, planos, imágenes satelitales, modelos, datos de registro de fenómenos con sensores de medición en tiempo real, entre otros. Toda estos recursos hacen a la base de datos del Proyecto estructurada  bajo ciertos protocolos que vuelve más eficiente la administración de la información y facilita su acceso a través de la web.
                     <br />
                     <br />
-                    El Observatorio es una poderosa herramienta de acceso a la información, que concreta el compromiso de IEASA en la transparencia de la gestión y en la promoción de conocimiento en forma abierta, libre y gratuita, como base para los procesos participativos de toma de decisiones. 
+                    El Observatorio es una poderosa herramienta de acceso a la información, que concreta el compromiso de Energía Argentina en la transparencia de la gestión y en la promoción de conocimiento en forma abierta, libre y gratuita, como base para los procesos participativos de toma de decisiones. 
                     <br />
                     <br />
                 </div>
@@ -134,7 +134,7 @@
                     Esta dimensión global del proyecto es propia de los emprendimientos de estas características, aunque suele quedar oculta por el hecho de que las obras se ejecutan en un espacio acotado del territorio. 
                     <br />
                     <br />
-                    En primer lugar, esta articulación se verifica en las competencias legales e institucionales más inmediatas: a) La Nación, a través de IEASA, como comitente del proyecto; b) La Provincia de Santa Cruz, como titular de los recursos naturales y de la gestión territorial y ambiental; c) La Inspección del proyecto; d) La Unión Transitoria de Empresas (UTE) Represas Patagonia, como contratista de las obras. 
+                    En primer lugar, esta articulación se verifica en las competencias legales e institucionales más inmediatas: a) La Nación, a través de Energía Argentina, como comitente del proyecto; b) La Provincia de Santa Cruz, como titular de los recursos naturales y de la gestión territorial y ambiental; c) La Inspección del proyecto; d) La Unión Transitoria de Empresas (UTE) Represas Patagonia, como contratista de las obras. 
                     <br />
                     <br />
                     Las articulaciones que sustentan la ejecución del proyecto operan también en diversos niveles. Además de los indicados, podemos mencionar: 

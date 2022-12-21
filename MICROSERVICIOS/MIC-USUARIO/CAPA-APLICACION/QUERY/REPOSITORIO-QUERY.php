@@ -29,41 +29,107 @@ class RepositorioQueryUsuario implements IRepositorioQueryUsuario{
         
         return $conexion->get_consulta($query); // resultado, array assoc de los archivos bloqueados 
     }
+
+    public function ldap_login($usu,$pass)
+    {
+        $server_ad= "ldap://idmc-01.ieasa.com.ar";
+        $dominio  = 'ieasa\\';
+        $ldaprdn  = $dominio.$usu; 
+        $ldappass = $pass;
+    
+        $ldapconn = ldap_connect($server_ad);
+    
+        if ($ldapconn) 
+        {
+            $ldapbind = ldap_bind($ldapconn, $ldaprdn, $ldappass);
+    
+            if($ldapbind) 
+            {
+                return true;
+            } 
+            else 
+            {
+                return false;
+            };
+        }
+        else
+        {
+            return false;
+        };
+    }
     
     public function login($user_name,$user_pass)
     {   
         // se instancia una nueva clase de conexion
         $conexion = new ConexionUsuario();
+        $respuesta = new respuesta_servidor();
+        $user_pass_encripted = md5($user_pass);
 
         // primeramente se verifica que el usuario exista y no este dado de baja 
-        $query_usuario = $conexion->conect->prepare('SELECT 1 FROM "MIC-USUARIO".user_data as ud WHERE ud.user_name = :user AND ud.user_estado_id=1 ;');
+        $query_usuario = $conexion->conect->prepare('SELECT * FROM "MIC-USUARIO".user_data as ud WHERE ud.user_name = :user AND ud.user_estado_id=1 ;');
         $query_usuario->bindParam(':user', $user_name, PDO::PARAM_STR);
         $query_usuario->execute();
         $resultado_user = $query_usuario->fetchAll();
 
         if($resultado_user) // cumplida esa condicion, se evalua la constraseña 
         {
-            // se crea la consulta definitiva, se escapan los caracteres
-            // como en la plataforma actual, la contraseña se cifra bajo MD5
-            $query_pass = $conexion->conect->prepare('SELECT * FROM "MIC-USUARIO".user_data as ud WHERE ud.user_name = :user AND ud.user_pass LIKE md5(:pass) ;'); 
-            $query_pass->bindParam(':user', $user_name, PDO::PARAM_STR);
-            $query_pass->bindParam(':pass', $user_pass, PDO::PARAM_STR);
-            $query_pass->execute();
-            $resultado_pass = $query_pass->fetchall(PDO::FETCH_ASSOC);
-
-            if($resultado_pass) // en caso de verificar que la clave sea correcta, se devuelven las credenciales del usuario 
+            
+            if($resultado_user[0]['user_contra_dominio'])
             {
-                echo json_encode($resultado_pass); // una vez configurada la API, se configurara la respuesta. por el momento devuelve  las credenciales del user
+                if($this->ldap_login($user_name,$user_pass))
+                {                   
+                    $detalle_respuesta = array();
+                    $detalle_respuesta['logged'] = true;
+                    $detalle_respuesta['user_info'] = $resultado_user;
 
-            }else{
-                
-                echo "Constraseña Incorrecta";
+                    $respuesta->flag = true;
+                    $respuesta->response_code  = 200;
+                    $respuesta->detalle = $detalle_respuesta;
+                    
+                    return $respuesta;
+
+                }else{ 
+
+                    die("Invalid Token");	
+                }
+
+            } else {                
+      
+                // se crea la consulta definitiva, se escapan los caracteres
+                // como en la plataforma actual, la contraseña se cifra bajo MD5
+                $query_pass = $conexion->conect->prepare('SELECT * FROM "MIC-USUARIO".user_data as ud WHERE ud.user_name = :user AND ud.user_pass = :pass ;'); 
+                $query_pass->bindParam(':user', $user_name, PDO::PARAM_STR);
+                $query_pass->bindParam(':pass', $user_pass_encripted, PDO::PARAM_STR);
+                $query_pass->execute();
+                $resultado_pass = $query_pass->fetchall(PDO::FETCH_ASSOC);
+
+                if($resultado_pass) // en caso de verificar que la clave sea correcta, se devuelven las credenciales del usuario 
+                {
+
+                    $detalle_respuesta = array();
+                    $detalle_respuesta['logged'] = true;
+                    $detalle_respuesta['user_info'] = $resultado_user;
+
+                    $respuesta->flag = true;
+                    $respuesta->response_code  = 200;
+                    $respuesta->detalle = $detalle_respuesta;
+                    
+                    return $respuesta;
+
+                }else{
+                    
+                    return "Constraseña Incorrecta";
+                }
+
             }
 
-        }else{
+        } else {
             
-            echo "Usuario Inexistente";
-        }
+            $respuesta->flag = false;
+            $respuesta->response_code  = 400;
+            $respuesta->detalle = "El Usuario ingresado no es valido!";
+            return $respuesta;
+        }       
         
     }
 

@@ -89,7 +89,8 @@
 
                 <div class="col-md-12">
                     <div class="geonetwork">
-                        <a href="http://observatorio.ieasa.com.ar:8080/geonetwork" class="row">
+                        <!-- <a href="http://observatorio.ieasa.com.ar:8080/geonetwork" class="row"> -->
+                        <a href="http://observatorio.energia-argentina.com.ar:8080/geonetwork" class="row">
                             <div class="col-md-4">
                                 <div class="page-box-image2" style="background-image: url(./images/herramientas/7.png);"></div>
                             </div>
@@ -108,7 +109,8 @@
                         <p class="page-wbox-title">WMS</p>
                         <p class="page-wbox-link">
                             <div class="row">
-                                <div class="col-md-8">http://observatorio.ieasa.com.ar</div>
+                                <!-- <div class="col-md-8">http://observatorio.ieasa.com.ar</div> --> 
+                                <div class="col-md-8">http://observatorio.energia-argentina.com.ar</div>
                                 <div class="col-md-4">
                                     <a class="badge badge-secondary" style="color: #fff;">COPIAR</a>
                                 </div>
@@ -122,7 +124,8 @@
                         <p class="page-wbox-title">WFS</p>
                         <p class="page-wbox-link">
                             <div class="row">
-                                <div class="col-md-8">http://observatorio.ieasa.com.ar</div>
+                                <!-- <div class="col-md-8">http://observatorio.ieasa.com.ar</div> -->
+                                <div class="col-md-8">http://observatorio.energia-argentina.com.ar</div>
                                 <div class="col-md-4">
                                     <a class="badge badge-secondary" style="color: #fff;">COPIAR</a>
                                 </div>
@@ -136,7 +139,8 @@
                         <p class="page-wbox-title">CSW</p>
                         <p class="page-wbox-link">
                             <div class="row">
-                                <div class="col-md-8">http://observatorio.ieasa.com.ar</div>
+                                <!-- <div class="col-md-8">http://observatorio.ieasa.com.ar</div> -->
+                                <div class="col-md-8">http://observatorio.energia-argentina.com.ar</div>
                                 <div class="col-md-4">
                                     <a class="badge badge-secondary" style="color: #fff;">COPIAR</a>
                                 </div>

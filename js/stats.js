@@ -1175,7 +1175,8 @@ function ol_stats() {
 				visible:true,
 				singleTile: true,
 				source: new ol.source.TileWMS({
-					url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+					//url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+					url: "http://observatorio.energia-argentina.com.ar:8080/geoserver/ows?",
 					params: {
 						'LAYERS': capa,//'intervalos_polygons',
 						'id':query_id,
@@ -1234,7 +1235,8 @@ function ol_stats() {
 		
 		//var link = "http://observatorio.atic.com.ar/cgi-bin/mapserver?map=wms_atic&service=WFS&version=1.0.0&request=GetFeature&typeName=" +capa + "&id=" + query_id + "&outputFormat=shape-zip";
 		
-		var link = "http://observatorio.ieasa.com.ar:8080/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=" +capa + "&id=" + query_id + "&outputFormat=shape-zip&viewparams=id:"+query_id;
+		/* var link = "http://observatorio.ieasa.com.ar:8080/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=" +capa + "&id=" + query_id + "&outputFormat=shape-zip&viewparams=id:"+query_id; */
+		var link = "http://observatorio.energia-argentina.com.ar:8080/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=" +capa + "&id=" + query_id + "&outputFormat=shape-zip&viewparams=id:"+query_id;
 		
 		document.getElementById("gm-mapear-download").setAttribute("href",link);
 		
@@ -1842,7 +1844,8 @@ function ol_stats() {
 		
 		var cid = $(".abr[data-active=1]").attr("data-cid");
 		var dt = $(".layer-label-active").attr("data-dt");
-		var url = "http://observatorio.ieasa.com.ar/estadisticas.php?mode=1";
+		/* var url = "http://observatorio.ieasa.com.ar/estadisticas.php?mode=1"; */
+		var url = "http://observatorio.energia-argentina.com.ar/estadisticas.php?mode=1";
 		
 		if (dt != undefined) {
 			

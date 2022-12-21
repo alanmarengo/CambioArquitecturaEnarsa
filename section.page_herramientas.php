@@ -23,7 +23,7 @@
                         <div class="page-box-image" style="background-image: url(./images/herramientas/3.png);"></div>
                         <div class="text-over">GeObi</div>
                         
-                        <p class="page-box-title">Geovisor de Observatorio de IEASA</p>
+                        <p class="page-box-title">Geovisor de Observatorio de Energía Argentina</p>
                         <p class="page-box-description">Visualizá, gestioná y accedé en línea a la totalidad de la
                             información de este Observatorio y conectate e integrá información de otros organismos
                             externos, tanto para consulta como para generar nueva información.</p>
@@ -64,7 +64,7 @@
                 <div class="col-md-12">
                     <p>
                         A través de los siguientes geoservicios estándares visualizá, accedé y consultá la información
-                        espacial de IEASA. Estos geoservicios, podrán ser vinculados con diversas instancias de
+                        espacial de Energía Argentina. Estos geoservicios, podrán ser vinculados con diversas instancias de
                         publicación, de acceso e intercambio de información que aplique estándares OGC (ISO 19111,
                         19115:2003).
                     </p>
@@ -72,7 +72,7 @@
 
                 <div class="col-md-12">
                     <div class="geonetwork">
-                        <a href="http://observatorio.ieasa.ar:8080/geonetwork" class="row">
+                        <a href="http://observatorio.energia-argentina.ar:8080/geonetwork" class="row">
                             <div class="col-md-4">
                                 <div class="page-box-image2"
                                     style="background-image: url(./images/herramientas/7.png);"></div>
@@ -82,7 +82,7 @@
                                 <div>
                                     Esta aplicación instalada en servidores de la empresa, de código abierto y diseñado
                                     para la catalogación de recursos georreferenciados, permite la búsqueda y acceso en
-                                    múltiples formatos de la información geográfica y servicios de IEASA. Accedé a
+                                    múltiples formatos de la información geográfica y servicios de Energía Argentina. Accedé a
                                     través del siguiente link.
                                 </div>
                             </div>
@@ -97,9 +97,10 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" readonly style="font-size: 12px;" value="http://observatorio.ieasa.ar:8080/geoserver/ows?">
+                                        <input type="text" class="form-control" readonly style="font-size: 12px;" value="http://observatorio.energia-argentina.ar:8080/geoserver/ahrsc/ows?">
                                         <span class="input-group-btn">
-                                            <button class="clipboard-copy btn btn-default" style="color: #333;" title="Copiar" data-clipboard-text="http://observatorio.ieasa.com.ar:8080/geoserver/ows?">
+                                            <!--<button class="clipboard-copy btn btn-default" style="color: #333;" title="Copiar" data-clipboard-text="http://observatorio.ieasa.com.ar:8080/geoserver/ahrsc/ows?"> -->
+                                            <button class="clipboard-copy btn btn-default" style="color: #333;" title="Copiar" data-clipboard-text="http://observatorio.energia-argentina.com.ar:8080/geoserver/ahrsc/ows?">
                                                 <i class="fa fa-clone"></i>
                                             </button>
                                         </span>
@@ -119,9 +120,10 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" readonly style="font-size: 12px;" value="http://observatorio.ieasa.ar:8080/geoserver/ows?">
+                                        <input type="text" class="form-control" readonly style="font-size: 12px;" value="http://observatorio.energia-argentina.ar:8080/geoserver/ahrsc/ows?">
                                         <span class="input-group-btn">
-                                            <button class="clipboard-copy btn btn-default" style="color: #333;" title="Copiar" data-clipboard-text="http://observatorio.ieasa.com.ar:8080/geoserver/ows?">
+                                            <!-- <button class="clipboard-copy btn btn-default" style="color: #333;" title="Copiar" data-clipboard-text="http://observatorio.ieasa.com.ar:8080/geoserver/ahrsc/ows?"> -->
+                                            <button class="clipboard-copy btn btn-default" style="color: #333;" title="Copiar" data-clipboard-text="http://observatorio.energia-argentina.com.ar:8080/geoserver/ahrsc/ows?">
                                                 <i class="fa fa-clone"></i>
                                             </button>
                                         </span>
@@ -142,9 +144,10 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" readonly style="font-size: 12px;" value="http://observatorio.ieasa.ar:8080/geonetwork/srv/spa/csw?">
+                                        <input type="text" class="form-control" readonly style="font-size: 12px;" value="http://observatorio.energia-argentina.ar:8080/geonetwork/ahrsc/srv/spa/csw?">
                                         <span class="input-group-btn">
-                                            <button class="clipboard-copy btn btn-default" style="color: #333;" title="Copiar" data-clipboard-text="http://observatorio.ieasa.com.ar:8080/geonetwork/srv/spa/csw?">
+                                           <!--  <button class="clipboard-copy btn btn-default" style="color: #333;" title="Copiar" data-clipboard-text="http://observatorio.ieasa.com.ar:8080/geonetwork/ahrsc/srv/spa/csw?"> -->
+                                            <button class="clipboard-copy btn btn-default" style="color: #333;" title="Copiar" data-clipboard-text="http://observatorio.energia-argentina.com.ar:8080/geonetwork/ahrsc/srv/spa/csw?">
                                                 <i class="fa fa-clone"></i>
                                             </button>
                                         </span>

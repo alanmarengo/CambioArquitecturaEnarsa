@@ -1,24 +1,20 @@
 <div class="row footer">
 	<div class="col-md-3">
-		<a target="_blank" href="https://www.ieasa.com.ar/">
+		<a target="_blank" href="https://www.energia-argentina.com.ar">
 			<!--<img src="./images/logo-footer.png" style="width:80%; max-width: 150px; height: auto;" />-->
-			<img src="./images/logo-footer.png" style="width:80%; max-width: 250px; height: auto;" />
+			<img src="./images/nuevo_logo/nuevo_logo_low_w.png" style="width:80%; max-width: 250px; height: auto;" />
 		</a>	
 	</div>
 	<div class="col-md-3" style="font-size: .9em; padding: 10px;">
-		(+54 11) 5276-4050 INT: 127<br />
-		Av. Paseo Colón 505 Piso 6,<br />
-		Ciudad de Buenos Aires, Argentina
+		Av. del Libertador 1068, C1112ABA<br />
+		Ciudad Autónoma de Buenos Aires, Argentina. <br />
+		<b>Tel.</b> (+54 11) 4800-0100 y rotativas
 	</div>
 	<div class="col-md-6 enlaces">
 		<b>ENLACES</b>
 		<div id="footer-slider" class="carousel slide" data-ride="carousel" data-interval="3000">
 			<div class="carousel-inner">
 				<div class="carousel-item active">
-					<a target="_blank" href="http://ieasa.com.ar">Integración Energética Argentina SA</a><br />
-					<a target="_blank" href="http://hidrosantacruz.com.ar">Hidro Santa Cruz</a><br />
-				</div>
-				<div class="carousel-item">
 					<a target="_blank" href="http://mapas.ambiente.gob.ar">Ministerio de Ambiente y Desarrollo Sostenible - IDE</a><br />
 					<a target="_blank" href="https://www.argentina.gob.ar/energia">Secretaría de Energía</a><br />
 				</div>
@@ -49,6 +45,7 @@
 				</div>
 				<div class="carousel-item">
 					<a target="_blank" href="http://www.represaspatagonia.com.ar/index.php/es/">UTE Represas Patagonia</a><br />
+					<a target="_blank" href="https://www.argentina.gob.ar/ambiente/ciam">Centro de Información Ambiental</a><br />
 				</div>
 			</div>
 

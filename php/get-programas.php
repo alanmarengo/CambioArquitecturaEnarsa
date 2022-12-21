@@ -53,17 +53,35 @@ while($r = pg_fetch_assoc($query)) {
 	for ($i=0; $i<sizeof($temas_id); $i++) { $temas_id[$i] = trim($temas_id[$i]); }
 	
 	$query_tema_id_string = "SELECT tema_id,tema_nombre FROM mod_catalogo.temas WHERE tema_id IN('" . implode("','",$temas_id) . "')";
-	$query_tema_id = pg_query($conn,$query_tema_id_string);
-	
-	while ($t = pg_fetch_assoc($query_tema_id)) {
-		
+	#$query_tema_id = pg_query($conn,$query_tema_id_string);
+
+//REEMPLACE EL CODIGO COMENTADO MAS ABAJO POR ESTE BLOQUE DE CODIGO
+	$result = pg_query($conn,$query_tema_id_string);
+	if (!$result) {
+//		 $tema_json .= "{";
+//                 $tema_json .= "\"id\":0,";
+//                 $tema_json .= "\"nombre\":\"\"";
+//                 $tema_json .= "},";
+	}else{
+		$arr = pg_fetch_all($result);
+		//$tema_json .= "{ \"Result\": \"OK\"},";
+		foreach($arr AS $t){
+			$tema_json .= "{";
+                	$tema_json .= "\"id\":" . $t["tema_id"] . ",";
+                	$tema_json .= "\"nombre\":\"" . $t["tema_nombre"] . "\"";
+                	$tema_json .= "},";
+		}
+	}
+//====================================================
+//SECTOR COMENTADO DE CODIGO ANTERIOR NO FUNCIONA EN PHP 8
+/*	while($t=pg_fetch_row($result[0])){
 		$tema_json .= "{";
 		$tema_json .= "\"id\":" . $t["tema_id"] . ",";
 		$tema_json .= "\"nombre\":\"" . $t["tema_nombre"] . "\"";
-		$tema_json .= "},";
-		
+		$tema_json .= "},";		
 	}
-	
+*/
+//==================================
 	$tema_json = substr($tema_json,0,strlen($tema_json)-1);
 		
 	$json .= "{";
@@ -168,12 +186,13 @@ while($r = pg_fetch_assoc($query)) {
 		$json .= "},";
 	
 	}
-	
+//	$json .= "\"id\":\"" . $r["id"] . "\",";
 	if ($has_sp) { $json = substr($json,0,strlen($json)-1); }
 	
 	$json .= "]";
-	$json .= "},";	
-	
+	$has_sp_str = $has_sp ? 'true' : 'false';
+	$json .= ",\"Hassp\":".$has_sp_str;
+	$json .= "},";
 }
 
 $json = substr($json,0,strlen($json)-1);

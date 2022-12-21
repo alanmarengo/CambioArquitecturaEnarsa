@@ -36,7 +36,6 @@ function loadComboObra() {
 	}
 	
 function loadComboComponente() {
-	
 	var obraIndex = $("#uxVisor").val();
 	
 	$("#uxCapa").empty();
@@ -128,8 +127,8 @@ function loadComboComponente() {
 			zoomToolA.href = "#";
 			zoomToolA.setAttribute("data-layer-id",proyectos[obraIndex].layers[i].layer_id);
 			zoomToolA.title = "Ir a extent de capa";
-			zoomToolA.onclick = function() {
-				
+			zoomToolA.onclick = function(e) {
+				e.preventDefault()
 				var layer_id = this.getAttribute("data-layer-id");
 				
 				var js = geomap.map.getLayerExtent(layer_id);

@@ -68,7 +68,8 @@
 						
 						if (!empty($legends[$i])) {
 						
-							$image = "https://observatorio.ieasa.com.ar/geoserver/ows?&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=".$legends[$i]."&format=image/png&";
+							/* $image = "https://observatorio.ieasa.com.ar/geoserver/ows?&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=".$legends[$i]."&format=image/png&"; */
+						$image = "https://observatorio.energia-argentina.com.ar/geoserver/ows?&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=".$legends[$i]."&format=image/png&";
 							
 						?>
 						

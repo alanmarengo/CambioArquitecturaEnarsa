@@ -14,8 +14,7 @@
 }
 .page_template .section-sticky {
   width: 100%;
-  position: -webkit-sticky;
-  position: sticky;
+  position: fixed;
   top: 68px;
   z-index: 999;
 }
@@ -153,6 +152,11 @@
   padding: 2em 6em 2em 6em;
   background-color: #fff;
 }
+@media (max-width: 850px) {
+  .page_template .section-a {
+    padding: 2em 3em 2em 3em;
+  }
+}
 .page_template .section-a a {
   color: #39a4c9;
   font-style: italic !important;
@@ -177,6 +181,11 @@
 .page_template .cols4 p {
   text-align: justify;
   padding: 0px 20px;
+}
+@media (max-width: 850px) {
+  .page_template .section-sticky {
+    top: 0;
+  }
 }
 #page_endesarrollo .leyenda-titulo {
   margin-top: 140px;
@@ -287,17 +296,17 @@
 #page_esia .linea-tiempo .cuadro-tiempo .bloque-1 {
   color: #fff;
   background-color: #475866;
-  border-left: solid 4px #ebebeb!important;
+  border-left: solid 4px #ebebeb !important;
 }
 #page_esia .linea-tiempo .cuadro-tiempo .bloque-2 {
   color: #fff;
   background-color: #075d94;
-  border-left: solid 4px #ebebeb!important;
+  border-left: solid 4px #ebebeb !important;
 }
 #page_esia .linea-tiempo .cuadro-tiempo .bloque-3 {
   color: #fff;
   background-color: #9b4361;
-  border-left: solid 4px #ebebeb!important;
+  border-left: solid 4px #ebebeb !important;
 }
 #page_esia .linea-tiempo .cuadro-tiempo .union-1 {
   background-image: url('../images/timeline-union-1.jpg');
@@ -351,7 +360,7 @@
   color: #8e2f4f;
 }
 #page_pdga .circulo {
-  color: #666!important;
+  color: #666 !important;
   border: solid 4px #ccc;
   background-color: #fff;
   border-radius: 50%;
@@ -477,9 +486,31 @@
 #page_monitoreo .button {
   padding: 8px 20px;
   margin-right: 10px;
-  background-color: #333!important;
+  background-color: #333 !important;
   color: #fff;
   border-radius: 6px;
   font-style: normal!important;
   font-weight: bold;
+}
+.contentIMG_page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.contentIMG_page img {
+  max-width: 100%;
+  max-height: 500px;
+}
+.text_img {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 2em;
+}
+.subtitulo_proyecto {
+  font-size: 14px;
+  font-weight: bolder;
+  margin: 1em 0px;
+  width: 100%;
 }

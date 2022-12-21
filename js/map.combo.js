@@ -20,7 +20,7 @@ function ol_map() {
 		language: 'es'
 		
 	});
-	
+
 	// MAP SCRIPTS 
 	
 	this.map.create = function() {
@@ -42,14 +42,14 @@ function ol_map() {
 			type: 'base',
 			visible: false,
 			source: new ol.source.XYZ({
-				url: '//{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png',
+				url: 'https://a.tile.openstreetmap.de/{z}/{x}/{y}.png',
 				crossOrigin: 'anonymous'
 			})
 		})
 
 		this.baselayers.bingmaps = new ol.source.BingMaps({
 			name:'bing',
-			key: 'AmqIEhx8ko1O3p1Npagu9_Egw7e8quBgM03p6_xdFqjSfJa6kWv_iUU2nO1htz1G',
+			key: 'Ap3WwWQeJSq8tx5eLgSgFPyICw-AKlbaILHBohZ35dC8G91TD1kSC7ekqh3lVo0a',
 			imagerySet: 'Road',
 			culture: 'ar-ES',
 			visible:false,
@@ -67,9 +67,9 @@ function ol_map() {
 		this.baselayers.bing_aerials = new ol.layer.Tile({
 			name:'bing_aerials',
 			preload: Infinity,
-			visible:false,
+			visible:true,
 			source: new ol.source.BingMaps({
-				key: 'AmqIEhx8ko1O3p1Npagu9_Egw7e8quBgM03p6_xdFqjSfJa6kWv_iUU2nO1htz1G',
+				key: 'Ap3WwWQeJSq8tx5eLgSgFPyICw-AKlbaILHBohZ35dC8G91TD1kSC7ekqh3lVo0a',
 				imagerySet: 'Aerial',
 				crossOrigin: 'anonymous'
 			})
@@ -77,7 +77,7 @@ function ol_map() {
 
 		this.baselayers.google = new ol.layer.Tile({
 			name:'google_base',
-			visible:true,
+			visible:false,
 			source: new ol.source.TileImage({ 
 				url: 'http://mt{0-3}.googleapis.com/vt?&x={x}&y={y}&z={z}&hl=es&gl=AR',
 				crossOrigin: 'anonymous'
@@ -872,7 +872,8 @@ function ol_map() {
 			
 			var layer_name = $(v).closest(".layer-group").attr("data-layer-name");
 			
-			var src = "http://observatorio.ieasa.com.ar/geoserver/ows?&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer="+layer_name+"&format=image/png&";
+			/* var src = "http://observatorio.ieasa.com.ar/geoserver/ows?&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer="+layer_name+"&format=image/png&"; */
+			var src = "http://observatorio.energia-argentina.com.ar/geoserver/ows?&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer="+layer_name+"&format=image/png&";
 			
 			var newImage = document.createElement("img");
 				newImage.setAttribute("src",src);
@@ -944,7 +945,8 @@ function ol_map() {
 				visible:true,
 				singleTile: true,
 				source: new ol.source.TileWMS({
-					url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+					/* url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?", */
+					url: "http://observatorio.energia-argentina.com.ar:8080/geoserver/ows?",
 					params: {
 						'LAYERS': capa,//'intervalos_polygons',
 						'id':query_id,
@@ -1232,7 +1234,8 @@ function ol_map() {
 					name:'get_buffer',
 					visible:false,
 					source: new ol.source.TileWMS({
-						url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+						/* url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?", */
+						url: "http://observatorio.energia-argentina.com.ar:8080/geoserver/ows?",
 						params: {
 							'LAYERS': 'get_buffer',
 							'VERSION': '1.1.1',

@@ -132,11 +132,11 @@ function ol_indicadores() {
 					let urlLayer = ''
 					let urlSplitLayer = urlPrepareLayer.split('/geoserver/') // Divido Url desde "/geoserver/"
 
-					if(urlSplitLayer[0] == 'https://observatorio.ieasa.com.ar'){  // Si la primera parte es de produccion, lo dejamos tal cual
+					if(urlSplitLayer[0] == 'https://observatorio.energia-argentina.com.ar'){  // Si la primera parte es de produccion, lo dejamos tal cual
 						/* urlLayer = urlPrepareLayer; */
 						urlLayer = urlSplitLayer[0]+'/geoserver/'+espacioDeTrabajo[0]+'/'+urlSplitLayer[1]
 					}else{
-						urlLayer = 'https://observatorio-dev.ieasa.com.ar/geoserver/'+espacioDeTrabajo[0]+'/'+urlSplitLayer[1]; //Si no, le ponemos la url del dev de ieasa
+						urlLayer = 'https://observatorio-dev.energia-argentina.com.ar/geoserver/'+espacioDeTrabajo[0]+'/'+urlSplitLayer[1]; //Si no, le ponemos la url del dev de ieasa
 					}
 
 
@@ -218,10 +218,10 @@ function ol_indicadores() {
 					});	
 					let url = ''
 					let urlSplit = urlPrepare.split('/geoserver/')
-					if(urlSplit[0] == 'https://observatorio.ieasa.com.ar'){
+					if(urlSplit[0] == 'https://observatorio.energia-argentina.com.ar'){
 						url = urlPrepare;
 					}else{
-						url = 'https://observatorio-dev.ieasa.com.ar/geoserver/'+urlSplit[1];
+						url = 'https://observatorio-dev.energia-argentina.com.ar/geoserver/'+urlSplit[1];
 					}
 					
 
@@ -715,7 +715,8 @@ function ol_indicadores() {
 	
 	this.share = function() {
 		
-		$("#input-share").val("https://observatorio.ieasa.com.ar/indicadores.php?ind_id="+this.current_ind+"&t="+this.current_title+"&cid="+this.current_cid);
+		/* $("#input-share").val("https://observatorio.ieasa.com.ar/indicadores.php?ind_id="+this.current_ind+"&t="+this.current_title+"&cid="+this.current_cid); */
+		$("#input-share").val("https://observatorio.energia-argentina.com.ar/indicadores.php?ind_id="+this.current_ind+"&t="+this.current_title+"&cid="+this.current_cid);
 		
 		$(".popup").not("#popup-busqueda").hide();
 		jwindow.open("popup-share");

@@ -2,9 +2,18 @@
 
 // clase para conexion a bd
 class ConexionUsuario {
+
+    // para uso en host
+    //private $host = "iobs-02.ieasa.com.ar";
+    //private $user = "plataforma_readonly";
+    //private $pass = "Plataforma100%";
+
+    // para uso en local
     private $host = "localhost";
     private $user = "postgres";
     private $pass = "37159252";
+
+    
     private $port = "5432";
     private $database = "MIC-USUARIO";
     public $conect;
@@ -37,7 +46,15 @@ class ConexionUsuario {
     }
 }
 
+/*
+class respuesta_servidor{
+    public $flag;
+    public $response_code;
+    public $detalle;
+    
+} 
+
 // $prueba_conexion = new ConexionUsuario();
 
-
+*/
 ?>

@@ -11,8 +11,9 @@
 				Herramientas del Observatorio <i class="fa fa-angle-right nav-item-count"></i>
 			</a>
 		</li>
-		<li>
-			<a href="./page_proyecto.php">Proyecto - AHRSC</a>
+		<li id="proyecto_ahrsc">
+			<!-- <a href="./page_proyecto.php">Proyecto - AHRSC</a> -->
+			<!-- <a class="inactive" title="Pagina en mantenimiento">Proyecto - AHRSC</a> -->
 		</li>
 		<li>
 			<a href="./page_pdga.php">Plan Director de Gestión Ambiental - PDGA</a>
@@ -30,9 +31,10 @@
 			
 		</li>
 		<li>
-			<a href="./page_monitoreo.php">Monitoreo hidrosedimentológico e hidroambiental</a>
+			<!--<a href="./page_monitoreo.php">Monitoreo hidrosedimentológico e hidroambiental</a>--> 
+			<a class="inactive" title="Pagina en mantenimiento"> Monitoreo hidrosedimentológico e hidroambiental </a>
 			<!--<a href="./page_endesarrollo.php?q=Monitoreo hidrosedimentológico e hidroambiental del río Santa Cruz">Monitoreo hidrosedimentológico e hidroambiental</a>-->
-			<!--<a href="./page_endesarrollo.php?q=Gestión Ambiental de Obra">Gestión Ambiental de Obra</a> -->
+			<!--<a href="./page_endesarrollo.php?q=Gestión Ambiental de Obra">Gestión Ambiental de Obra</a> -->			
 		</li>
 		
 		<!--
@@ -54,10 +56,30 @@
 			<a href="./page_herramientas.php?target=geoservicios">Servicios Geográficos</a>
 		</li>
 		<li>
-			<a href="http://observatorio.ieasa.com.ar:8080/geonetwork" target="_blank" >Datos Abiertos</a>
+			<!-- <a href="http://observatorio.ieasa.com.ar:8080/geonetwork" target="_blank" >Datos Abiertos</a> -->
+			<a href="http://observatorio.energia-argentina.com.ar:8080/geonetwork" target="_blank" >Datos Abiertos</a>
 		</li>
 		<li>
 			<a href="./contacto.php">Contacto</a>
 		</li>
 	</ul>
 </div>
+<script>
+	
+	let ahrscContainer = document.getElementById('proyecto_ahrsc');
+	let html = ``;
+	if(window.location.origin.includes('http://localhost') || window.location.origin.includes('observatorio-dev') ){
+		html = `
+			<a href="./page_proyecto.php"> Obra AHRSC </a>
+		`
+	}else{
+/* 		html = `
+			<a class="inactive" title="Pagina en mantenimiento"> Obra AHRSC </a>
+		` */
+		html = `
+			<a href="./page_proyecto.php"> Obra AHRSC </a>
+		`
+	}
+	ahrscContainer.innerHTML = html
+
+</script>

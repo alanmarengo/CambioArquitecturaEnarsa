@@ -10,7 +10,8 @@
 			HoldOn.close();
 		});
 		
-		statsIniQueryString = "https://observatorio.ieasa.com.ar/estadisticas-vista.php?<?php echo $_SERVER["QUERY_STRING"]; ?>";
+		/* statsIniQueryString = "https://observatorio.ieasa.com.ar/estadisticas-vista.php?<?php /* echo $_SERVER["QUERY_STRING"]; */ ?>"; */
+		statsIniQueryString = "https://observatorio.energia-argentina.com.ar/estadisticas-vista.php?<?php echo $_SERVER["QUERY_STRING"]; ?>";
 		
 		stats = new ol_stats();
 		stats.view.start();

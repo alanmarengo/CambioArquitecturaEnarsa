@@ -246,8 +246,8 @@ function ol_map() {
 
 
 
-							if(url.includes('observatorio.ieasa.com.ar') || url.includes('observatorio-dev.ieasa.com.ar')){
-
+							/* if(url.includes('observatorio.ieasa.com.ar') || url.includes('observatorio-dev.ieasa.com.ar')){ */
+							if(url.includes('observatorio.energia-argentina.com.ar') || url.includes('observatorio-dev.ieasa.com.ar')){
 								var req = $.ajax({								
 								async:false,
 								type:"GET",
@@ -1045,7 +1045,8 @@ function ol_map() {
 				singleTile: true,
 				source: new ol.source.TileWMS({
 					//url: "https://observatorio.enarsa.ar/geoserver/ows?",
-					url: "https://observatorio.ieasa.com.ar/geoserver/ows?",
+					/* url: "https://observatorio.ieasa.com.ar/geoserver/ows?", */
+					url: "https://observatorio.energia-argentina.com.ar/geoserver/ows?",
 					params: {
 						'LAYERS': capa,//'intervalos_polygons',
 						'id':query_id,
@@ -1334,7 +1335,8 @@ function ol_map() {
 					visible:false,
 					source: new ol.source.TileWMS({
 						//url: "http://observatorio.enarsa.ar:8080/geoserver/ows?",
-						url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+						/* url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?", */
+						url: "http://observatorio.energia-argentina.com.ar:8080/geoserver/ows?",
 						params: {
 							'LAYERS': 'get_buffer',
 							'VERSION': '1.1.1',
@@ -2533,9 +2535,12 @@ function ol_map() {
 
 
 		$(".layer-group[data-layer="+layer_id+"] .layer-label").bind("click",function() {
-			
-			$("#layer-legend-"+layer_id).html("<img onload=\"geomap.map.fixLegend("+layer_id+")\" src=\"" + layer_wms + "&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer="+layer_name+"&format=image/png&\">");
-			
+
+			const  baseUrlLegend = layer_wms.split('/ows?')
+
+			/* $("#layer-legend-"+layer_id).html("<img onload=\"geomap.map.fixLegend("+layer_id+")\" src=\"" + layer_wms + "&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer="+layer_name+"&format=image/png&\">"); */ // <- Antes, se modifica porque en capas externas el layer_wms viene de diferente forma
+			$("#layer-legend-"+layer_id).html("<img onload=\"geomap.map.fixLegend("+layer_id+")\" src=\"" + baseUrlLegend[0] + "/ows?&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer="+layer_name+"&format=image/png&\">");
+
 		});
 		
 		

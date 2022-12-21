@@ -44,7 +44,8 @@
 				La página de la Red de Monitoreo Hídrico se encuentra actualmente en mantenimiento. <br> <b>Disculpen las molestias</b>
 				</div>
 				<div id="footerPopup">
-					<a href="https://observatorio.ieasa.com.ar/" class="btn btn-primary" id="btnMantenimiento">
+					<!-- <a href="https://observatorio.ieasa.com.ar/" class="btn btn-primary" id="btnMantenimiento"> -->
+					<a href="https://observatorio.energia-argentina.com.ar/" class="btn btn-primary" id="btnMantenimiento">
 						Volver a la home
 					</a>
 				</div>
@@ -59,7 +60,8 @@
 		
 			<?php /* include("./section.page_monitoreo.php"); */ ?>
 			<div class="pageEnMantenimiento" style="width:100%; height:70vh; text-align:center; background-color:white; display:flex; justify-content:center; align-items:center;"> 
-				Esta pagina se encuentra en mantenimiento. <b class="b_mantenimiento">	<a href="https://observatorio.ieasa.com.ar/" >	Volver	</a></b>
+				Esta pagina se encuentra en mantenimiento. <b class="b_mantenimiento">	
+				<!-- <a href="https://observatorio.ieasa.com.ar/" > -->	<a href="https://observatorio.energia-argentina.com.ar/" > Volver	</a></b>
 			</div>
 			
 			<?php include("./html.navs.php"); ?>
@@ -87,7 +89,7 @@
 
 		$('#btnMantenimiento').attr('href', locationActual[0])
 	}catch(error){
-		$('#btnMantenimiento').attr('href', 'https://observatorio.ieasa.com.ar/')
+		$('#btnMantenimiento').attr('href', 'https://observatorio.energia-argentina.com.ar/')
 	}
 
 

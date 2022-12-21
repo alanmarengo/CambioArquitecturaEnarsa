@@ -8,37 +8,27 @@
 -->
 	<div class="row jump-row default-row">
 
-		<div class="col col-xs-12 col-sm-12 col-md-8 col-lg-8 flexbox col-brand">
+		<div class="col col-xs-12 col-sm-12 col-md-5 col-lg-8 flexbox" id="contentNewName">
 
-				<div id="logo_mobile_1" class="logo_mobile">
-<!-- 					<a href="./index.php" id="logo_content">
-						<img src="./images/logo_observatorio_ieasa_mobile_1.png" class="ml-15">
-					</a>	 -->	
-				</div>			
+		
 			<div id="hamburguer" class="inline-b ml-15">
 				<span></span>
 				<span></span>
 				<span></span>
 			</div>
-			
 			<div id="hamburguer-line" class="inline-b ml-25">
 				<span></span>
 			</div>
-				<div id="logo_mobile_2" class="logo_mobile">
-<!-- 					<a href="./index.php">
-						<img src="./images/logo_observatorio_ieasa_mobile_2.png" class="ml-15">
-					</a> -->		
-				</div>
+
+			
 			
 			<div id="brand" class="inline-b ml-15 logo_desktop">				
-<!-- 				<a href="./index.php">
-					<img src="./images/logo_observatorio_ieasa.png" height="60">
-				</a> -->				
+						<!-- ACA VA EL LOGO, SE COLOCA CON JS AL FINAL DE ESTE ARCHIVO -->			
 			</div>
 			
 		</div>
 		
-		<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 flexbox">
+		<div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-4 flexbox new_logo_Search">
 				
 			<?php
 			
@@ -60,10 +50,13 @@
 						<i class="fa fa-search"></i>
 					</a>							
 				</li>
-				<li class="dropdown">
-					<a href="#" id="navbarDropdown-help" role="button" data-toggle="dropdown" aria-expanded="false" title="Ayuda">
+				<li class="dropdown" style="display:none;">
+					<!-- <a href="#" id="navbarDropdown-help" role="button" data-toggle="dropdown" aria-expanded="false" title="Ayuda">
 						<i class="fa fa-question-circle"></i>
-					</a>
+					</a> -->
+					<div id="navbarDropdown-help" title="Manual de usuario en mantenimiento" class="inactive">
+						<i class="fa fa-question-circle"></i>
+					</div> 
 					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown-help" id="dropdown-help">
 						<ul>
 							<li>
@@ -97,47 +90,27 @@
 
 </div>
 <script>
-console.log(window.location.href)
-const logoContentMobile1 = document.getElementById('logo_mobile_1');
-const logoContentMobile2 = document.getElementById('logo_mobile_2');
+let isGeo35 = false
 const logoContentDesktop = document.getElementsByClassName('logo_desktop'); 
 
-//Para el geovisor 35, le ponemos otra imagen de logo
-
 if(window.location.href.includes('geovisor.php?geovisor=35')){
-	$(logoContentMobile1).html(`
-		<a href="./index.php" id="logo_content">
-			<img src="./images/logo_observatorio_ieasa_mobile_1.png" class="ml-15">
-		</a>	
-	`)
-	$(logoContentMobile2).html(`
-		<a href="./index.php">
-			<img src="./images/logo_observatorio_ieasa_mobile_2.png" class="ml-15">
-		</a>
-	`)
-	$(logoContentDesktop).html(`
-		<a href="./index.php" id="logo_content">
-			<img src="./images/logo_observatorio_ieasa_mobile_1.png" class="ml-15">
-		</a>	
-	`)
-
-}else{
-	$(logoContentMobile1).html(`
-		<a href="./index.php" id="logo_content">
-			<img src="./images/logo_observatorio_ieasa_mobile_1.png" class="ml-15">
-		</a>	
-	`)
-	$(logoContentMobile2).html(`
-		<a href="./index.php">
-			<img src="./images/logo_observatorio_ieasa_mobile_2.png" class="ml-15">
-		</a>
-	`)
-	$(logoContentDesktop).html(`
-		<a href="./index.php">
-					<img src="./images/logo_observatorio_ieasa.png" height="60">
-		</a>
-	`)
+	isGeo35 = true
 }
+
+$(logoContentDesktop).html(`
+	<a href="./index.php" class="logo_content">
+		<div class="imgContentLogo"> 
+			<img src="./images/nuevo_logo/nuevo_logo_low_w.png" class="nuevo_logo">
+		</div>
+		<div class="contentTextLogo">
+			<h4> OBSERVATORIO </h4>	
+			<div class="textLogo" style="display: ${isGeo35 === true ? 'none' : ''}">	
+					APROVECHAMIENTOS HIDROELÉCTRICOS <br/>
+					DEL RIO SANTA CRUZ
+			</div>
+		</div>
+	</a>
+`)
 
 
 </script>

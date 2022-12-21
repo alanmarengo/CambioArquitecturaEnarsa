@@ -29,7 +29,7 @@
                 <div class="col-md-6 text-justify">
                     El proyecto Aprovechamiento Hidroeléctrico del río Santa Cruz (AHRSC), es un emprendimiento hidroeléctrico estratégico para el desarrollo del país que se enmarca dentro de los preceptos de la energía renovable y se fundamenta bajo criterios de sostenibilidad.
                     <br />
-                    IEASA, como organización pública que gestiona el proyecto, se compromete en un proceso de gestión del conocimiento abierto, de uso libre y gratuito, aportando visibilidad de sus acciones y acceso a la información para la aplicación en soluciones y toma de decisiones para el bien público.
+                    Energía Argentina, como organización pública que gestiona el proyecto, se compromete en un proceso de gestión del conocimiento abierto, de uso libre y gratuito, aportando visibilidad de sus acciones y acceso a la información para la aplicación en soluciones y toma de decisiones para el bien público.
                     <br />
                     En 2017 se presentó en Audiencia Pública en el Congreso de la Nación, prevista en la Ley Nº 23.879, el Estudio de Impacto Ambiental (EsIA) que permitió respaldar la factibilidad técnica, económica y ambiental del Proyecto. 
                     <br />
@@ -60,7 +60,7 @@
             
             <div class="row">
                 <div class="col-md-3" style="padding: 0px 10px 20px 0px;">
-                    <img src="./images/acercade_mediateca.png" style="width: 100%; height: auto;" />
+                    <img src="./images/pagina_acercade/acercade_mediateca.png" style="width: 100%; height: auto;" />
                     <h6>MEDIATECA</h6>
                     <p>
                         Es el centro de consulta de la información digital que permite la exploración por el laberinto del conocimiento donde se alberga todos los contenidos del Observatorio. Facilita la identificación de los recursos a través de un filtro personalizado y la visualización, consulta y descarga de todos los documentos: informes, noticias, fotografías, videos, planos, mapas temáticos, capas geográficas, modelos, imágenes satelitales y otros.
@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="col-md-3" style="text-align: center; padding: 0px 10px 20px 0px;">
-                    <img src="./images/acercade_geovisor.png" style="width: 100%; height: auto;" />
+                    <img src="./images/pagina_acercade/acercade_geovisor.png" style="width: 100%; height: auto;" />
                     <h6>Geovisor (GeObi)</h6>
                     <p>
                         La plataforma ofrece un sistema de información geográfica en línea, libre y gratuito.  Facilita la investigación y la participación de los usuarios en un entorno espacial y colaborativo en red. Promueve la indagación, producción, difusión y acceso de información espacial a través de su descarga. Las herramientas del GeObi conceden la posibilidad de selección, visualización, consulta, superposición de información y operaciones de análisis espacial.
@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="col-md-3" style="text-align: center; padding: 0px 10px 20px 0px;">
-                    <img src="./images/acercade_indicadores.png" style="width: 100%; height: auto;" />
+                    <img src="./images/pagina_acercade/acercade_indicadores.png" style="width: 100%; height: auto;" />
                     <h6>Indicadores</h6>
                     <p>
                         Se implementó un sistema de indicadores de gestión e indicadores ambientales para reflejar el curso de generación de información sobre los fenómenos estudiados. Los indicadores son considerados herramientas de gran valor para la evaluación del proceso de gestión del proyecto y las obras. Se implementan paneles de indicadores categorizados temáticamente, relacionados con aspectos de gestión de los proyectos, del monitoreo de variables ambientales y de manejo de cuenca;
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="col-md-3" style="text-align: center; padding: 0px 10px 20px 0px;">
-                    <img src="./images/acercade_estadisticas.png" style="width: 100%; height: auto;" />
+                    <img src="./images/pagina_acercade/acercade_estadisticas.png" style="width: 100%; height: auto;" />
                     <h6>Estadísticas</h6>
                     <p>
                         Esta aplicación posibilita en línea la realización de operaciones matemáticas y lógicas a la base de datos, facilita la representación gráfica y mapeo de los resultados obtenidos, y acepta la visualización y descarga de los datasets o conjunto de datos.
@@ -102,7 +102,7 @@
 
                 <div class="col-md-6" style="padding: 0px 10px 20px 0px;">
                     <p>
-                        Cabe destacar que todos los recursos del sitio están catalogados en un motor de metadatos que ofrece descripciones detalladas sobre la elaboración de cada uno y brinda la posibilidad de reconocerlos, buscarlos y obtenerlos. A través de servicios web, se ofrece toda la información geográfica adhiriendo a los protocolos de intercambio promovidos por IDERA y a los suscriptos por la Secretaria de Gobierno de Ambiente y Desarrollo Sustentable a través del grupo de trabajo IDE Ambiental (Res. SAyDS  67/2015, Ley General del Ambiente Nº 25.675) integrado por distintas áreas de ese organismo, tales como el Sistema de Información Ambiental Nacional-SIAN, entre otras.
+                        Cabe destacar que todos los recursos del sitio están catalogados en un motor de metadatos que ofrece descripciones detalladas sobre la elaboración de cada uno y brinda la posibilidad de reconocerlos, buscarlos y obtenerlos. A través de servicios web, se ofrece toda la información geográfica adhiriendo a los protocolos de intercambio promovidos por IDERA y a los suscriptos por la Secretaria de Gobierno de Ambiente y Desarrollo Sustentable a través del grupo de trabajo IDE Ambiental (Res. SAyDS  67/2015, Ley General del Ambiente Nº 25.675) integrado por distintas áreas de ese organismo, tales como el Centro de Información Ambiental, entre otras.
                     </p>
                 </div>
             </div>

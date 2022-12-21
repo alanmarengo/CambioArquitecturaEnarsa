@@ -1,3 +1,27 @@
+<style>
+#moduloEnMantenimiento{
+    cursor:default;
+}
+#moduloEnMantenimiento span{
+    opacity: 0;
+    position:absolute;
+    z-index: 10;
+    width: 100%;
+    color:white;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+
+}
+#moduloEnMantenimiento:hover span{
+    opacity: 1;
+}
+#moduloEnMantenimiento:hover{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>
 <div id="page_index">
     <div id="main-slider" class="carousel slide" data-ride="carousel" data-interval="3000">
         <ol class="carousel-indicators">
@@ -179,21 +203,28 @@
         <div class="col-md-10">
             <div class="row modulo-row">
                 
-                <!-- #1 -->
+                <!-- #1 --> 
+                <!-- <a href="./page_proyecto.php" class="col-md-6 modulo-wrap modulo-1"> -->
                 <a href="./page_proyecto.php" class="col-md-6 modulo-wrap modulo-1">
                     <div class="modulo-opacity"></div>
                     <div class="modulo-text">
-                        Proyecto AHRSC
+                            Obra AHRSC
                     </div>
                     <div class="modulo-hover">
+                        <p class="modulo-hover-text">
+                            Construcción de dos presas, sus centrales de generación eléctrica y obras complementarias que aportarán energía limpia y estable al Sistema Argentino de Interconexión                           <br />
+                            <span class="modulo-hover-icon">
+                                <i class="fa fa-plus-circle fa-2x"></i>
+                            </span>
+                        </p>
                     </div>
                 </a>
 
                 <!-- #2 -->
                 <a href="./page_pdga.php" class="col-md-6 modulo-wrap modulo-2">
-                    <div class="modulo-opacity"></div>
+                    <!-- <div class="modulo-opacity"></div> -->
                     <div class="modulo-text">
-                        Plan de Gestión Ambiental
+                        Gestión Ambiental
                     </div>
                     <div class="modulo-hover">
                         <p class="modulo-hover-text">
@@ -205,11 +236,11 @@
                     </div>
                 </a>
             </div>
-
+             <!--
             <div class="row modulo-row">
-                <!-- #3 -->
+                <!-- #3 
                 <div id="noticias-slider" class="carousel slide col-md-12" data-ride="false" data-interval="false" style="padding-left: 0px; padding-right: 0px;"></div>
-            </div>
+            </div> -->
 
             <div class="row modulo-row">
                 
@@ -218,7 +249,7 @@
 				<a href="./page_participacion.php" class="col-md-6 modulo-wrap modulo-4">
                     <div class="modulo-opacity"></div>
                     <div class="modulo-text">
-                        Participación pública y gestión social
+                        Participación Pública                    
                     </div>
                     <div class="modulo-hover">
                         <p class="modulo-hover-text">
@@ -236,7 +267,7 @@
                     <div class="modulo-opacity"></div>
                     <div class="modulo-text">
                         <!--Manejo integrado de cuenca-->
-                        Antecedentes y marco legal
+                        Antecedentes
                     </div>
                     <div class="modulo-hover">
                         <p class="modulo-hover-text">
@@ -257,7 +288,7 @@
                 <a href="./page_monitoreo.php" class="col-md-6 modulo-wrap modulo-6" style="width: 50%;">
                     <div class="modulo-opacity"></div>
                     <div class="modulo-text">
-                        Monitoreo hidrosedimentológico e hidroambiental del río Santa Cruz
+                            Hidrosedimentología
                     </div>
                     <div class="modulo-hover">
                         <p class="modulo-hover-text">
@@ -291,24 +322,20 @@
                             </div>
                         </a>
                         
-                        <!-- #8 -->
-                        <!--<a href="./page_antecedentes.php" class="col-md-12 modulo-wrap modulo-8">-->
+                        <!-- #8 
                         <a href="./page_huella.php" class="col-md-12 modulo-wrap modulo-8">
                             <div class="modulo-opacity"></div>
                             <div class="modulo-text">
-                                <!--Antecedentes y marco legal-->
-                                <!--En construcción-->
                             </div>
                             <div class="modulo-hover">
                                 <p class="modulo-hover-text">
-                                    <!--Línea de base ambiental, estudios de impacto y normativa aplicable al proyecto.--> 
-                                    <!--En construcción-->
+
                                     <br />
                                     <span class="modulo-hover-icon">
                                         <i class="fa fa-plus-circle fa-2x"></i>
                                     </span>
                                 </p>
-                            </div>
+                            </div> --> 
                         </a>
 
                     </div>
@@ -344,7 +371,7 @@
                 <a href="./geovisor.php?geovisor=1" class="col-md-4 modulo-wrap modulo-11">
                     <div class="modulo-opacity"></div>
                     <div class="modulo-text">
-                        SIG Ambiental Santa Cruz
+                        SIG Santa Cruz
                     </div>
                     <div class="modulo-hover">
                         <p class="modulo-hover-text">
@@ -361,38 +388,47 @@
 
 
         <div class="col-md-2 side-right" style="position: relative;">
-            <div class="row pinned" style="position: absolute;">
+            <div class="row pinned">
                 <a 
                     href="./mediateca.php" 
                     class="col-md-12 link-icon" 
-                    data-img="./images/index/icon1a.png"
-                    data-imghover="./images/index/icon1b.png" 
-                >
-                    <img src="./images/index/icon1a.png" />
+                    id="mediateca"
+                    style="background-image: url('./images/icono_mediateca.png');"
+                >                    
+                    <div class="spanContent">
+                        <span> MEDIATECA </span>
+                    </div>
                 </a>
                 <a 
                     href="./geovisor.php" 
                     class="col-md-12 link-icon" 
-                    data-img="./images/index/icon2a.png"
-                    data-imghover="./images/index/icon2b.png" 
+                    id="geovisor"
+                    style="background-image: url('./images/icono_geovisores.png');"
                 >
-                    <img src="./images/index/icon2a.png" />
+                    <div class="spanContent">
+                        <span> GEOVISOR </span>
+                    </div>
+                    
                 </a>
                 <a 
                     href="./indicadores.php" 
                     class="col-md-12 link-icon" 
-                    data-img="./images/index/icon3a.png"
-                    data-imghover="./images/index/icon3b.png" 
+                    id="indicadores" 
+                    style="background-image: url('./images/icono_indicadores.png');"
                 >
-                    <img src="./images/index/icon3a.png" />
+                    <div class="spanContent">
+                        <span> INDICADORES </span>
+                    </div>
                 </a>
                 <a 
                     href="./estadisticas.php" 
                     class="col-md-12 link-icon" 
-                    data-img="./images/index/icon4a.png"
-                    data-imghover="./images/index/icon4b.png" 
+                    id="estadisticas" 
+                    style="background-image: url('./images/icono_estadisticas.png');"
                 >
-                    <img src="./images/index/icon4a.png" />
+                    <div class="spanContent">
+                        <span> ESTADISTICAS </span>
+                    </div>
                 </a>
             </div>
         </div>
@@ -424,10 +460,10 @@ $(document).ready(function() {
         noticiasxslide: 4
     };
 
-    $('.pinned').hcSticky({
+/*     $('.pinned').hcSticky({
         stickTo: '.side-right',
         top: 80
-    });
+    }); */
 
     $.getJSON(model.apiUrlBase + '/mediateca_noticias_index.php', function(data) {
         model.noticias = data;
@@ -543,25 +579,15 @@ $(document).ready(function() {
         }
     )
 
-    $('.modulo-wrap').hover(
+/*     $('.modulo-wrap').hover(
         function() {
             $(this).find('.modulo-text').hide();
         },
         function() {
             $(this).find('.modulo-text').show();
         }
-    )
-
-    $('.link-icon').hover(
-        function() {
-            let icon = $(this).find('img');
-            icon.attr('src', $(this).data('imghover'));
-        },
-        function() {
-            let icon = $(this).find('img');
-            icon.attr('src', $(this).data('img'));
-        }
-    )
+    ) */
+        let iconos = document.getElementsByClassName('.link-icon')
 
     refreshUI();
     $(window).resize(function() {

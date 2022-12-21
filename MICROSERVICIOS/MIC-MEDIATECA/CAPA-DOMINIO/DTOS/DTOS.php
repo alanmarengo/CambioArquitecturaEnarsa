@@ -1,4 +1,14 @@
 <?php
+
+
+class respuesta_servidor{
+
+    public $flag;
+    public $cod_status;
+    public $detalle;
+}
+
+
 //esto devuelve get_recursos_filtrado
 class RecursosFiltros{
     public $recursos;

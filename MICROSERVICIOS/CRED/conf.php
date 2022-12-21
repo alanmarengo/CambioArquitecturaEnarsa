@@ -3,12 +3,21 @@
 // clase de definicion de credenciales a bases de datos remotas 
 class conect_db_link{
 
-    // string conexion db_link 
-    public $string_mic_mediateca = 'dbname=MIC-MEDIATECA hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
+    private $host_obs2 = 'iobs-02.ieasa.com.ar';
+    private $user_readonly = 'plataforma_readonly';
+    private $pass_readonly = 'Plataforma100%';
+    public $string_mic_mediateca = "";
+    public $string_mic_geovisores = "";
+    public $string_mic_estadisticas = "";
 
-    public $string_mic_geovisores = 'dbname=MIC-GEOVISORES hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
 
-    public $string_mic_estadisticas = 'dbname=MIC-ESTADISTICAS hostaddr=179.43.126.101 user=postgres password=plahe100% port=5432';
+    public function __construct(){
+
+         // string conexion db_link 
+        $this->string_mic_mediateca = "dbname=MIC-MEDIATECA  user=$this->user_readonly password=$this->pass_readonly port=5432";
+        $this->string_mic_geovisores = "dbname=MIC-GEOVISORES  user=$this->user_readonly password=$this->pass_readonly port=5432";
+        $this->string_mic_estadisticas = "dbname=MIC-ESTADISTICAS user=$this->user_readonly password=$this->pass_readonly port=5432";
+    }
     
 }
 

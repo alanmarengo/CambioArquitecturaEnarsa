@@ -56,7 +56,7 @@
 						},
 						{
 							name: '31/08/2016',
-							label: 'Se aprueban las modificaciones en el proyecto: reducción de cota de CC, reducción en el número de turbinas, régimen de operación de LB y construcción de la LEAT.',
+							label: 'Se aprueban las modificaciones en el proyecto: reducción de cota de NK, reducción en el número de turbinas, régimen de operación de JC y construcción de la LEAT.',
 							description: ''
 						},
 						{
@@ -77,6 +77,16 @@
 						{
 							name: '20/02/2019',
 							label: 'Presentación del EsIA de la Línea de Alta Tensión en Audiencia Pública en Comandante Luis Piedra Buena, Santa Cruz.',
+							description: ''
+						},
+						{
+							name: '09/2020',
+							label: 'Inicio de obras de fortalecimiento en los estribos de la presa Néstor Kirchner como medida ante la sensibilidad mostrada ante las excavaciones.',
+							description: ''
+						},
+						{
+							name: '09/2021 y 04/2022',
+							label: 'Consolidación del proyecto ejecutivo optimizado de las obras de Néstor Kirchner.',
 							description: ''
 						}
 					]

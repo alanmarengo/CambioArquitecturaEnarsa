@@ -4,7 +4,7 @@
             Contacto
         </div>
 
-        <div class="col-md-12 page-section-3" style="background-image: url(./images/contacto_banner.png);">
+        <div class="col-md-12 page-section-3" style="background-image: url(./images/contacto_bannerv2.png); background-size:cover;">
         </div>
 
         <div class="col-md-12 page-section-4" style="background-color: #fff;">

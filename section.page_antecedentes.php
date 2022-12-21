@@ -21,13 +21,13 @@ include("./Get_Link.php");
             <a id="historia"></a>
             <h3>HISTORIA DEL PROYECTO</h3>
 
-            <p>Los Aprovechamientos Hidroeléctricos del río Santa Cruz (AHRSC) consisten en la construcción de las presas Cóndor Cliff (CC) y La Barrancosa (LB), con sus respectivas centrales de generación, sobre el río homónimo, que proveerán electricidad al Sistema Argentino de Interconexión (SADI).</p>
+            <p>Los Aprovechamientos Hidroeléctricos del río Santa Cruz (AHRSC) consisten en la construcción de las presas Néstor Kirchner (NK) y Jorge Cepernic (JC), con sus respectivas centrales de generación, sobre el río homónimo, que proveerán electricidad al Sistema Argentino de Interconexión (SADI).</p>
             <p>El potencial energético del río Santa Cruz comenzó a estudiarse en la década de los 50 del siglo XX. En 1955, la empresa del estado Agua y Energía Eléctrica (AyEE) dispuso la habilitación de estaciones de aforo sobre el río, además de algunas estaciones meteorológicas en la zona, lo que hizo posible contar con más datos y establecer tendencias más confiables, a pesar de la discontinuidad en las mediciones.</p>
-            <p>A partir de 1975, AyEE comenzó a realizar estudios de prefactibilidad, incluyendo relevamientos geológicos y topográficos. Y en 1980 se realizaron investigaciones complementarias sobre perfiles geológicos de la zona de Cóndor Cliff.</p>
+            <p>A partir de 1975, AyEE comenzó a realizar estudios de prefactibilidad, incluyendo relevamientos geológicos y topográficos. Y en 1980 se realizaron investigaciones complementarias sobre perfiles geológicos de la zona de Néstor Kirchner.</p>
             <p>Después de varias décadas –período en que el país discontinuó el plan de obras hidroeléctricas y se optó por la generación térmica como motor del crecimiento del parque generador–, en 2012 se licitaron las obras del río Santa Cruz y, paralelamente, se extendió la línea de trasmisión de alta tensión hasta la provincia con el objetivo de transportar la energía de las presas, además de permitir el trasporte de energía de los futuros parques eólicos de la región patagónica.</p>
             <p>En agosto de 2012, la Secretaría de Obras Públicas del entonces Ministerio de Planificación Federal, Inversión Pública y Servicios de la Nación aprobó los pliegos licitatorios de la obra y se dispuso el llamado a Licitación Pública Nacional e Internacional para la contratación de los trabajos, bajo el régimen de la Ley 13064 y del Decreto 1381. Se presentaron cinco consorcios de empresas, adjudicándose la obra al constituido por las argentinas Electroingeniería e Hidrocuyo, y por la empresa asiática China Gezhouba Group Corporation, que conformaron el consorcio Represas Patagonia (contratista).</p>
             <p>El Contratista elaboró y presentó el Estudio de Impacto Ambiental (EsIA) del proyecto, de acuerdo con los requerimientos de evaluación de impacto ambiental de la provincia de Santa Cruz, en agosto de 2015. En noviembre del mismo año, la autoridad provincial emitió un dictamen técnico y se convocó a la audiencia pública, luego de lo cual se otorgó la Declaración de Impacto Ambiental (DIA), con validez de un año, que planteaba la necesidad de algunos ajustes y estudios complementarios, que se ejecutaron oportunamente.</p>
-            <p>A partir de 2016 se realizaron cambios sustanciales al proyecto, como la reducción de la cota en Cóndor Cliff y la reducción de turbinas en función de la modificación del diseño operativo en La Barrancosa. <!--<a target="_blank" href="./fichas/Optimizacion-proyecto.pdf">VER OPTIMIZACIÓN</a></p>--><a href="#" onclick="$('#link-optimizacion').trigger('click');">VER OPTIMIZACIÓN</a></p>  
+            <p>A partir de 2016 se realizaron cambios sustanciales al proyecto, como la reducción de la cota en Néstor Kirchner y la reducción de turbinas en función de la modificación del diseño operativo en Jorge Cepernic. <!--<a target="_blank" href="./fichas/Optimizacion-proyecto.pdf">VER OPTIMIZACIÓN</a></p>--><a href="#" onclick="$('#link-optimizacion').trigger('click');">VER OPTIMIZACIÓN</a></p>  
             <br />
             <p>El 21 de diciembre de 2016, una medida cautelar dictaminada por la Corte Suprema de Justicia de la Nación (CSJN) suspendió la ejecución de las obras principales de los aprovechamientos (exceptuando las tareas preliminares del proyecto ejecutivo y obras complementarias), hasta que se implementase el proceso de evaluación de impacto ambiental y la audiencia pública prevista en la <a target="_blank" href="http://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=279">Ley Nacional 23.879</a>.</p>
             <p>El Estudio cumplimentó lo solicitado en el mencionado dictamen de la Corte, conjuntamente con la realización de la Audiencia Pública en el marco del Congreso de la Nación, desarrollada el 20 y 21 de julio de 2017.</p>
@@ -43,9 +43,9 @@ include("./Get_Link.php");
                     <p>
                         Los ajustes realizados al proyecto de los aprovechamientos hidroeléctricos del río Santa Cruz tienen dos premisas fundamentales desde el punto de vista ambiental, cuyo fin es garantizar la sostenibilidad sobre dos componentes principales del patrimonio natural durante toda la vida útil de las obras, incluido el periodo de llenado de los embalses:
                         <br />
-                        <span class="bullet">•</span>Garantizar el desacople hidráulico del futuro embalse de la presa Cóndor Cliff respecto del lago Argentino.
+                        <span class="bullet">•</span>Garantizar el desacople hidráulico del futuro embalse de la presa Néstor Kirchner respecto del lago Argentino.
                         <br />
-                        <span class="bullet">•</span>Operar la central La Barrancosa de forma tal de preservar aguas abajo el régimen natural del río y del estuario.
+                        <span class="bullet">•</span>Operar la central Jorge Cepernic de forma tal de preservar aguas abajo el régimen natural del río y del estuario.
                     </p>
                     <p>
                         De esta manera, el proyecto logra su sostenibilidad en el tiempo, aprovechando una fuente de energía renovable para la generación eléctrica. 
@@ -55,9 +55,9 @@ include("./Get_Link.php");
                     <p>
                         Para esto, se han introducido las siguientes modificaciones al proyecto original:
                         <br />
-                        <span class="bullet">•</span>Reducción en 2,40m, del nivel del embalse de Cóndor Cliff con el objetivo de garantizar el desacople hidráulico respecto al lago Argentino. Adicionalmente se ajustó el cálculo del oleaje. En este nuevo escenario, la altura de la presa en CC se bajó 6,50 m
+                        <span class="bullet">•</span>Reducción en 2,40m, del nivel del embalse de Néstor Kirchner con el objetivo de garantizar el desacople hidráulico respecto al lago Argentino. Adicionalmente se ajustó el cálculo del oleaje. En este nuevo escenario, la altura de la presa en NK se bajó 6,50 m
                         <br />
-                        <span class="bullet">•</span>La cantidad de turbinas totales para ambos aprovechamientos pasó de 11 a 8, motivado por el cambio de modo de operación de LB.
+                        <span class="bullet">•</span>La cantidad de turbinas totales para ambos aprovechamientos pasó de 11 a 8, motivado por el cambio de modo de operación de JC.
                         <br />
                         <span class="bullet">•</span>Se sextuplicó la capacidad de erogación de los descargadores de fondo para mejorar la capacidad de manejo del agua, brindando mayor flexibilidad en la erogación de caudales otorgando una ventaja desde el punto de vista de la seguridad de la presa y de regulación de los hidrogramas ecológicos.
                     </p>
@@ -65,34 +65,31 @@ include("./Get_Link.php");
             </div>
 
             <div class="text-center pt-0">
-                <b>Reducción del nivel de embalse de la presa Cóndor Cliff</b>
+                <b>Reducción del nivel de embalse de la presa Néstor Kirchner </b>
                 <img src="./images/base1.png" style="margin: 1em 0em 1em 0em; width: 100%; height: auto;" />
             </div>
 
             <br />
-            <b>OPERACI&Oacute;N DE "BASE" DE LA BARRANCOSA</b>
+            <b>OPERACI&Oacute;N DE "BASE" DE JORGE CEPERNIC </b>
             <br />
             <br />
 
             <div class="row">
                 <div class="col-md-6">
                     <p>La operación de “base” de una central hidroeléctrica consiste en el funcionamiento permanente de la misma, de modo tal de generar energía en forma independiente de los picos de demanda del sistema.</p> 
-                    <p>En el caso de las obras sobre el río Santa Cruz, la central La Barrancosa (situada aguas abajo de la presa Cóndor Cliff) operará en régimen de base. Por lo tanto, el tramo fluvial aguas abajo de dicha presa no tendrá las fluctuaciones típicas de los ríos con aprovechamientos hidroeléctricos.</p>
-                    <p>Además, La Barrancosa tendrá un criterio de operación adicional: la central debe erogar el mismo caudal diario que ingresa al río Santa Cruz desde el lago Argentino, por lo que respetará los caudales naturales del río.</p>
+                    <p>En el caso de las obras sobre el río Santa Cruz, la central Jorge Cepernic (situada aguas abajo de la presa Néstor Kirchner) operará en régimen de base. Por lo tanto, el tramo fluvial aguas abajo de dicha presa no tendrá las fluctuaciones típicas de los ríos con aprovechamientos hidroeléctricos.</p>
+                    <p>Además, Jorge Cepernic tendrá un criterio de operación adicional: la central debe erogar el mismo caudal diario que ingresa al río Santa Cruz desde el lago Argentino, por lo que respetará los caudales naturales del río.</p>
                 </div>
                 <div class="col-md-6">
-                    <p>De esta manera, si nos ubicamos en cualquier punto aguas abajo de la presa La Barrancosa durante la etapa de operación, el río tendrá las mismas fluctuaciones a lo largo del día y de las estaciones que tendría si las obras no hubieran sido construidas, evitando que se produzcan alteraciones hidrológicas.</p>
-                    <p>Desde el punto de vista energético, ello constituye una restricción a la generación, priorizando la preservación ambiental de la porción inferior del río y su estuario. Por lo tanto, La Barrancosa podrá generar sólo la cantidad de energía que el caudal ingresante al río le permita, respetando las variaciones naturales del río Santa Cruz en la embocadura.</p>
-                    <p>La reducción del número de turbinas en La Barrancosa, de 5 a 3, es una modificación acorde al nuevo régimen adoptado para la operación de la central.</p> 
+                    <p>De esta manera, si nos ubicamos en cualquier punto aguas abajo de la presa Jorge Cepernic durante la etapa de operación, el río tendrá las mismas fluctuaciones a lo largo del día y de las estaciones que tendría si las obras no hubieran sido construidas, evitando que se produzcan alteraciones hidrológicas.</p>
+                    <p>Desde el punto de vista energético, ello constituye una restricción a la generación, priorizando la preservación ambiental de la porción inferior del río y su estuario. Por lo tanto, Jorge Cepernic podrá generar sólo la cantidad de energía que el caudal ingresante al río le permita, respetando las variaciones naturales del río Santa Cruz en la embocadura.</p>
+                    <p>La reducción del número de turbinas en Jorge Cepernic, de 5 a 3, es una modificación acorde al nuevo régimen adoptado para la operación de la central.</p> 
                 </div>
                 <div class="col-md-12 text-center">
-                    <!--<b>Operación de “base” de La Barrancosa</b>-->
+                    <!--<b>Operación de “base” de Jorge Cepernic</b>-->
                     <img src="./images/base2.png" style="margin: 1em 0em 1em 0em; width: 100%; height: auto;" />
                 </div>
 
-                <div class="col-md-12 text-center">
-                    <a target="_blank" href="./fichas/Optimizacion-proyecto.pdf" class="boton">OPTIMIZACI&Oacute;N DEL PROYECTO – DESCRIPCI&Oacute;N T&Eacute;CNICA</a>
-                </div>
             </div>
         </div>
 

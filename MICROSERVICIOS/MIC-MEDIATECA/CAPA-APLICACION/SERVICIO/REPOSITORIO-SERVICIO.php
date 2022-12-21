@@ -119,8 +119,12 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
         $respuesta->filtros=$filtros;
         $respuesta->recordset=$recursos_mediateca->recursos;       
         
+        $respuesta_final = new respuesta_servidor();
+        $respuesta_final->flag = true;
+        $respuesta_final->cod_status = 200;
+        $respuesta_final->detalle = $respuesta;
 
-        return  $respuesta;
+        return  $respuesta_final;
 
 
     }

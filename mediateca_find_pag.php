@@ -320,6 +320,7 @@ function getSQL($solapa) {
 			case 3: 	$SQL = ""; die("Modo desconocido."); break;
 			case 10: 	
 					/******************************* MODO RECURSOS DE CAPA *********************************************/
+					//$SQL = ""; die("Modo desconocido."); break;
 
 					if($_REQUEST['o']==6){
 						$filtro_fecha_observatorio= "AND fecha_observatorio IS NOT NULL";
@@ -328,6 +329,7 @@ function getSQL($solapa) {
 						$filtro_fecha_observatorio="";
 					}
 					
+
 					$SUBQUERY  = "SELECT origen_id_especifico AS Id,"
 					. "tipo_formato_solapa AS \"Solapa\","
 					. "origen_id,"					
@@ -344,12 +346,28 @@ function getSQL($solapa) {
 					. " FROM mod_mediateca.mediateca_find('$qt','$desde','$hasta','$proyecto','$clase','$subclase','$tipo_doc','$filtro_temporalidad') C "
 					. " WHERE estudios_id IN(SELECT CTA.estudios_id FROM mod_geovisores.catalogo CTA WHERE CTA.origen_id_especifico=$mode_id) " 
 					. " AND tipo_formato_solapa=$solapa AND (CASE WHEN origen_id=6 THEN mod_login.check_permisos_new(3, origen_id_especifico, $user_id) ELSE mod_login.check_permisos_new(origen_id, origen_id_especifico, $user_id) END) AND recurso_titulo IS NOT NULL  ". $filtro_fecha_observatorio;
+
 					$SUBQUERY2=str_replace('"','',$SUBQUERY);
-					$SQLSUBQUERYAUX="SELECT DISTINCT(T.Id) AS Id,T.Solapa AS Solapa,T.origen_id,T.Titulo AS Titulo,T.Descripcion AS Descripcion,T.LinkImagen AS LinkImagen,T.MetaTag AS MetaTag,T.Autores AS Autores ,T.estudios_id AS estudios_id,T.Fecha AS Fecha,T.Tema AS Tema,T.ico AS ico,T.fecha_observatorio AS fecha_observatorio FROM ($SUBQUERY2)T ". $ORDER;
+
+					$SQLSUBQUERYAUX="SELECT 
+					DISTINCT(T.Id) AS Id,
+					T.Solapa AS Solapa,
+					T.origen_id,
+					T.Titulo AS Titulo,
+					T.Descripcion AS Descripcion,
+					T.LinkImagen AS LinkImagen,
+					T.MetaTag AS MetaTag,
+					T.Autores AS Autores ,
+					T.estudios_id AS estudios_id,
+					T.Fecha AS Fecha,
+					T.Tema AS Tema,
+					T.ico AS ico,
+					T.fecha_observatorio AS fecha_observatorio 
+					FROM ($SUBQUERY2)T ". $ORDER;
 					$SQL = "SELECT row_to_json(A)::text AS r FROM ($SQLSUBQUERYAUX)A";
 							
 					$mode_label = "Capa ".getCapaNombre($mode_id);
-
+					
 					break;
 
 
@@ -600,28 +618,29 @@ $fflag = false;
 
 echo "\"filtros\":[";
 
-$row = pg_fetch_row($recordset);
-
-while($row) 
-{
-  if ($fflag)
-  {
-      echo ',';
-  }
-  else
-  {
-      $fflag = true;
-  };
-  
-  draw_tupla($row);
-  
-  $row = pg_fetch_row($recordset);//NEXT
-};
-
 echo "]";
+echo "}";// Fin JSON
+
+//===CORRECCION - COMENTAR las dos lines anteriores y descomentar de aca para abajo===
+//$row = pg_fetch_row($recordset);
+
+//while($row = pg_fetch_row($recordset)){
+//  if ($fflag)
+//  {
+//      echo ',';
+//  }
+//  else
+//  {
+//      $fflag = true;
+//  };
+//  draw_tupla($row);
+//$row = pg_fetch_row($recordset);//NEXT
+//};
+
+//echo "]";
 /******************************************* FIN FILTROS RECALCULADOS ********************************************/
 
-echo "}";// Fin JSON
+//echo "}";// Fin JSON
 
 //echo "ERROR SQL ".pg_last_error($conn);
 

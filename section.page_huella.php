@@ -23,7 +23,7 @@ include("./Get_Link.php");
         <div class="col-md-12 section-a">
             <div class="row">
                 <div class="col-md-6 text-justify">
-La cuenca del río Santa Cruz tiene una gran importancia para el concimiento del patrimonio natural y cultural. La región fue escenario de varias glaciaciones, habitad de abundante fauna y escenario de los primeros asentamientos del país. A su vez, en la zona de La Barrancosa tuvieron lugar hechos históricos de relevancia.
+La cuenca del río Santa Cruz tiene una gran importancia para el concimiento del patrimonio natural y cultural. La región fue escenario de varias glaciaciones, habitad de abundante fauna y escenario de los primeros asentamientos del país. A su vez, en la zona de Jorge Cepernic tuvieron lugar hechos históricos de relevancia.
 <br />
 <br />
                 </div>
@@ -117,7 +117,7 @@ Los sedimentos de mayor importancia paleontológica son los continentales de la 
 <br />
 <br />
                 <div class="col-md-6 text-justify">
-Las dos zonas de mayor sensibilidad afectadas por las obras (que quedarán bajo la cota de inundación) están situadas en la margen sur del río: Yaten Huageno (embalse Cóndor Cliff) y Segundas Barrancas Blancas (embalse La Barrancosa).                
+Las dos zonas de mayor sensibilidad afectadas por las obras (que quedarán bajo la cota de inundación) están situadas en la margen sur del río: Yaten Huageno (embalse Néstor Kirchner) y Segundas Barrancas Blancas (embalse Jorge Cepernic).                
 <br />
 <br />
 <a class="image-zoom" id="info_big2" href="./images/info2_big.png">
@@ -145,7 +145,7 @@ A partir de los estudios geológicos podemos conocer la historia de la conformac
 Los procesos de glaciación han dejado huellas evidentes en la región, que no sólo alberga aún hoy un extenso campo de hielo, sino que nos permite definir cómo fue la dinámica de avances y retrocesos glaciarios que generaron estos depósitos y cómo se desarrollaron los diversos ambientes de sedimentación que componen actualmente sus cuerpos. 
 <br />
 <br />
-Las formaciones denominadas Arroyo verde y El Tranquilo son las más recientes (periodo Pleistoceno del Cuaternario) y constituyen el foco de las actividades de rescate geológico del PGA, dado que se encuentran expuestas en zonas que serán ocupadas por el embalse Cóndor Cliff. Los programas relevan con detalle los perfiles del área, extrayendo muestras sedimentológicas y paleoambientales en la porción superior del río Santa Cruz. 
+Las formaciones denominadas Arroyo verde y El Tranquilo son las más recientes (periodo Pleistoceno del Cuaternario) y constituyen el foco de las actividades de rescate geológico del PGA, dado que se encuentran expuestas en zonas que serán ocupadas por el embalse Néstor Kirchner. Los programas relevan con detalle los perfiles del área, extrayendo muestras sedimentológicas y paleoambientales en la porción superior del río Santa Cruz. 
 <br />
 Si bien el área de interés geológico es amplia y se extiende más allá del futuro embalse, la zona aledaña al río reviste un valor particular debido a que el río ha excavado y dejado expuestos los mejores afloramientos que se conocen de estas unidades geológicas, en particular en la zona de los laberintos del Santa Cruz. 
 <br />

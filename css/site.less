@@ -4,10 +4,12 @@
 @color-grey-medium: #828282;
 @color-grey-light: #DDDDDD;
 @color-orange-mediateca: #FFA91B;
+@color-azul:#1371b8;
+@color-celeste:#44ade3;
 html,
 body {
     height: 100%;
-    background-color: #333333 !important;
+    background-color: #eaeaed !important; 
 }
 
 .embed-responsive-custom::before {
@@ -73,7 +75,7 @@ img[usemap], map area{
 
 .page-title {
     height: 44px;
-    background-color: #4c4c4e;
+    background-color: #115b94;
     color: #fff;
     font-size: 18px;
     font-weight: 400;
@@ -90,7 +92,7 @@ img[usemap], map area{
 
 .navbar {
     display: block !important;
-    background-color: #333333 !important;
+    background-color: @color-azul !important;
     z-index: 10 !important;
 }
 
@@ -638,7 +640,6 @@ img[usemap], map area{
         bottom: 0;
         left: 0;
         right: 0;
-        background: rgba(0, 0, 0, 0.5);
         color: #fff;
         visibility: hidden;
         opacity: 0;
@@ -674,19 +675,25 @@ img[usemap], map area{
     .modulo-row {
         min-height: @modulo_height;
     }
-
+    .modulo-wrap:hover .modulo-text{
+        min-height: 100%;
+        text-decoration: underline;
+    }
     .modulo-text {
-        font-size: 1.5em;
-        font-weight: bolder;
-        padding: 1em 1em;
+        font-size: 1.6em;
+        font-weight: bolder;      
         color: #fff;
         text-align: center;
-        position: relative;
-        float: left;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);  
-        text-shadow: @sombra-texto; 
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding:8px 0px; 
+        text-transform: uppercase;
+        min-height: 55px;
+        /* text-shadow: @sombra-texto; */ 
+        background-color: #115b94;
+        transition: all 0.2s;
     }
 
     .videosize {
@@ -699,37 +706,59 @@ img[usemap], map area{
     }
 
     .modulo-1 {
-        background-image: url(../images/index/caja1.jpg);
+        /* background-image: url(../images/index/caja1.jpg); */
+        /* background-color: #8D2F4F; */
+        background-image: url(../images/index/NuevoHome/modulo-1.webp);
         min-height: @modulo_height;
+        background-position: top center;
+        
     }
     .modulo-2 {
-        background-image: url(../images/index/caja2.jpg);
+        /* background-image: url(../images/index/caja2.jpg); */
         min-height: @modulo_height;
+        background-image: url(../images/index/NuevoHome/modulo-2.webp);
+        background-position: bottom center;
+/*         background-color: #1165a5;
+        .modulo-text{
+            background-color:  #1165a5;
+        } */
     }
     .modulo-3 {
         min-height: @modulo_height;
     }
     .modulo-4 {
-        background-image: url(../images/index/caja4.jpg);
+        /* background-image: url(../images/index/caja4.jpg); */
         min-height: @modulo_height;
         border-top: @modulo-border10;
+        /* background-color: #FCA819; */
+        background-image: url(../images/index/NuevoHome/modulo-4.webp);
     }
     .modulo-5 {
-        background-image: url(../images/index/caja5.jpg);
+        /* background-image: url(../images/index/caja5.jpg); */
         min-height: @modulo_height;
         border-top: @modulo-border10;
+        /* background-color: #8D2F4F; */
+        background-position: bottom center;
+        background-image: url(../images/index/NuevoHome/modulo-5.webp);
     }
     .modulo-6 {
-        background-image: url(../images/index/caja6.jpg);
+        /* background-image: url(../images/index/caja6.jpg); */
         min-height: @modulo_height;
+        /* background-color: #585DC5; */
+        background-position: top center;
+        background-image: url(../images/index/NuevoHome/modulo-6.webp);
     }
     .modulo-7 {
-        background-image: url(../images/index/caja7.jpg);
-        min-height: calc(@modulo_height / 2);
+        /* background-image: url(../images/index/caja7.jpg); */
+        min-height: @modulo_height;
+        background-position: bottom center;
+        background-image: url(../images/index/NuevoHome/modulo-7.webp);
+        /* background-color: #330033; */
     }
     .modulo-8 {
-        background-image: url(../images/index/caja8.jpg);
+        /* background-image: url(../images/index/caja8.jpg); */
         min-height: calc(@modulo_height / 2);
+        background-color: #330033;
     }
     .modulo-9 {
         min-height: @modulo_height;
@@ -738,10 +767,15 @@ img[usemap], map area{
     .modulo-10 {
         background-image: url(../images/index/caja10.jpg);
         min-height: @modulo_height;
+        /* background-color: #8D2F4F; */
+        .modulo-text{
+            font-size: 22px;
+        }
     }
     .modulo-11 {
         background-image: url(../images/index/caja11.jpg);
         min-height: @modulo_height;
+        /* background-color: #8D2F4F; */
     }
 
     #uxSensor {
@@ -784,13 +818,86 @@ img[usemap], map area{
     .side-right {
         padding: 20px 30px 20px 20px;
         background-color: #fff;
-
-        .link-icon {
+        .pinned{   
+            position: sticky;
+            top: 70px; 
             width: 100%;
-        
-            img {
-                width: 100%;
-                height: auto;
+            max-width: 150px;
+            margin: auto;
+
+            .link-icon#mediateca {
+                background-color: #214174;
+                &:hover{
+                    border:3px solid #14243d;
+                }
+                &:hover .spanContent{
+                    opacity: 1;
+                    background-color: #2141746b;
+                }
+            }
+            .link-icon#geovisor {
+                background-color: #0235d2;
+                &:hover{
+                    border:3px solid #022eaf;
+                }
+                &:hover .spanContent{
+                    opacity: 1;
+                    background-color: #0235d26b;
+                }
+            }
+            .link-icon#indicadores {
+                background-color: #8cc4df;
+                &:hover{
+                    border:3px solid #72a4bd;
+                }
+                &:hover .spanContent{
+                    opacity: 1;
+                    background-color: #8cc3df9f;
+                }
+            }
+            .link-icon#estadisticas {
+                background-color: #3f9cca;
+                &:hover{
+                    border:3px solid #3581a7;
+                }
+                &:hover .spanContent{
+                    opacity: 1;
+                    background-color: #3f9cca6b;
+                }
+            }
+            .link-icon {
+                margin:5px 0;            
+                border-radius: 50%;
+                position: relative;    
+                width:100%;
+                height:0;
+                padding-bottom:calc( 100% - 6px );  
+                background-size: contain;
+                background-repeat: no-repeat;
+                transition: all 0.2s;  
+                border:3px solid transparent;
+                img {
+                    width: 100%;
+                    height: auto;               
+                }
+                .spanContent{
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    opacity: 0;
+                    transition: all 0.2s;
+                    border-radius: 50%;
+                    span{
+                        color:white;
+                        font-weight: bold;
+                        font-size: 1rem;
+                    }
+                }
             }
         }
     }
@@ -1810,7 +1917,7 @@ img[usemap], map area{
 
 .footer {
     @carousel_height: 200px;
-    background-color:#333;
+    background-color:@color-celeste; // ANTES #333
 
     padding: 1em 2em;
     color: #fff;
@@ -1818,9 +1925,7 @@ img[usemap], map area{
     .enlaces {
         font-size: .9em; 
         padding: 10px; 
-        //background: RGBA(0,0,0,.2);
-        border: 1px solid #666;
-        /* height: 150px; */
+        border: 1px solid white; //Antes #666
 
         #footer-slider {
             position: relative;

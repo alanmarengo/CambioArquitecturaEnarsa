@@ -3,7 +3,7 @@ include("./pgconfig.php");
 $string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;	
 $conn = pg_connect($string_conn);
 
-$getId = $_GET['id'];
+#$getId = $_GET['id'];
 
 function GET_LINK($ID){
     $link;
@@ -16,5 +16,5 @@ function GET_LINK($ID){
     return $link;
 }
 
-echo GET_LINK($getId)
+#echo GET_LINK($getId)
 ?>

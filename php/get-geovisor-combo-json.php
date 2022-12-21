@@ -6,14 +6,17 @@ $string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . 
 	
 $conn = pg_connect($string_conn);
 
-$sections = array("AHRSC","Cóndor Cliff","La Barrancosa","Obras Complementarias");
+$sections = array("AHRSC","Presidente Néstor Kichner","Gobernador Jorge Cepernic","Obras Complementarias");
 $id_geovisor = array(100,200,300,400);
 
 $lists = array();
 $lists[0] = "841";
-$lists[1] = "851,821,823,818,819,820,824,822,848,850,906";
-$lists[2] = "852,827,829,825,826,828,847,849,905";
-$lists[3] = "815,853,854,892";
+/* $lists[1] = "851,821,823,818,819,820,824,822,848,850,906"; */
+$lists[1] = "851,821,823,1101,820,824,822,848,906,1105";
+/* $lists[2] = "852,827,829,825,826,828,847,849,905"; */
+$lists[2] = "852,827,829,1100,826,828,847,905,1106";
+/* $lists[3] = "815,853,854,892"; */
+$lists[3] = "815,853,854";
 
 $json = "[";
 

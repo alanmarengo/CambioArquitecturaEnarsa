@@ -32,8 +32,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 			case 1: 	$ORDER = " ORDER BY origen_id_especifico, r.recurso_titulo DESC"; break;
 			case 2: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) DESC"; break; // quedan estos dos para revisar 
 			case 3: 	$ORDER = " ORDER BY tipo_formato_solapa, mod_mediateca.get_total_vistas_recurso(origen_id_especifico,origen_id) ASC"; break; // quedan estos dos para revisar 
-			case 4: 	$ORDER = " ORDER BY origen_id_especifico, r.fecha DESC"; break;
-			case 5: 	$ORDER = " ORDER BY origen_id_especifico, r.fecha ASC"; break;
+			case 4: 	$ORDER = " ORDER BY origen_id_especifico, r.recurso_fecha DESC"; break;
+			case 5: 	$ORDER = " ORDER BY origen_id_especifico, r.recurso_fecha ASC"; break;
 			case 6: 	$ORDER = "  ORDER BY origen_id_especifico, r.fecha_observatorio DESC"; break;
 			//default: 	$ORDER = " ORDER BY tipo_formato_solapa,recurso_titulo ASC"; break;
 		};
@@ -55,7 +55,13 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         $total_registros = $this->get_cantidad_recursos_solapa($consulta_paginado,$solapa,"",$extension_consulta_filtro_recursos);
         $cant_paginas= ceil($total_registros/$page_size);
-        $inicio = ($current_page - 1) * $page_size;         
+        
+        if($current_page == 0)
+        {
+            $inicio = 0;
+        }elseif($current_page > 0){
+            $inicio = ($current_page - 1) * $page_size; 
+        }                
 
         $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;
 
@@ -86,6 +92,8 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
        
         // instancio una nueva conexion 
         $conexion = new ConexionMediateca();
+
+       // echo $consulta_definitiva;
         
         //realizo la consulta            
         $recursos_mediateca = $conexion->get_consulta($consulta_definitiva);   

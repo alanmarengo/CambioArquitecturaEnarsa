@@ -24,7 +24,7 @@ class RepositorioServicioUsuario implements IRepositorioServicioUsuario{
     {        
         return $this->query->login($user_name,$user_pass);
     }
-
+   
 }
 
 // ejeplos de implementacion 

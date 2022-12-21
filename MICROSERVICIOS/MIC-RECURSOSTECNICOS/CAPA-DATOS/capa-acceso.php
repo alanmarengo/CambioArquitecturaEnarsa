@@ -4,9 +4,9 @@ require_once(dirname(__FILE__,3).'\CRED\conf.php');
 
 // clase para conexion a bd
 class ConexionRecursosTecnicos {
-    private $host = "179.43.126.101"; 
-    private $user = "postgres";
-    private $pass = "plahe100%";
+    private $host = "iobs-02.ieasa.com.ar"; 
+    private $user = "plataforma_readonly";
+    private $pass = "Plataforma100%";
     private $port = "5432";
     private $database = "MIC-MEDIATECA";
     private $conect;

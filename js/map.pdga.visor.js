@@ -950,7 +950,8 @@ function ol_map(tema_id) {
 				visible:true,
 				singleTile: true,
 				source: new ol.source.TileWMS({
-					url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+					//url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+					url: "http://observatorio.energia-argentina.com.ar:8080/geoserver/ows?",
 					params: {
 						'LAYERS': capa,//'intervalos_polygons',
 						'id':query_id,
@@ -1238,7 +1239,8 @@ function ol_map(tema_id) {
 					name:'get_buffer',
 					visible:false,
 					source: new ol.source.TileWMS({
-						url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+						//url: "http://observatorio.ieasa.com.ar:8080/geoserver/ows?",
+						url: "http://observatorio.energia-argentina.com.ar:8080/geoserver/ows?",
 						params: {
 							'LAYERS': 'get_buffer',
 							'VERSION': '1.1.1',
