@@ -1,6 +1,7 @@
 <?php
 require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\INTERFACE-REPOSITORIO-QUERY\INTERFACE-REPOSITORIO-QUERY.php');
 require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DATOS\capa-acceso.php');
+require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DATOS\clases.php');
 require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\ENTIDADES\ENTIDADES.php');
 require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\DTOS\DTOS.php');
 
@@ -553,7 +554,7 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
         }
 
-    return new EstadisticasFiltros($estadistica_documentos,$estadistica_recursos_audiovisuales,$estadistica_novedades);
+        return new EstadisticasFiltros($estadistica_documentos,$estadistica_recursos_audiovisuales,$estadistica_novedades);
     
     }
 
@@ -588,10 +589,89 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         
     }
 
+    public function carrusel_represas($represa){
+
+        //consulta filtrando por la represa
+        // ACLARACION, LA RELACION mod_mediateca.fotos_proyectos  NO EXISTE EN LA VERSION DE LA BD A LA QUE NOS DIERON ACCESO, HABRIA QUE PEDIR 
+        $QUERY='SELECT * FROM "MIC-MEDIATECA".fotos_proyectos as fp WHERE fp.presa = '.$represa.' ORDER BY fp.recurso_fecha DESC;';
+        
+        $conexion = new ConexionMediateca();        
+        //realizo la consulta            
+        $consulta = $conexion->get_consulta($QUERY);
+
+        $Array_recursos=array(); // array contenedor 
+        foreach($consulta as $recurso)
+        {   
+            $aux_recurso_id = $recurso['recurso_id'];
+            $aux_recurso_desc = $recurso['recurso_desc'];
+            $aux_presa = $recurso['presa'];
+            $aux_recurso_path_url = $recurso['recurso_path_url'];
+            $aux_recurso_fecha = $recurso['recurso_fecha'];
+            $aux_formato_id = $recurso['formato_id'];
+        
+        // se graba cada fila de la consulta en un objeto
+        $record= new Imagen($aux_recurso_id, $aux_recurso_desc, $aux_presa, $aux_recurso_path_url, $aux_recurso_fecha, $aux_formato_id);
+        array_push($Array_recursos,$record); // se agrega el objeto al array 
+        }
+
+        // se devuelve el array en formato JSON 
+        echo json_encode($Array_recursos); 
+       return $this->query->carrusel_represas($represa);
+    }
+
+    public function noticias_mediateca(){
+
+        // por el momento queda con la consulta vieja, queda refactorizar a la nueva base de datos. "MIC-MEDIATECA"
+
+        // una vez implementado todo, usa la siguiente consulta 
+
+        /* la misma ya apunta a la base de datos del microservicio
+        
+        SELECT ('./cache/'||recurso_id::TEXT||'.jpg')::text AS path_img, recurso_titulo as titulo,recurso_fecha as fecha,recurso_path_url as path_pdf,recurso_desc as desc,recurso_id,(recurso_fecha-30) AS fecha_menos_30,recurso_preview_path as path_img2  
+        from  "MIC-MEDIATECA".recurso r where formato_id in(102) order by recurso_fecha desc limit 7        
+        
+        */
+
+
+        $consulta_noticias_mediateca = <<<EOD
+            select * from dblink('dbname=ahrsc_backup  user=postgres password=37159252 port=5432',
+            'SELECT recurso_id AS path_img, recurso_titulo as titulo,recurso_fecha as fecha,recurso_path_url as path_pdf,recurso_desc as desc,recurso_id,(recurso_fecha-30) AS fecha_menos_30,recurso_preview_path as path_img2  
+                from  mod_mediateca.recurso r where formato_id in(102) order by recurso_fecha desc limit 7')
+                as t(path_img text,titulo text,fecha date,path_pdf text, "desc" text,recurso_id bigint, fecha_menos_30 date, path_img2 text);
+            EOD;
+        
+        $conexion = new ConexionMediateca();
+        //realizo la consulta            
+        $resultado = $conexion->get_consulta($consulta_noticias_mediateca);   
+
+        $noticias_mediateca = array();
+
+        foreach($resultado as $registro)
+        {            
+            $path_img;
+
+            if($registro['path_img2']==null){
+
+                $path_img=$registro['path_img'];
+            }else{
+                $path_img=$registro['path_img2'];
+            }
+            
+            $aux_noticia = new Noticia_mediateca($path_img,$registro['titulo'],$registro['fecha'],$registro['path_pdf'],$registro['desc'],$registro['fecha_menos_30']);
+
+            array_push($noticias_mediateca,json_encode($aux_noticia));
+        }
+
+        return json_encode($noticias_mediateca); //  revisar bien la respuesta 
+
+    }
+
+   
 
 
 
 } // fin repositorio mediateca
 
 
-
+$test = new RepositorioQueryMediateca();
+echo $test->noticias_mediateca();

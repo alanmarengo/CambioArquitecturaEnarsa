@@ -8,6 +8,7 @@ interface IRepositorioQueryMediateca{
     public function get_estadistica_inicial();
     public function get_estadistica_filtrado($aux_cadena_filtros,$extension_consulta_filtro_recursos);
     public function busqueda_mediateca($str_filtro_mediateca);
+    public function noticias_mediateca();
 }
 
 

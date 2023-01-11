@@ -16,7 +16,8 @@ $string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . 
 
 $conn = pg_connect($string_conn);
 
-$SQL = "SELECT ('./cache/'||recurso_id::TEXT||'.jpg')::text AS path_img, recurso_titulo as titulo,recurso_fecha as fecha,recurso_path_url as path_pdf,recurso_desc as desc,recurso_id,(recurso_fecha-30) AS fecha_menos_30,recurso_preview_path as path_img2  from  mod_mediateca.recurso r where formato_id in(102) order by recurso_fecha desc limit 7";
+$SQL = "SELECT ('./cache/'||recurso_id::TEXT||'.jpg')::text AS path_img, recurso_titulo as titulo,recurso_fecha as fecha,recurso_path_url as path_pdf,recurso_desc as desc,recurso_id,(recurso_fecha-30) AS fecha_menos_30,recurso_preview_path as path_img2  
+        from  mod_mediateca.recurso r where formato_id in(102) order by recurso_fecha desc limit 7";
 
 $recordset = pg_query($conn,$SQL);
 

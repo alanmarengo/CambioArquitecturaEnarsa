@@ -1,6 +1,7 @@
 <?php
 require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DOMINIO\INTERFACE-REPOSITORIO-QUERY\INTERFACE-REPOSITORIO-QUERY.php');
 require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DATOS\capa-acceso.php');
+require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DATOS\clases.php');
 
 //reemplazar los paths aboslutos por la nueva y linda forma que encontramos
 
@@ -34,6 +35,87 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 	}
 
 	*/
+
+	public function get_layer_info_pgda()
+	{
+		
+		$layer_id_arr = array(873,937,938,939,875);
+		$layer_title_arr = array(
+			"Provincia Santa Cruz",
+			"Subcuenca Alta Del Río Santa Cruz",
+			"Subcuenca Media Y Baja Del Río Santa Cruz",
+			"Estuario Río Santa Cruz",
+			"Áreas De Obra De Los Aprovechamientos Hidroeléctricos Del Río Santa Cruz"
+		);
+
+		//$layer_id_arr = array_values($layer_id_arr);	
+
+		$html = "";
+
+		for ($i=0; $i<sizeof($layer_id_arr); $i++) 
+		{	
+			$query_string = 'SELECT DISTINCT layer_id,layer_desc FROM "MIC-GEOVISORES".vw_layers WHERE layer_id = '. $layer_id_arr[$i] . ' LIMIT 1';
+			
+			$conexion = new ConexionGeovisores();       
+			$data =  $conexion->get_consulta($query_string);  
+			
+			$layer_id = $data["layer_id"];
+			$layer_desc = $data["layer_desc"];
+			
+			$query_string2 = 'SELECT * FROM "MIC-CATALOGO".vw_visor_pg_programas WHERE layer_id = ' . $layer_id . " ORDER BY programa ASC";
+			
+			$query2 = $conexion->get_consulta($query_string2);  ;
+			
+			//$query_count = pg_num_rows($query2);
+			
+			$metadata_url = $data["metadata_url"];
+			$target = " target=\"_blank\"";
+						
+			if ($metadata_url == "") {
+								
+				$metadata_url = "javascript:alert('Esta capa no posee metadatos asociados');";
+				$target = "";
+								
+			}
+
+			$html = <<<EOD
+					<div class="popup-layer-node jus-between" data-state="0" data-layer="$layer_id" data-index="$i">
+							<div class="popup-layer-node-icons ml-15">
+								<div class="layer-icon" title="Ver/Ocultar">
+									<a href="javascript:void(0);" onclick="geomap.map.togglePopupLayers(this);"><img src="./images/geovisor/icons/popup-layer-closed.png" data-inactive="./images/geovisor/icons/popup-layer-closed.png"
+									data-active="./images/geovisor/icons/popup-layer-opened.png"></a>
+								</div>
+							</div>
+							<a href="#" class="layer-label" style="cursor:text" alt=" $layer_title_arr[$i]">" $layer_title_arr[$i]"</a>
+						</div>
+						
+						<div style="display:none;" class="popup-layer-content">	
+							
+							<table class="popup-table gfi-info-table" cellpadding="5">
+									
+								<tr>
+								<th>Programas Asociados</th>;
+								</tr>
+				EOD;
+		
+		
+			
+				while($r) {
+						
+					$html .= "<tr>";
+					$html .= "<td>" . $r["programa"] . "</td>";
+					$html .= "</tr>";
+					
+				}
+			
+				$html .= "</table>";
+			$html .= "</div>";
+
+		}
+
+		return $html;
+
+	}
 
 
     public function ListaProyectos()
@@ -1378,6 +1460,28 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 	
 	}
 
+	public function ComboSubclase($clase_id)
+	{
+
+		$conexion = new ConexionGeovisores(); 		
+		
+		$query_string = 'SELECT * FROM "MIC-GEOVISORES".vw_filtros_avanzados_subclase WHERE clase_id = $clase_id ORDER BY subclase_desc ASC';
+		
+		$data = $conexion->get_consulta($query_string);
+		
+		$html = "<option value=\"-1\" selected>Subclase</option>";
+
+		foreach($data as $registro)
+		{
+			$html .= "<option value=\"" . $registro["subclase_id"] . "\">" . $registro["subclase_desc"] . "</option>";
+		
+		}
+			
+		return $html;
+    }
+
+	
+
 
 }; // fin interface 
 
@@ -1386,7 +1490,8 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 // test
 
 //$test = new RepositorioQueryGeovisor();
-
+//$respuesta = $test->get_layer_info_pgda();
+//echo $respuesta;
 
 
 

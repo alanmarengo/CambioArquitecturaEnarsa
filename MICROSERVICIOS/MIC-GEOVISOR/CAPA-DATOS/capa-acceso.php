@@ -4,10 +4,10 @@ require_once(dirname(__FILE__,3).'\CRED\conf.php');
 
 // clase para conexion a bd
 class ConexionGeovisores {
-    private $host = "iobs-02.ieasa.com.ar"; 
+    private $host = "localhost"; 
     private $user = "plataforma_readonly";
     private $pass = "Plataforma100%";
-    private $port = "5432";
+    private $port = "5433";
     private $database = "MIC-GEOVISORES";
     private $conect;
     public $obj_conexion_db_externas; // objeto de conexion con credenciales. 

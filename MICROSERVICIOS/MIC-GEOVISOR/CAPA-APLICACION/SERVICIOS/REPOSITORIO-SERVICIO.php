@@ -137,7 +137,19 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
         return $this->query->get_layer_preview($layer_id);
     }
     
+    public function get_layer_info_pgda(){
 
+        return $this->query->get_layer_info_pgda();
+    }
+
+    public function ComboSubclase($clase_id){
+        return $this->query->ComboSubclase($clase_id);
+    }
+
+    public function carrusel_represas($represa){
+        return $this->query->carrusel_represas($represa);
+    }
+    
 
 }               	
 

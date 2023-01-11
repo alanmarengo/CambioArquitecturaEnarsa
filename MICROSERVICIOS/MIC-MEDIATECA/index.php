@@ -24,6 +24,44 @@ $_REQUEST['user_id'] = null;
 */
 
 
+
+
+
+
+
+$_POST['carrusel_represas'] = "NK";
+
+//if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
+//{ 
+    if(isset($_POST['carrusel_represas']) && !empty($_POST['carrusel_represas'])) // evaluo que contenga la variable action(contiene la funcion a requerir)
+    {   
+        $servicio_geovisor = new RepositorioServicioMediateca;
+
+        $datos_respuesta =  $servicio_geovisor->carrusel_represas($_POST['carrusel_represas']);
+
+        if($datos_respuesta)
+        {
+            echo json_encode($datos_respuesta);
+        }else{
+
+            echo "La Solicitud no arrojo resultados.";
+        }
+
+        // vaciamos el objeto servicio_geovisor
+        $servicio_geovisor = null;           
+        
+    } else {
+
+        http_response_code(200);
+        echo 'Peticion Incorrecta';
+    }          
+   
+//}
+
+
+
+
+
 if($_SERVER['REQUEST_METHOD'] == "GET")
 {
 

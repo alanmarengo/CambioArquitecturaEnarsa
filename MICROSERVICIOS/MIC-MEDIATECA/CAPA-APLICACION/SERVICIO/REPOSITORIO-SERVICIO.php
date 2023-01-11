@@ -136,6 +136,14 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
     } //
 
+    public function carrusel_represas($represa){
+        return $this->query->carrusel_represas($represa);
+    }
+
+    public function noticias_mediateca(){
+        return $this->query->noticias_mediateca();
+    }
+
 
 } // fin clase RepositorioServicioMediateca  <-----------------
 
