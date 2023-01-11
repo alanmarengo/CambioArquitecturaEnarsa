@@ -7,6 +7,10 @@ interface IRepositorioServicioMediateca{
                                  $calculo_estadistica,$order_by);
 
     public function busqueda_mediateca($str_filtro_mediateca);
+
+    public function noticias_mediateca();
 }
+
+
 
 ?>
