@@ -4,20 +4,19 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 $db_name = "ahrsc";
 
-
 if((strpos($_SERVER["SCRIPT_FILENAME"],"wamp64")) || (strpos($_SERVER["SCRIPT_FILENAME"],"wamp")))
 {
-	define("pg_server","iobs-02.ieasa.com.ar");
-	define("pg_user","plataforma_readonly");
-	define("pg_password","Plataforma100%");
+	define("pg_server","127.0.0.1");
+	define("pg_user","postgres");
+	define("pg_password","postgres");
 	define("pg_portv","5432");
 	define("pg_db",$db_name);
 	
 }else{
 	
-	define("pg_server","iobs-02.ieasa.com.ar");
-	define("pg_user","plataforma_readonly");
-	define("pg_password","Plataforma100%");
+	define("pg_server","127.0.0.1");
+	define("pg_user","postgres");
+	define("pg_password","plahe100%");
 	define("pg_portv",5432);
 	define("pg_db",$db_name);
 	

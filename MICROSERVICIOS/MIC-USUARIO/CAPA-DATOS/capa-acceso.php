@@ -4,14 +4,14 @@
 class ConexionUsuario {
 
     // para uso en host
-    //private $host = "iobs-02.ieasa.com.ar";
-    //private $user = "plataforma_readonly";
-    //private $pass = "Plataforma100%";
+    private $host = "iobs-02.ieasa.com.ar";
+    private $user = "plataforma_readonly";
+    private $pass = "Plataforma100%";
 
     // para uso en local
-    private $host = "localhost";
-    private $user = "postgres";
-    private $pass = "37159252";
+    //private $host = "localhost";
+    //private $user = "postgres";
+    //private $pass = "37159252";
 
     
     private $port = "5432";
