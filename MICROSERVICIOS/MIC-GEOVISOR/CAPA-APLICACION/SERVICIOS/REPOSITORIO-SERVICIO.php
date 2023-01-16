@@ -3,7 +3,7 @@
 
 require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DOMINIO\INTERFACE-REPOSITORIO-SERVICIO\INTERFACE-REPOSITORIO-SERVICIO.php');
 require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-APLICACION\QUERYS\REPOSITORIO-QUERY.php');
-require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIOS.php');
+require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
 
 
 class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{

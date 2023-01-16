@@ -673,5 +673,5 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 } // fin repositorio mediateca
 
 
-$test = new RepositorioQueryMediateca();
-echo $test->noticias_mediateca();
+//$test = new RepositorioQueryMediateca();
+//echo $test->noticias_mediateca();

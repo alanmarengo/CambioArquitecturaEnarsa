@@ -1,6 +1,5 @@
 <?php
 
-require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
 require_once(dirname(__FILE__).'\clase_request.php');
 
 /*
@@ -24,15 +23,11 @@ $_REQUEST['user_id'] = null;
 */
 
 
+require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
 
 
-
-
-
-$_POST['carrusel_represas'] = "NK";
-
-//if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
-//{ 
+if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
+{ 
     if(isset($_POST['carrusel_represas']) && !empty($_POST['carrusel_represas'])) // evaluo que contenga la variable action(contiene la funcion a requerir)
     {   
         $servicio_geovisor = new RepositorioServicioMediateca;
@@ -56,10 +51,14 @@ $_POST['carrusel_represas'] = "NK";
         echo 'Peticion Incorrecta';
     }          
    
-//}
+}else{
+
+    http_response_code(400);
+    echo 'Peticion Incorrecta';
+}
 
 
-
+/*
 
 
 if($_SERVER['REQUEST_METHOD'] == "GET")
@@ -112,7 +111,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
 }
 
 
-
+*/
 
 
 

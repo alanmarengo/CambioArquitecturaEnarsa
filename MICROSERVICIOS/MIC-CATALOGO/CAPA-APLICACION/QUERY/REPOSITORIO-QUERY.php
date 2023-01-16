@@ -511,6 +511,20 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         }
     }
 
+    public function get_link($ID){
+
+        //aca instancio a la conexion 
+        $conexion = new ConexionCatalogo();
+
+        $query = 'SELECT t.fec_bbdd_date, t.territorio_simpli,t.fec_bbdd,t.descripcion 
+                              FROM "MIC-CATALOGO".territorio t 
+                              WHERE t.territorio_id = '.$territorio_id;
+        
+        return $conexion->get_consulta($query); // retorno el resultado de la consulta ejecutada
+
+
+    }
+
 
 }
 

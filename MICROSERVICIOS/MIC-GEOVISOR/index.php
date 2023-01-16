@@ -1,7 +1,7 @@
 <?php
 
-require_once 'CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php';
-
+//require_once 'CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php';
+require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php');
 
 // Archivo de evaluacion de peticiones POST
 // Este archivo sera el encargado las nueva peticiones post que reciba la pagina,
@@ -11,25 +11,6 @@ require_once 'CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php';
 
 // verifica usuario_id en la variable session y si no exitiste, user_id = -1, que corresponde al usuario publico.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// variables de prueba 
- //$_POST['action'] = "get_medicion";
- //$_POST["type"] = "LineString";
- //$_POST["wkt"] = 1000;
 
 if (isset($_POST) && !empty($_POST['action'])) // verifica que existan las variables $_POST y action
 {
@@ -158,7 +139,7 @@ if (isset($_POST) && !empty($_POST['action'])) // verifica que existan las varia
 
 } else {
         
-    echo "No hay nada para Mostrar.";
+    echo "Solicitud Incorrecta!";
 }
  
 

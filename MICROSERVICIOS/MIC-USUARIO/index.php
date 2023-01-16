@@ -56,9 +56,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
 
     } else {
 
-        http_response_code(200);
+        http_response_code(400);
         echo 'Peticion Incorrecta';
     }
+}else {
+
+    http_response_code(400);
+    echo 'Peticion Incorrecta';
 }
 
 
