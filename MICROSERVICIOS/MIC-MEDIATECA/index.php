@@ -1,6 +1,12 @@
 <?php
 
-require_once(dirname(__FILE__).'\clase_request.php');
+require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
+include_once(dirname(__FILE__).'\CAPA-DOMINIO\clase_request.php');
+include_once(dirname(__FILE__).'\CAPA-DOMINIO\clase_respuesta.php');
+include_once(dirname(__FILE__).'\CAPA-DOMINIO\clases.php');
+
+$_respuesta = new Respuesta();
+$datos_respuesta; // variable que almacenara la respuesta final. 
 
 /*
 
@@ -23,44 +29,82 @@ $_REQUEST['user_id'] = null;
 */
 
 
-require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
 
 
-if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
-{ 
-    if(isset($_POST['carrusel_represas']) && !empty($_POST['carrusel_represas'])) // evaluo que contenga la variable action(contiene la funcion a requerir)
-    {   
-        $servicio_geovisor = new RepositorioServicioMediateca;
+$_POST['action'] = '';
 
-        $datos_respuesta =  $servicio_geovisor->carrusel_represas($_POST['carrusel_represas']);
+/*
+get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,
+                                $subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+busqueda_mediateca($str_filtro_mediateca)
+carrusel_represas($represa)
+noticias_mediateca() */
 
-        if($datos_respuesta)
+//if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
+//{ 
+    if(isset($_POST['action']) && !empty($_POST['action'])) // evaluo que contenga la variable action(contiene la funcion a requerir)
+    {  
+
+        switch ($_POST['action']) 
         {
-            echo json_encode($datos_respuesta);
-        }else{
+            case 'carrusel_represas':
+                
+                if((isset($_POST['represa'])) && (!empty($_POST['represa'])))
+                {                    
+                    $servicio_mediateca = new RepositorioServicioMediateca();
 
-            echo "La Solicitud no arrojo resultados.";
+                    $datos_respuesta =  $servicio_mediateca->carrusel_represas($_POST['carrusel_represas']);        
+                                  
+                    if($datos_respuesta->flag)
+                    {
+
+                        http_response_code(200);                
+                        $datos_respuesta = $_respuesta->error_200($datos_respuesta->detalle); 
+                        echo json_encode($datos_respuesta);
+
+                    }else{
+
+                        http_response_code(400);                
+                        $datos_respuesta = $_respuesta->error_400($datos_respuesta->detalle); 
+                        echo json_encode($datos_respuesta);
+
+                    } 
+
+                    // vaciamos el objeto servicio_geovisor
+                    $servicio_mediateca = null;   
+
+                }else{
+
+                    http_response_code(400);                
+                    $datos_respuesta = $_respuesta->error_400('Variable represa Vacia'); 
+                    echo json_encode($datos_respuesta);
+
+                }
+
+                break;
+
+            default : 
+
+                http_response_code(400);                
+                $datos_respuesta = $_respuesta->error_400('Variable Usuario Vacia'); 
+                echo json_encode($datos_respuesta);
+
+            break;
+            
         }
-
-        // vaciamos el objeto servicio_geovisor
-        $servicio_geovisor = null;           
         
     } else {
 
-        http_response_code(200);
-        echo 'Peticion Incorrecta';
+        http_response_code(400);                
+        $datos_respuesta = $_respuesta->error_400('Peticion Inconrrecta!'); 
+        echo json_encode($datos_respuesta);
     }          
    
-}else{
+//}
 
-    http_response_code(400);
-    echo 'Peticion Incorrecta';
-}
 
 
 /*
-
-
 if($_SERVER['REQUEST_METHOD'] == "GET")
 {
 
@@ -109,9 +153,9 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
     
     //print_r($filtros_recibidos);
 }
-
-
 */
+
+
 
 
 

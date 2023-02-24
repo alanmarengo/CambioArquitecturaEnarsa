@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__,4).'\MIC-INDICADORES\CAPA-DOMINIO\INTERFACE-SERVICIOS\REPOSITORIO-INTERFACE-SERVICIO.php');
 require_once(dirname(__FILE__,4).'\MIC-INDICADORES\CAPA-APLICACION\QUERYS\REPOSITORIO-QUERY.php');
-require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
+require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIOS.php');
 
 class RepositorioServicioIndicadores implements IRepositorioServicioIndicadores{
 

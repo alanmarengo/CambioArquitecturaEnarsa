@@ -1,7 +1,7 @@
 <?php
 
-require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-DOMINIO\INTERFACE-REPOSITORIO-SERVICIO\INTERFACE-REPOSITORIO-SERVICIO.php');
-require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\QUERY\REPOSITORIO-QUERY.php');
+include_once(dirname(__FILE__,4).'/MIC-USUARIO/CAPA-DOMINIO/INTERFACE-REPOSITORIO-SERVICIO/INTERFACE-REPOSITORIO-SERVICIO.php');
+include_once(dirname(__FILE__,4).'/MIC-USUARIO/CAPA-APLICACION/QUERY/REPOSITORIO-QUERY.php');
 
 class RepositorioServicioUsuario implements IRepositorioServicioUsuario{
     public $query;

@@ -1,6 +1,9 @@
 <?php
 
-require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php'); // Implementamos la interfaz de servicio del microservicio
+include_once(dirname(__FILE__).'/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php'); // Implementamos la interfaz de servicio del microservicio
+include_once(dirname(__FILE__).'/CAPA-DOMINIO/CLASES/Clases.php');
+
+$_respuesta = new Respuesta();
 
 // interfaz donde se implementara la API para consumir los servicios del Microservicio Usuario
 
@@ -16,56 +19,118 @@ if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
             case 'login':
                 
                 if(!empty($_POST['usuario']))
-                {
-                    if(!empty($_POST['clave']))
+                {                    
+                    $servicio_usuario = new RepositorioServicioUsuario();
+
+                    $datos_respuesta = $servicio_usuario->login($_POST['usuario'],$_POST['clave']);
+                                  
+                    if($datos_respuesta->flag)
                     {
-                        $servicio_usuario = new RepositorioServicioUsuario();
-                        $respuesta = $servicio_usuario->login($_POST['usuario'],$_POST['clave']);
 
-                        if($respuesta->flag)
-                        {
-                            print_r($respuesta);
-
-                        }else{
-                            
-                            http_response_code($respuesta->response_code);
-                            print_r($respuesta);
-
-                        }
+                        http_response_code(200);                
+                        $datos_respuesta = $_respuesta->error_200($datos_respuesta->detalle); 
+                        echo json_encode($datos_respuesta);
 
                     }else{
 
-                        http_response_code(400);
-                        echo 'Variable Clave Vacia';
+                        http_response_code(400);                
+                        $datos_respuesta = $_respuesta->error_400($datos_respuesta->detalle); 
+                        echo json_encode($datos_respuesta);
 
-                    }
+                    } 
+                
+                    $servicio_usuario = null;
 
-                }else{  
+                }else{
 
-                    http_response_code(400);
-                    echo 'Variable Usuario Vacia';
+                    http_response_code(400);                
+                    $datos_respuesta = $_respuesta->error_400('Variable Usuario Vacia'); 
+                    echo json_encode($datos_respuesta);
+
+
                 }
 
                 break;
+            
+            case 'get_recursos_restringidos':
 
-            default :                
-                http_response_code(400);
-                echo 'Peticion Incorrecta';
+                $servicio_usuario = new RepositorioServicioUsuario();
+
+                $datos_respuesta = $servicio_usuario->get_recursos_restringidos();
+                
+                if($datos_respuesta->flag)
+                {
+
+                    http_response_code(200);                
+                    $datos_respuesta = $_respuesta->error_200($datos_respuesta->detalle); 
+                    echo json_encode($datos_respuesta);
+
+                }else{
+
+                    http_response_code(400);                
+                    $datos_respuesta = $_respuesta->error_400($datos_respuesta->detalle); 
+                    echo json_encode($datos_respuesta);
+
+                } 
+                
+                $servicio_usuario = null;
+
+                break;
+            
+            case 'get_recursos_restringidos_user':
+
+                if(!empty($_POST['user_id']))
+                {
+
+                    $servicio_usuario = new RepositorioServicioUsuario();
+
+                    $datos_respuesta = $servicio_usuario->get_recursos_restringidos_user($_POST['user_id']);
+                    
+                    if($datos_respuesta->flag)
+                    {
+    
+                        http_response_code(200);                
+                        $datos_respuesta = $_respuesta->error_200($datos_respuesta->detalle); 
+                        echo json_encode($datos_respuesta);
+    
+                    }else{
+
+                        http_response_code(400);                
+                        $datos_respuesta = $_respuesta->error_400($datos_respuesta->detalle); 
+                        echo json_encode($datos_respuesta);
+    
+                    } 
+                    
+                    $servicio_usuario = null;
+
+                }else{
+
+                    $datos_respuesta = $_respuesta->error_400("Variable user_id no puede ir vacia.");                       
+                    http_response_code($datos_respuesta["result"]["error_id"]);
+                    echo json_encode($datos_respuesta);  
+
+                }    
+
+                break;
+
+            default :
+            
+                http_response_code(400);                
+                $datos_respuesta = $_respuesta->error_400("Solicitud Incorrecta"); 
+                echo json_encode($datos_respuesta);
+               
             break;
         }      
 
     } else {
 
-        http_response_code(400);
-        echo 'Peticion Incorrecta';
+        http_response_code(400);                
+        $datos_respuesta = $_respuesta->error_400("Solicitud Incorrecta"); 
+        echo json_encode($datos_respuesta);
+       
     }
-}else {
-
-    http_response_code(400);
-    echo 'Peticion Incorrecta';
+    
 }
-
-
 
 
 

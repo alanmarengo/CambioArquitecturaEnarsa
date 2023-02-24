@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\INTERFACE-REPOSITORIO-QUERY\INTERFACE-REPOSITORIO-QUERY.php');
 require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DATOS\capa-acceso.php');
-require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DATOS\clases.php');
+require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\CLASES\clases.php');
 require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\ENTIDADES\ENTIDADES.php');
 require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\DTOS\DTOS.php');
 
@@ -599,24 +599,40 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         //realizo la consulta            
         $consulta = $conexion->get_consulta($QUERY);
 
-        $Array_recursos=array(); // array contenedor 
-        foreach($consulta as $recurso)
-        {   
-            $aux_recurso_id = $recurso['recurso_id'];
-            $aux_recurso_desc = $recurso['recurso_desc'];
-            $aux_presa = $recurso['presa'];
-            $aux_recurso_path_url = $recurso['recurso_path_url'];
-            $aux_recurso_fecha = $recurso['recurso_fecha'];
-            $aux_formato_id = $recurso['formato_id'];
-        
-        // se graba cada fila de la consulta en un objeto
-        $record= new Imagen($aux_recurso_id, $aux_recurso_desc, $aux_presa, $aux_recurso_path_url, $aux_recurso_fecha, $aux_formato_id);
-        array_push($Array_recursos,$record); // se agrega el objeto al array 
-        }
+        if(!empty($resultado))
+        {
 
-        // se devuelve el array en formato JSON 
-        echo json_encode($Array_recursos); 
-       return $this->query->carrusel_represas($represa);
+            $Array_recursos=array(); // array contenedor 
+            foreach($consulta as $recurso)
+            {   
+                $aux_recurso_id = $recurso['recurso_id'];
+                $aux_recurso_desc = $recurso['recurso_desc'];
+                $aux_presa = $recurso['presa'];
+                $aux_recurso_path_url = $recurso['recurso_path_url'];
+                $aux_recurso_fecha = $recurso['recurso_fecha'];
+                $aux_formato_id = $recurso['formato_id'];
+            
+                // se graba cada fila de la consulta en un objeto
+                $record= new Imagen($aux_recurso_id, $aux_recurso_desc, $aux_presa, $aux_recurso_path_url, $aux_recurso_fecha, $aux_formato_id);
+                array_push($Array_recursos,$record); // se agrega el objeto al array 
+
+            }
+
+            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server->flag = true;
+            $respuesta_op_server->detalle = $Array_recursos;        
+
+        }else{
+
+            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server->flag = false;
+            $respuesta_op_server->detalle = "No se encontraron resultados";
+
+        }
+        
+        //retorno un fetch_row o fetch_assoc        
+        return  $respuesta_op_server; // resultado, array assoc de los archivos bloqueados 
+
     }
 
     public function noticias_mediateca(){
