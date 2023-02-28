@@ -470,7 +470,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
             default :
             
                 http_response_code(400);                
-                $datos_respuesta_geovisor = $_respuesta->error_400("Solicitud Incorrecta"); 
+                $datos_respuesta_geovisor = $_respuesta_geovisor->error_400("Solicitud Incorrecta"); 
                 echo json_encode($datos_respuesta_geovisor);
                
             break;
@@ -479,7 +479,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
     } else {
 
         http_response_code(400);                
-        $datos_respuesta_geovisor = $_respuesta->error_400("Solicitud Incorrecta"); 
+        $datos_respuesta_geovisor = $_respuesta_geovisor->error_400("Solicitud Incorrecta"); 
         echo json_encode($datos_respuesta_geovisor);
        
     }
