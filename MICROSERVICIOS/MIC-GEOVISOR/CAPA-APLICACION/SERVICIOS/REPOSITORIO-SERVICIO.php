@@ -29,7 +29,7 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
             $lista_recursos_restringidos = $this->servicio_usuario->get_recursos_restringidos();
         }
 
-        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        for($x=0; $x<=count($lista_recursos_restringidos->detalle)-1; $x++)
         {
            if($lista_recursos_restringidos[$x]['objeto_id'] == $layer_id)
            {
@@ -94,7 +94,7 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
             $lista_recursos_restringidos = $this->servicio_usuario->get_recursos_restringidos();
         }
 
-        return $this->query->filter_proyectos_basic($lista_recursos_restringidos, $proyectos, $geovisor);
+        return $this->query->filter_proyectos_basic($lista_recursos_restringidos->detalle, $proyectos, $geovisor);
 
     }
 

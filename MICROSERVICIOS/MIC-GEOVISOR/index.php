@@ -1,7 +1,8 @@
 <?php
 
 //require_once 'CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php';
-require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php');
+include_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php'); //\ Implementamos la interfaz de servicio del microservicio
+include_once(dirname(__FILE__).'\CAPA-DOMINIO\CLASES\Clases.php');
 
 // Archivo de evaluacion de peticiones POST
 // Este archivo sera el encargado las nueva peticiones post que reciba la pagina,
@@ -12,139 +13,476 @@ require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.
 // verifica usuario_id en la variable session y si no exitiste, user_id = -1, que corresponde al usuario publico.
 
 
-if (isset($_POST) && !empty($_POST['action'])) // verifica que existan las variables $_POST y action
-{
-    /* se evaluara esta funcion cuando se determine como se recibira el id_user desde el front
-    // se evalua el tipo de usuario
-	if ( (!empty($_SESSION)) && (!empty($_SESSION["user_info"]["user_id"]))) 
-    {
-        $user_id = $_SESSION["user_info"]["user_id"];
+$_respuesta_geovisor = new Respuesta_geovisor();
 
-    }else $user_id = -1 ; // usuario publico, no hay perfil 
-    */
+// interfaz donde se implementara la API para consumir los servicios del Microservicio Usuario
 
-    // -- a partir de esta parte, se definiran todos los metodos para implementacion
+if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
+{           
+    if(isset($_POST['action']) && !empty($_POST['action'])) // evaluo que contenga la variable action(contiene la funcion a requerir)
+    {   
+        $datos_respuesta_geovisor; // variable que almacenara la respuesta final. 
+        $servicio_geovisor = New RepositorioServicioGeovisor;
+        // evaluo la variable action. 
+        switch ($_POST['action']) 
+        {               
+            case 'Get_Layer_Security':
+
+                if(!empty($_POST['usuario_id']))
+                {  
+
+                    if(!empty($_POST['layer_id']))
+                    {  
+                        $datos_respuesta_geovisor = $servicio_geovisor->Get_Layer_Security($_POST['usuario_id'],$_POST['layer_id']);
+
+                        if($datos_respuesta_geovisor->flag)
+                        {
+
+                            http_response_code(200);                
+                            $datos_respuesta_geovisor = $_respuesta->error_200($datos_respuesta_geovisor->detalle); 
+                            echo json_encode($datos_respuesta_geovisor);
+
+                        }else{
+
+                            http_response_code(400);                
+                            $datos_respuesta_geovisor = $_respuesta->error_400($datos_respuesta_geovisor->detalle); 
+                            echo json_encode($datos_respuesta_geovisor);
+
+                        } 
+
+                    }else{      
+
+                        http_response_code(400);                
+                        $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para layer_id'); 
+                        echo json_encode($datos_respuesta_geovisor);
+                    }
+
+                }else{      
+
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para usuario_id'); 
+                    echo json_encode($datos_respuesta_geovisor);
+                }                   
+                
+                $servicio_geovisor = null;
+
+                break;
+
+            case 'ListaProyectos':
+
+                $datos_respuesta_geovisor = $servicio_geovisor->ListaProyectos();
+
+                if($datos_respuesta_geovisor->flag)
+                {
+
+                    http_response_code(200);                
+                    $datos_respuesta_geovisor = $_respuesta->error_200($datos_respuesta_geovisor->detalle); 
+                    echo json_encode($datos_respuesta_geovisor);
+
+                }else{
+
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta->error_400($datos_respuesta_geovisor->detalle); 
+                    echo json_encode($datos_respuesta_geovisor);
+
+                }
+                
+                $servicio_geovisor = null;
+
+                break;
+
+            case 'DrawAbr':
+
+                $datos_respuesta_geovisor = $servicio_geovisor->DrawAbr();
+
+                if($datos_respuesta_geovisor->flag)
+                {
+
+                    http_response_code(200);                
+                    $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                    echo json_encode($datos_respuesta_geovisor);
+
+                }else{
+
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta_geovisor->error_400($datos_respuesta_geovisor->detalle); 
+                    echo json_encode($datos_respuesta_geovisor);
+
+                }
+                
+                $servicio_geovisor = null;
 
 
-    //echo $test->filter_proyectos_basic("", [5,3,9,1,8,2,4], -1);
+                break;
 
-    if($_POST['action'] == 'filter-proyectos-basic')    
-    {
-       if(!empty($_POST['proyectos']) && !empty($_POST['geovisor']))
-       {
-        //echo $_POST['proyectos']."  ".$_POST['geovisor'];
+            case 'DrawContainers':
 
-        $array_proyectos = array();
-        $array_proyectos = json_decode($_POST['proyectos']);
+                $datos_respuesta_geovisor = $servicio_geovisor->DrawContainers();
+                
+                $_respuesta_geovisor->error_400($datos_respuesta_geovisor); 
 
-        $servicio_geovisor = new RepositorioServicioGeovisor;
+                //echo json_encode($datos_respuesta_geovisor);
+                /*
+                if($datos_respuesta_geovisor->flag)
+                {
 
-        echo $servicio_geovisor->filter_proyectos_basic($user_id,  $array_proyectos, $_POST['geovisor']);
+                    http_response_code(200);                
+                    $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                    echo json_encode($datos_respuesta_geovisor);
 
-        // vaciamos el objeto servicio_geovisor
-        $servicio_geovisor = null; 
+                }else{
 
-       }         
-    }
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta_geovisor->error_400($datos_respuesta_geovisor->detalle); 
+                    echo json_encode($datos_respuesta_geovisor);
 
-    if($_POST['action'] == 'filter-proyectos-advanced')    
-    {
-       if(!empty($_POST['geovisor']))
-       {
-        //echo".$_POST['geovisor'];
-        
-        $servicio_geovisor = new RepositorioServicioGeovisor;
+                } */
+                
+                $servicio_geovisor = null;
+
+                break;
+            
+            case 'DrawLayersSearch':
+
+                if(!empty($_POST['pattern']))
+                {  
+                    $datos_respuesta_geovisor = $servicio_geovisor->DrawLayersSearch($_POST['pattern']);
+                    
+                    if($datos_respuesta_geovisor->flag)
+                    {                    
+                        http_response_code(200);                
+                        $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    }else{
+
+                        http_response_code(400);                
+                        $datos_respuesta_geovisor = $_respuesta_geovisor->error_400($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    } 
+
+                }else{      
+
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para pattern'); 
+                    echo json_encode($datos_respuesta_geovisor);
+                }                
+               
+                break;
+
+            case 'DrawDatasetSearch':
+
+                if(!empty($_POST['pattern']))
+                {  
+                    $datos_respuesta_geovisor = $servicio_geovisor->DrawDatasetSearch($_POST['pattern']);
+                    
+                    echo $datos_respuesta_geovisor;               
+                     
+
+                }else{      
+
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para pattern'); 
+                    echo json_encode($datos_respuesta_geovisor);
+                }                
+
+                break;
+            case 'DrawProyectos':
+
+                $datos_respuesta_geovisor = $servicio_geovisor->DrawProyectos();
+                    
+                if($datos_respuesta_geovisor->flag)
+                {                    
+                    http_response_code(200);                
+                    $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                    echo json_encode($datos_respuesta_geovisor);
+
+                }else{
+
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta_geovisor->error_400($datos_respuesta_geovisor->detalle); 
+                    echo json_encode($datos_respuesta_geovisor);
+
+                } 
+
+                break;
+
+            case 'GetLayerLabel':
+                
+                if(!empty($_POST['layer_name']))
+                {  
+                    $datos_respuesta_geovisor = $servicio_geovisor->GetLayerLabel($_POST['layer_name']);
+                    
+                    if($datos_respuesta_geovisor->flag)
+                    {                    
+                        http_response_code(200);                
+                        $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    }else{
+
+                        http_response_code(400);                
+                        $datos_respuesta_geovisor = $_respuesta_geovisor->error_400($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    } 
+
+                }else{      
+
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para layer_name'); 
+                    echo json_encode($datos_respuesta_geovisor);
+                }     
+
+                break;
+            case 'filter_proyectos_basic':
+
+                if(!empty($_POST['geovisor']))
+                {  
+
+                    $datos_respuesta_geovisor = $servicio_geovisor->filter_proyectos_basic($_POST['user_id'], $_POST['proyectos'],$_POST['geovisor']);
+                    
+                    if($datos_respuesta_geovisor->flag)
+                    {
+                        http_response_code(200);                
+                        $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    }else{
+
+                        http_response_code(400);                
+                        $datos_respuesta_geovisor = $_respuesta->error_400($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    }
+                    
+               
     
-        echo $servicio_geovisor->filter_proyectos_advanced($user_id, $_POST["adv-search-busqueda"], $_POST["adv-search-fdesde"], 
-                                                           $_POST["adv-search-fhasta"],$_POST["adv-search-proyecto-combo"], $_POST["adv-search-subclase-combo"],
-                                                           $_POST["adv-search-responsable-combo"], $_POST["adv-search-esia-combo"],
-                                                           $_POST["adv-search-objeto-combo"], $_POST["geovisor"]);
+                }else{      
 
-        // vaciamos el objeto servicio_geovisor
-        $servicio_geovisor = null; 
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para geovisor'); 
+                    echo json_encode($datos_respuesta_geovisor);
+                }                
+                $servicio_geovisor = null; 
 
-       }         
+                break;
+
+            case 'filter_proyectos_advanced':
+
+                if(!empty($_POST['geovisor']))
+                {  
+                    if(!empty($_POST['user_id']))
+                    {  
+                        $datos_respuesta_geovisor = $servicio_geovisor->filter_proyectos_advanced($_POST['user_id'], $_POST["adv-search-busqueda"], $_POST["adv-search-fdesde"], 
+                                                                                                  $_POST["adv-search-fhasta"],$_POST["adv-search-proyecto-combo"],$_POST["adv-search-clase-combo"],
+                                                                                                  $_POST["adv-search-subclase-combo"],$_POST["adv-search-responsable-combo"], $_POST["adv-search-esia-combo"],
+                                                                                                  $_POST["adv-search-objeto-combo"], $_POST["geovisor"]);                            
+                    
+                        if($datos_respuesta_geovisor->flag)
+                        {
+                            http_response_code(200);                
+                            $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                            echo json_encode($datos_respuesta_geovisor);
+                        }else{
+                            http_response_code(400);                
+                            $datos_respuesta_geovisor = $_respuesta->error_400($datos_respuesta_geovisor->detalle); 
+                            echo json_encode($datos_respuesta_geovisor);
+                        }
+                        
+                    }else{      
+                        http_response_code(400);                
+                        $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para user_id'); 
+                        echo json_encode($datos_respuesta_geovisor);
+                    }
+                    
+                }else{      
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para geovisor'); 
+                    echo json_encode($datos_respuesta_geovisor);
+                }      
+
+                $servicio_geovisor = null; 
+
+                break;
+
+            case 'get_layer_extent':
+
+                if(!empty($_POST['layer_id']))
+                {  
+
+                    $datos_respuesta_geovisor = $servicio_geovisor->get_layer_extent($_POST['layer_id']);
+                    
+                    if($datos_respuesta_geovisor->flag)
+                    {
+                        http_response_code(200);                
+                        $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    }else{
+
+                        http_response_code(400);                
+                        $datos_respuesta_geovisor = $_respuesta->error_400($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    }                    
+                  
+                }else{      
+
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para layer_id'); 
+                    echo json_encode($datos_respuesta_geovisor);
+                }                
+
+                $servicio_geovisor = null;    
+
+                break;
+
+            case 'get_coor_transformed':
+
+                if(!empty($_POST['lat']))
+                {  
+
+                    if(!empty($_POST['lon']))
+                    {  
+                        $datos_respuesta_geovisor = $servicio_geovisor->get_coor_transformed($_POST['lon'], $_POST['lat']);
+                    
+                        if($datos_respuesta_geovisor->flag)
+                        {
+                            http_response_code(200);                
+                            $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                            echo json_encode($datos_respuesta_geovisor);
+
+                        }else{
+
+                            http_response_code(400);                
+                            $datos_respuesta_geovisor = $_respuesta->error_400($datos_respuesta_geovisor->detalle); 
+                            echo json_encode($datos_respuesta_geovisor);
+
+                        }
+                        
+                    }else{      
+
+                        http_response_code(400);                
+                        $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para geovisor'); 
+                        echo json_encode($datos_respuesta_geovisor);
+                    }                           
+                       
+                }else{      
+
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para geovisor'); 
+                    echo json_encode($datos_respuesta_geovisor);
+                }                
+                $servicio_geovisor = null; 
+
+                break;
+
+            case 'get_medicion':
+
+                if(!empty($_POST["wkt"]) && !empty($_POST["type"]))
+                {  
+                    $datos_respuesta_geovisor = $servicio_geovisor->get_medicion($_POST['wkt'], $_POST['type']);
+                
+                    if($datos_respuesta_geovisor->flag)
+                    {
+                        http_response_code(200);                
+                        $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    }else{
+
+                        http_response_code(400);                
+                        $datos_respuesta_geovisor = $_respuesta->error_400($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    }
+                    
+                }else{      
+
+                    http_response_code(400);                
+                    $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para wkt - type'); 
+                    echo json_encode($datos_respuesta_geovisor);
+                }                                      
+
+                $servicio_geovisor = null; 
+
+                break;
+
+            case 'get_buffer':
+
+                break;
+
+            case 'get_layer_preview':
+
+                    if(!empty($_POST['layer_id']))
+                    {  
+                        $datos_respuesta_geovisor = $servicio_geovisor->get_layer_preview($_POST['layer_id']);
+                    
+                        if($datos_respuesta_geovisor->flag)
+                        {
+                            http_response_code(200);                
+                            $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                            echo json_encode($datos_respuesta_geovisor);
+
+                        }else{
+
+                            http_response_code(400);                
+                            $datos_respuesta_geovisor = $_respuesta->error_400($datos_respuesta_geovisor->detalle); 
+                            echo json_encode($datos_respuesta_geovisor);
+
+                        }
+                        
+                    }else{      
+
+                        http_response_code(400);                
+                        $datos_respuesta_geovisor = $_respuesta->error_400('Dato Incorrecto para layer_id'); 
+                        echo json_encode($datos_respuesta_geovisor);
+                    }       
+
+                    $servicio_geovisor = null; 
+
+                break;
+
+            case 'get_layer_info_pgda':
+       
+                    $datos_respuesta_geovisor = $servicio_geovisor->get_layer_info_pgda();
+                
+                    if($datos_respuesta_geovisor->flag)
+                    {
+                        http_response_code(200);                
+                        $datos_respuesta_geovisor = $_respuesta_geovisor->error_200($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    }else{
+
+                        http_response_code(400);                
+                        $datos_respuesta_geovisor = $_respuesta->error_400($datos_respuesta_geovisor->detalle); 
+                        echo json_encode($datos_respuesta_geovisor);
+
+                    }
+
+
+                break;
+   
+            
+            default :
+            
+                http_response_code(400);                
+                $datos_respuesta_geovisor = $_respuesta->error_400("Solicitud Incorrecta"); 
+                echo json_encode($datos_respuesta_geovisor);
+               
+            break;
+        }      
+
+    } else {
+
+        http_response_code(400);                
+        $datos_respuesta_geovisor = $_respuesta->error_400("Solicitud Incorrecta"); 
+        echo json_encode($datos_respuesta_geovisor);
+       
     }
-
-    if($_POST['action'] == 'get_layer_extent')
-    {
-        if(!empty($_POST["layer_id"]))
-        {
-
-            $servicio_geovisor = new RepositorioServicioGeovisor;
-
-            echo $servicio_geovisor->get_layer_extent($_POST['layer_id']);
     
-            // vaciamos el objeto servicio_geovisor
-            $servicio_geovisor = null; 
-
-        }
-    }   
-
-    if($_POST['action'] == 'get_coord_transformed')
-    {
-       if(!empty($_POST["lon"]) &&  !empty($_POST["lat"]))
-       {
-           $servicio_geovisor = new RepositorioServicioGeovisor;           
-
-           echo $servicio_geovisor->get_coord_transformed($_POST["lon"],$_POST["lat"]);
-
-           // vaciamos el objeto servicio_geovisor
-           $servicio_geovisor = null; 
-
-       }
-    }
-
-    if($_POST['action'] == 'get_medicion')
-    {
-        if(!empty($_POST["wkt"]) && !empty($_POST["type"]))
-        {
-            $servicio_geovisor = new RepositorioServicioGeovisor;           
-
-            echo $servicio_geovisor->get_medicion($_POST["wkt"],$_POST["type"]);
- 
-            // vaciamos el objeto servicio_geovisor
-            $servicio_geovisor = null; 
- 
-        }
-    }
-
-    if($_POST['action'] == 'get_buffer')
-    {
-        if(!empty($_POST["wkt"]) && !empty($_POST["layers"]))
-        {
-            $servicio_geovisor = new RepositorioServicioGeovisor;           
-
-            echo $servicio_geovisor->get_buffer($_POST["wkt"],$_POST["layers"]);
- 
-            // vaciamos el objeto servicio_geovisor
-            $servicio_geovisor = null; 
- 
-        }
-    }
-
-    if($_POST['action'] == 'get_layer_preview')
-    {
-        if(!empty($_POST["layer_id"]))
-        {
-            $servicio_geovisor = new RepositorioServicioGeovisor;           
-
-            echo $servicio_geovisor->get_layer_preview($_POST["layer_id"]);
- 
-            // vaciamos el objeto servicio_geovisor
-            $servicio_geovisor = null; 
- 
-        }
-    }
-
-} else {
-        
-    echo "Solicitud Incorrecta!";
 }
- 
 
-
-
-
-
-?>

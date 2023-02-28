@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DOMINIO\INTERFACE-REPOSITORIO-QUERY\INTERFACE-REPOSITORIO-QUERY.php');
 require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DATOS\capa-acceso.php');
-require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DATOS\clases.php');
+require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DOMINIO\CLASES\Clases.php');
 
 //reemplazar los paths aboslutos por la nueva y linda forma que encontramos
 
@@ -36,7 +36,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	*/
 
-	public function get_layer_info_pgda()
+	public function get_layer_info_pgda() // faltan registros para su funcionamiento 
 	{
 		
 		$layer_id_arr = array(873,937,938,939,875);
@@ -59,10 +59,10 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 			$conexion = new ConexionGeovisores();       
 			$data =  $conexion->get_consulta($query_string);  
 			
-			$layer_id = $data["layer_id"];
-			$layer_desc = $data["layer_desc"];
+			$layer_id = $data[0]["layer_id"];
+			$layer_desc = $data[0]["layer_desc"];
 			
-			$query_string2 = 'SELECT * FROM "MIC-CATALOGO".vw_visor_pg_programas WHERE layer_id = ' . $layer_id . " ORDER BY programa ASC";
+			$query_string2 = 'SELECT * FROM mic_catalogo_fdw.vw_visor_pg_programas WHERE layer_id = ' . $layer_id . " ORDER BY programa ASC";
 			
 			$query2 = $conexion->get_consulta($query_string2);  ;
 			
@@ -120,7 +120,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
     public function ListaProyectos()
 	{
-		
+		// no existe la relacion proyectos
         $query_string = 'SELECT proyecto_id,proyecto_titulo FROM "MIC-GEOVISORES".proyectos ORDER BY proyecto_titulo ASC'; 
 
 		$conexion = new ConexionGeovisores();        
@@ -148,22 +148,25 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 	{
 		$conexion = new ConexionGeovisores(); 
 
-		$query_string = <<<EOD
-                            SELECT * FROM dblink('$conexion->string_con_mic_catalogo',
-                            'SELECT clase_id,clase_desc,color_hex,color_head,cod_clase_alf FROM "MIC-CATALOGO".clase ORDER BY clase_id ASC') 
-                            as dt(clase_id integer, clase_desc text, color_hex text, color_head text, cod_clase_alf text)
-                        EOD;
+		$query_string ='SELECT clase_id,clase_desc,color_hex,color_head,cod_clase_alf FROM mic_catalogo_fdw.clase ORDER BY clase_id ASC;';
 		//realizo la consulta 
+		//echo $query_string;
 		$r = $conexion->get_consulta($query_string);
 
-
+		$html_response = '';
 		for($x=0; $x<=count($r)-1; $x++)
 		{  
-			echo '<div class="abr panel-abr" data-color="#31cbfd" data-bgcolor="#FFFFFF" data-active="0" data-cid="'.$r[$x]["clase_id"].'" title="'.$r[$x]["clase_desc"].'">
+			$html_response .= '<div class="abr panel-abr" data-color="#31cbfd" data-bgcolor="#FFFFFF" data-active="0" data-cid="'.$r[$x]["clase_id"].'" title="'.$r[$x]["clase_desc"].'">
                  	<span>'.$r[$x]["cod_clase_alf"].'</span>
            		 </div>' ;
 		}	    
 
+		
+		$respuesta_op_server = new respuesta_error_geovisor();
+		$respuesta_op_server->flag = true;
+		$respuesta_op_server->detalle = $html_response;        
+
+		return $respuesta_op_server;
 	}
 
 	public function DrawLayers($clase_id) 
@@ -174,66 +177,61 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 		// se le concatena la consulta equivalente a la vista vw_layers
 		$consulta_definitiva .= <<<EOD
-								 (SELECT l.layer_id, l.layer_desc, 
-										CASE
-											WHEN l.layer_alter_activo THEN l.layer_wms_server_alter
-											ELSE l.layer_wms_server
-										END AS layer_wms_server, 
-										CASE
-											WHEN l.layer_alter_activo THEN l.layer_wms_layer_alter
-											ELSE l.layer_wms_layer
-										END AS layer_wms_layer, 
-									l.layer_metadata_url, l.layer_wms_sld, l.layer_sld_id, l.layer_schema, 
-									l.layer_table, l.tipo_layer_id, l.tipo_origen_id, l.preview_desc, 
-									l.preview_link, l.preview_titulo, 
-										CASE
-											WHEN sc.subclase_id IS NULL THEN (-1)::bigint
-											ELSE sc.subclase_id
-										END AS subclase_id, 
-										CASE
-											WHEN sc.subclase_desc IS NULL THEN 'General'::text
-											ELSE sc.subclase_desc
-										END AS subclase_desc, 
-										CASE
-											WHEN sc.clase_id IS NULL THEN (-1)::bigint
-											ELSE sc.clase_id
-										END AS clase_id, 
-										CASE
-											WHEN sc.clase_desc IS NULL THEN 'General'::text
-											ELSE sc.clase_desc
-										END AS clase_desc, 
-									e.estudios_id, e.nombre AS estudio_nombre, tl.tipo_layer_desc, 
-									tipo_o.tipo_origen_desc, 
-										CASE
-											WHEN sc.cod_clase_alf IS NULL THEN 'G-N'::text
-											ELSE sc.cod_clase_alf
-										END AS cod_clase_alf, 
-									e.cod_oficial
-									FROM "MIC-GEOVISORES".layer l
-									LEFT JOIN "MIC-GEOVISORES".catalogo c ON l.layer_id = c.origen_id_especifico
-									LEFT JOIN dblink('$conexion->string_con_mic_calalogo',
-														'SELECT sc.subclase_id, sc.subclase_desc, sc.clase_id,  c.clase_desc,  c.cod_clase_alf
-														FROM "MIC-CATALOGO".subclase sc
-														JOIN "MIC-CATALOGO".clase c ON sc.clase_id = c.clase_id') 
-											as sc(subclase_id bigint, subclase_desc text, clase_id bigint, clase_desc text, cod_clase_alf text) ON sc.subclase_id = c.subclase_id
-									LEFT JOIN dblink('$conexion->string_con_mic_calalogo',
-														'SELECT estudios_id, nombre, cod_oficial FROM "MIC-CATALOGO".estudios') 
-											as e(estudios_id bigint, nombre text, cod_oficial text) ON e.estudios_id = c.estudios_id
-									LEFT JOIN "MIC-GEOVISORES".tipo_layer tl ON tl.tipo_layer_id = l.tipo_layer_id
-									LEFT JOIN "MIC-GEOVISORES".tipo_origen tipo_o ON tipo_o.tipo_origen_id = l.tipo_origen_id) A 
-								EOD;
+								(SELECT l.layer_id, l.layer_desc, 
+								CASE
+									WHEN l.layer_alter_activo THEN l.layer_wms_server_alter
+									ELSE l.layer_wms_server
+								END AS layer_wms_server, 
+								CASE
+									WHEN l.layer_alter_activo THEN l.layer_wms_layer_alter
+									ELSE l.layer_wms_layer
+								END AS layer_wms_layer, 
+							l.layer_metadata_url, l.layer_wms_sld, l.layer_sld_id, l.layer_schema, 
+							l.layer_table, l.tipo_layer_id, l.tipo_origen_id, l.preview_desc, 
+							l.preview_link, l.preview_titulo, 
+								CASE
+									WHEN sc.subclase_id IS NULL THEN (-1)::bigint
+									ELSE sc.subclase_id
+								END AS subclase_id, 
+								CASE
+									WHEN sc.subclase_desc IS NULL THEN 'General'::text
+									ELSE sc.subclase_desc
+								END AS subclase_desc, 
+								CASE
+									WHEN sc.clase_id IS NULL THEN (-1)::bigint
+									ELSE sc.clase_id
+								END AS clase_id, 
+								CASE
+									WHEN sc.clase_desc IS NULL THEN 'General'::text
+									ELSE sc.clase_desc
+								END AS clase_desc, 
+							e.estudios_id, e.nombre AS estudio_nombre, tl.tipo_layer_desc, 
+							tipo_o.tipo_origen_desc, 
+								CASE
+									WHEN sc.cod_clase_alf IS NULL THEN 'G-N'::text
+									ELSE sc.cod_clase_alf
+								END AS cod_clase_alf, 
+							e.cod_oficial
+							FROM "MIC-GEOVISORES".layer l
+							LEFT JOIN "MIC-GEOVISORES".catalogo c ON l.layer_id = c.origen_id_especifico
+							LEFT JOIN ( SELECT sc.subclase_id, sc.subclase_desc, sc.clase_id,  c.clase_desc,  c.cod_clase_alf
+												FROM mic_catalogo_fdw.subclase sc
+												JOIN mic_catalogo_fdw.clase c ON sc.clase_id = c.clase_id) sc ON sc.subclase_id = c.subclase_id
+							LEFT JOIN mic_catalogo_fdw.estudios e ON e.estudios_id = c.estudios_id
+							LEFT JOIN "MIC-GEOVISORES".tipo_layer tl ON tl.tipo_layer_id = l.tipo_layer_id
+							LEFT JOIN "MIC-GEOVISORES".tipo_origen tipo_o ON tipo_o.tipo_origen_id = l.tipo_origen_id) A
+						EOD;
 		// por ultimo, concatenamos el where
 		$consulta_definitiva .= " WHERE clase_id =  $clase_id  ORDER BY layer_desc ASC";		
 
+		//echo $consulta_definitiva;
 		//realizo la consulta 
 		$r = $conexion->get_consulta($consulta_definitiva);
-
-
 		
 		for($x=0; $x<=count($r)-1; $x++)
 			{				
 			?>				
-				<div class="layer-group" data-state="0" data-layer-name="<?php echo $r[$x][$x]["layer_wms_layer"]; ?>" data-layer="<?php echo $r[$x]["layer_id"]; ?>" data-cid="<?php echo $r[$x]["clase_id"]; ?>" data-layer-type="<?php echo $r[$x]["tipo_layer_id"]; ?>">
+				<div class="layer-group" data-state="0" data-layer-name="<?php echo $r[$x]["layer_wms_layer"]; ?>" data-layer="<?php echo $r[$x]["layer_id"]; ?>" data-cid="<?php echo $r[$x]["clase_id"]; ?>" data-layer-type="<?php echo $r[$x]["tipo_layer_id"]; ?>">
 				
 					<div class="layer-header">
 						<!--<a href="javascript:void(0);">
@@ -409,17 +407,11 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	public function DrawContainers()
 	{
-		$query_string = <<<EOD
-                            SELECT * FROM dblink('$conexion->string_con_mic_calalogo',
-                            'SELECT clase_id,cod_nom,color_hex,color_head,cod_clase_alf FROM "MIC-CATALOGO".clase ORDER BY clase_id ASC') 
-                            as dt(clase_id integer, cod_nom text,color_hex text,color_head text,cod_clase_alf text)
-                        EOD;
+		$query_string ='SELECT clase_id,cod_nom,color_hex,color_head,cod_clase_alf FROM mic_catalogo_fdw.clase ORDER BY clase_id ASC;';
 
 		$conexion = new ConexionGeovisores(); 
 		//realizo la consulta 
 		$r = $conexion->get_consulta($query_string);
-		
-
 
 		for($x=0; $x<=count($r)-1; $x++)
 			{				
@@ -449,7 +441,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 	{
 		// variable contenedora de consulta a realizar
 		$query_string = <<<EOD
-						SELECT DISTINCT * FROM "MIC-GEOVISORES".vw_layers WHERE layer_desc ILIKE '%$pattern%' ORDER BY layer_desc ASC		
+						SELECT DISTINCT * FROM "MIC-GEOVISORES".vw_layers WHERE layer_desc ILIKE '%$pattern%' ORDER BY layer_desc ASC;		
 						EOD;
 		
 		$conexion = new ConexionGeovisores(); 
@@ -462,7 +454,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		
 		if(!empty($resultado))
 		{
-			for($x=0; $x<=count($r)-1; $x++)
+			for($x=0; $x<=count($resultado)-1; $x++)
 			{						
 				$low_desc = strtolower($resultado[$x]["layer_desc"]);
 				$low_pattern = strtolower($pattern);
@@ -480,7 +472,11 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		
 		$output .= "</ul>";
 
-		return $output;
+		$respuesta_op_server = new respuesta_error_geovisor();
+        $respuesta_op_server->flag = true;
+        $respuesta_op_server->detalle = $output;
+
+		return $respuesta_op_server;
 		
 	}
 
@@ -490,14 +486,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		$conexion = new ConexionGeovisores();
 
 		// variable contenedora de consulta a realizar
-		$query_string = <<<EOD
-						SELECT * FROM dblink('$conexion->string_con_mic_estadisticas',
-											'SELECT DISTINCT * FROM "MIC-ESTADISTICAS".vw_dt') 
-											as dt( dt_id bigint, clase_id bigint, dt_titulo text, dt_desc text, dt_table_source text, dt_geom_base_table text,
-													dt_geom_column_display text, clase_desc text, clase_cod text, cod_nom text, descripcion text,
-													cod_temp text, fec_bbdd text, color_hex text, cod_clase_alf text, color_head text)
-											WHERE dt_titulo ILIKE '%$pattern%' ORDER BY dt_titulo ASC
-		EOD; // cierre string consulta 
+		$query_string = "SELECT DISTINCT * FROM mic_estadisticas_fdw.vw_dt WHERE dt_titulo ILIKE '%$pattern%' ORDER BY dt_titulo ASC;";
 			
 		$output = "<ul>";
 
@@ -543,42 +532,55 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 		// variable contenedora de consulta a realizar
 		$query_string = <<<EOD
-
-						SELECT * FROM dblink('$conexion->string_con_mic_catalogo',
-						'SELECT * FROM "MIC-CATALOGO".sub_proyecto') 
-						as e( sub_proyecto_id bigint, proyecto_id bigint, sub_proyecto_desc text)
-						WHERE sub_proyecto_id IN ( SELECT DISTINCT e.sub_proyecto_id  
-						FROM "MIC-GEOVISORES".catalogo c
-						LEFT JOIN dblink('$conexion->string_con_mic_catalogo',
-								'SELECT estudios_id, sub_proyecto_id FROM "MIC-CATALOGO".vw_estudio') 
-						as e(estudios_id bigint, sub_proyecto_id bigint) ON c.estudios_id = e.estudios_id )
-						ORDER BY sub_proyecto_desc ASC		
-		
+						SELECT * FROM mic_catalogo_fdw.sub_proyecto as e
+						WHERE sub_proyecto_id IN (SELECT DISTINCT e.sub_proyecto_id  
+												FROM "MIC-GEOVISORES".catalogo c
+												LEFT JOIN "MIC-GEOVISORES".vw_estudio_catalogo e ON c.estudios_id = e.estudios_id) 
+						ORDER BY sub_proyecto_desc ASC;
 					EOD;
 
-
+		//echo $query_string;
 		//realizo la consulta 
 		$resultado = $conexion->get_consulta($query_string);
 		//print_r($resultado);
-			
+		
+		$respuesta = '';
+		$respuesta_op_server = new respuesta_error();
 		if(!empty($resultado))
-		{
+		{	
+			$respuesta = '';
+
 			for($x=0; $x<=count($resultado)-1; $x++)
-				{	?>
+			{	
 					
-					<div class="popup-panel-tree-item">
-						<div class="pretty p-icon p-curve">
-							<input type="checkbox" class="basic-filter-checkbox default-empty-checkbox" data-spid="<?php echo $resultado[$x]["sub_proyecto_id"]; ?>"/>
-							<div class="state">
-								<i class="icon mdi mdi-check" onclick="$(this).parent().prev('input[type=checkbox]').trigger('click');"></i>
-								<label><?php echo $resultado[$x]["sub_proyecto_desc"]; ?></label>
+				$respuesta .= <<<EOD
+						<div class="popup-panel-tree-item">
+							<div class="pretty p-icon p-curve">
+								<input type="checkbox" class="basic-filter-checkbox default-empty-checkbox" data-spid="{$resultado[$x]["sub_proyecto_id"]}"/>
+								<div class="state">
+									<i class="icon mdi mdi-check" onclick="$(this).parent().prev('input[type=checkbox]').trigger('click');"></i>
+									<label>{$resultado[$x]["sub_proyecto_desc"]}</label>
+								</div>
 							</div>
 						</div>
-					</div>
+
+				EOD;
+
+			}
 			
-				<?php			
-				}		
+			
+            $respuesta_op_server->flag = true;
+            $respuesta_op_server->detalle = $respuesta;
+			
+		}else{
+
+            $respuesta_op_server->flag = false;
+            $respuesta_op_server->detalle = "No se encontraron resultados";
+
 		}
+
+		return  $respuesta_op_server; 
+
 	}
 
 	public function DrawComboSimple($id,$desc,$schema,$table,$opini,$opini_label,$opini_val,$hname,$hid)
@@ -738,17 +740,33 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 	public function GetLayerLabel($layer_name) 
 	{				
 		
-		$query_string = 'SELECT * FROM "MIC-GEOVISORES".vw_layers WHERE layer_wms_layer ='."'". $layer_name ."'";
+		$query_string = <<<EOD
+							SELECT * FROM "MIC-GEOVISORES".vw_layers WHERE layer_wms_layer = '$layer_name';
+						EOD;
+
+		//echo $query_string;
 					
 		$conexion = new ConexionGeovisores(); 
 
 		//realizo la consulta 
 		$respuesta = $conexion->get_consulta($query_string);
-		//print_r($r);	
-				
-		$layer_desc = $respuesta[0]["layer_desc"];
+		//print_r($r);		
+
+		$respuesta_op_server = new respuesta_error();
+		if(!empty($respuesta))
+		{	
 		
-		return $layer_desc;
+            $respuesta_op_server->flag = true;
+            $respuesta_op_server->detalle = $layer_desc = $respuesta[0]["layer_desc"];
+			
+		}else{
+
+            $respuesta_op_server->flag = false;
+            $respuesta_op_server->detalle = "No se encontraron resultados";
+
+		}
+
+		return  $respuesta_op_server;
 		
 	}
 
@@ -823,7 +841,9 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 		// ejecuto la consulta y evaluo el resultado 
 
-		$conexion = new ConexionGeovisores(); 
+		$conexion = new ConexionGeovisores();
+		
+		//echo $get_layers_query_string;
 
 		//realizo la consulta 
 		$respuesta = $conexion->get_consulta($get_layers_query_string);
@@ -831,6 +851,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		// variable que se debe evaluar en el if !empty $respuesta[0]['layer_ids']
 		//$test = '444,222,21,45,78,54,33,441';
 		$layers_ids = $respuesta[0]['layer_ids'];
+		$respuesta_html = "";
 		if(!empty($layers_ids))
 		{	
 			$query_string = "SELECT clase_id,subclase_id,clase_desc,subclase_desc 
@@ -843,131 +864,125 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		
 			$respuesta_2 = $conexion->get_consulta($query_string);
 					
-			$clase = "";
-
+			$clase = "";			
+			
 			for($x=0; $x<=count($respuesta_2)-1; $x++)
 			{
 				if ($clase != $respuesta_2[$x]["clase_desc"])
 				{			
 					$clase = $respuesta_2[$x]["clase_desc"];
 
+					$aux_primera_seccion = "";
 					if($x==0) // si es el primer registro
 					{ 
-						?>				
-		
-						<div class="popup-panel-tree-item" data-state="0">
-							<div class="popup-panel-tree-item-header">
-								<i class="fas fa-folder popup-panel-tree-item-icon popup-icon"></i>
-								<a href="#" class="popup-panel-tree-item-label popup-text">
-									<span><?php echo $clase; ?></span>
-								</a>
-								<a href="#" class="simple-tree-pm-button">
-									<i class="fa fa-angle-down popup-panel-tree-item-icon-toggler popup-icon"></i>
-								</a>
-							</div>
-							
-							<div class="popup-panel-tree-item-subpanel">
-							
-						<?php
+						$aux_primera_seccion .= <<<EOD
+												div class="popup-panel-tree-item" data-state="0">
+												<div class="popup-panel-tree-item-header">
+													<i class="fas fa-folder popup-panel-tree-item-icon popup-icon"></i>
+													<a href="#" class="popup-panel-tree-item-label popup-text">
+														<span> $clase </span>
+													</a>
+													<a href="#" class="simple-tree-pm-button">
+														<i class="fa fa-angle-down popup-panel-tree-item-icon-toggler popup-icon"></i>
+													</a>
+												</div>
+												
+												<div class="popup-panel-tree-item-subpanel">
+						EOD;
 						
 					}else{ // si no es el primer registro
 
-						?>				
-				
-						</div>
-						</div>
-						
-						<div class="popup-panel-tree-item" data-state="0">
-							<div class="popup-panel-tree-item-header">
-								<i class="fas fa-folder popup-panel-tree-item-icon popup-icon"></i>
-								<a href="#" class="popup-panel-tree-item-label popup-text">
-									<span><?php echo $clase; ?></span>
-								</a>
-								<a href="#" class="simple-tree-pm-button">
-									<i class="fa fa-angle-down popup-panel-tree-item-icon-toggler popup-icon"></i>
-								</a>
-							</div>
-							
-							<div class="popup-panel-tree-item-subpanel">
-							
-						<?php
-						
+						$aux_primera_seccion = <<<EOD
+												</div>
+												</div>
+												
+												<div class="popup-panel-tree-item" data-state="0">
+													<div class="popup-panel-tree-item-header">
+														<i class="fas fa-folder popup-panel-tree-item-icon popup-icon"></i>
+														<a href="#" class="popup-panel-tree-item-label popup-text">
+															<span> $clase </span>
+														</a>
+														<a href="#" class="simple-tree-pm-button">
+															<i class="fa fa-angle-down popup-panel-tree-item-icon-toggler popup-icon"></i>
+														</a>
+													</div>
+													
+													<div class="popup-panel-tree-item-subpanel">
+						EOD;						
 					}  
+
+					$respuesta_html .= $aux_primera_seccion;
+					//echo $aux_primera_seccion;
+
 				}
 
 				// segunda seccion 
+				$aux_segunda_seccion = <<<EOD
 
-				?>			
-		
-				<div class="popup-panel-tree-item" data-state="0">
+										<div class="popup-panel-tree-item" data-state="0">
 					
-					<div class="popup-panel-tree-item-header">
-						<i class="fa fa-layer-group popup-panel-tree-item-icon popup-icon"></i>
-						<a href="#" class="popup-panel-tree-item-label popup-text">
-							<span><?php echo $respuesta_2[$x]["subclase_desc"]; ?></span>
-						</a>
-						<a href="#" class="simple-tree-pm-button">
-							<i class="fa fa-angle-down popup-panel-tree-item-icon-toggler popup-icon"></i>
-						</a>
-					</div>
-						
-					<div class="popup-panel-tree-item-subpanel">
-						<ul>
-						
-							<?php
-							
-							$layer_query_string = "SELECT DISTINCT clase_id,layer_id,tipo_layer_id,layer_desc,layer_wms_layer,layer_wms_server 
-												   FROM ".'"MIC-GEOVISORES"'.".vw_layers 
-												   WHERE clase_id = " . $respuesta_2[$x]["clase_id"] . 
-												   " AND subclase_id = " . $respuesta_2[$x]["subclase_id"] .
-													" AND layer_id IN (" . $layer_ids . ")  
-													 AND layer_id NOT IN (10,11,22,345) 
-												   ORDER BY layer_desc ASC";
+											<div class="popup-panel-tree-item-header">
+												<i class="fa fa-layer-group popup-panel-tree-item-icon popup-icon"></i>
+												<a href="#" class="popup-panel-tree-item-label popup-text">
+													<span> {$respuesta_2[$x]["subclase_desc"]}</span>
+												</a>
+												<a href="#" class="simple-tree-pm-button">
+													<i class="fa fa-angle-down popup-panel-tree-item-icon-toggler popup-icon"></i>
+												</a>
+											</div>
+				EOD;
 
-							$respuesta_3 =  $conexion->get_consulta($layer_query_string);
-							
-							for($x=0; $x<=count($respuesta_3)-1; $x++)
-							{
-								?>
-								
-								<li>
-									<a href="#" onclick="geomap.panel.PreviewLayer(<?php echo $respuesta_3[$x]["layer_id"]; ?>)">
-											<?php echo $respuesta_3[$x]["layer_desc"]; ?>
-									</a>	
-								</li>				
-								
-								<?php
-							}
-							
-							
-							?>
-							
-						</ul>
+
+				$layer_query_string = "SELECT DISTINCT clase_id,layer_id,tipo_layer_id,layer_desc,layer_wms_layer,layer_wms_server 
+										FROM ".'"MIC-GEOVISORES"'.".vw_layers 
+										WHERE clase_id = " . $respuesta_2[$x]["clase_id"] . 
+										" AND subclase_id = " . $respuesta_2[$x]["subclase_id"] .
+										" AND layer_id IN (" . $layers_ids . ")  
+										AND layer_id NOT IN (10,11,22,345) 
+										ORDER BY layer_desc ASC";
+				
+
+				//echo $layer_query_string;
+				$respuesta_3 =  $conexion->get_consulta($layer_query_string);
+
+				$lista_li = "";
+
+				for($x2=0; $x2<=count($respuesta_3)-1; $x2++)
+				{
+					$lista_li .= <<<EOD
+									<li>
+										<a href="#" onclick="geomap.panel.PreviewLayer({$respuesta_3[$x2]["layer_id"]})"> {$respuesta_3[$x2]["layer_desc"]}</a>	
+									</li>					
+					EOD;
+
+				}
+
+				$aux_segunda_seccion .= <<<EOD
+										<div class="popup-panel-tree-item-subpanel">
+											<ul>											
+												$lista_li
+											</ul>										
+										</div>
+									</div>
+				EOD;
+
+				$respuesta_html .= $aux_segunda_seccion;
 						
-					</div>
-					
-				</div>
-	
-				<?php	
-							
 			} // FIN FOR 
 
-			?>
-		
-			</div>
-			</div>
+			$respuesta_html .= "	</div>
+									</div>";
 			
-			<?php
-
 
 		}else{
-				
-			?>
-				
-			<p>No se encontraron capas asociadas a estos proyectos</p>
-				
-			<?php
+			
+			$respuesta_html = '<p>No se encontraron capas asociadas a estos proyectos</p>';
 		}
+
+		$respuesta_op_server = new respuesta_error_geovisor();
+		$respuesta_op_server->flag = true;
+		$respuesta_op_server->detalle = $respuesta_html;
+		return  $respuesta_op_server;
 
 	}
 
@@ -980,13 +995,13 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		$extension_registros_restringidos = " WHERE C.origen_id_especifico NOT IN ( " ; 
 
         // armo una cadena para usar como subconsulta en la query principal 
-        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        for($x=0; $x<=count($lista_recursos_restringidos->detalle)-1; $x++)
         {       
-           if($x==count($lista_recursos_restringidos)-1){
+           if($x==count($lista_recursos_restringidos->detalle)-1){
                
-               $extension_registros_restringidos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+               $extension_registros_restringidos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].")";
            }else{
-               $extension_registros_restringidos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+               $extension_registros_restringidos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].",";
            }       
         }
 
@@ -1056,39 +1071,39 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		
 		$conexion = new ConexionGeovisores(); 
 
-		//realizo la consulta 
-		$respuesta = $conexion->get_consulta($query_string_filtros_advanced);
+		//echo $query_string_filtros_advanced;
 
+		//realizo la consulta que regresara la lista de layers para los filtros seleccionados 
+
+		$respuesta = $conexion->get_consulta($query_string_filtros_advanced);
 		
 		$layer_ids = $respuesta[0]["layer_ids"];
-		if(empty($layer_ids))
-		{				
-			?>
 
-			<p>No se encontraron capas asociadas a estos proyectos</p>
+		$html_respuesta = "";
 
-			<?php
-			
+		if(empty($layer_ids)) // si no hay layers/capas disponibles
+		{							
+			$html_respuesta .= '<p>No se encontraron capas asociadas a estos proyectos</p>';			
 		}else{
 
 			$query_string = <<<EOD
 			SELECT clase_id,subclase_id,clase_desc,subclase_desc 
 			FROM "MIC-GEOVISORES".vw_layers WHERE layer_id IN ( $layer_ids ) 
 			GROUP BY clase_id,subclase_id,clase_desc,subclase_desc 
-			ORDER BY clase_desc ASC, subclase_desc ASC;'
+			ORDER BY clase_desc ASC, subclase_desc ASC;
 			EOD;
 
 			$respuesta_2 = $conexion->get_consulta($query_string);
 
 			$clase = "";
 					
-			for($x=0; $x<=count($respuesta_2)-1; $x++)
+			for($x=0; $x<=count($respuesta_2)-1; $x++) // por cada capa en la lista 
 			{				
-				if ($clase != $respuesta_2[$x]["clase_desc"]) {
+				if ($clase != $respuesta_2[$x]["clase_desc"]) { 
 					
 					$clase = $respuesta_2[$x]["clase_desc"];
 					
-					if ($x==0) 
+					if ($x==0) // si es el primer registro... 
 					{						
 						?>				
 						<div class="popup-panel-tree-item" data-state="0">
@@ -1187,15 +1202,19 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 			
 		}
 
-		?>
 		
-		</div>
-		</div>
+
+
+		$html_respuesta .= '</div>
+						</div>';
 		
-		<?php
+		$respuesta_op_server = new respuesta_error();
+		$respuesta_op_server->flag = true;
+		$respuesta_op_server->detalle = $html_respuesta;
+		
 	}
 
-	public function wms_get_layer_extent($str_layer_name)
+	public function wms_get_layer_extent($str_layer_name) 
 	{
 
 		// definicion de direccion geoserver 
@@ -1242,7 +1261,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		return $json_buffer_extent;
 	}
 
-	public function get_layer_extent($layer_id)
+	public function get_layer_extent($layer_id) // faltan refactorizar algunas cosas en la consulta y acceso del dblink
 	{
 		
 		$query_string = 'SELECT layer_schema,layer_table,layer_wms_layer 
@@ -1259,6 +1278,8 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 						st_xmax(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS maxx,
 						st_ymax(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS maxy
 						FROM \"" . trim($data[0]["layer_schema"]) . "\".\"" . ($data[0]["layer_table"]) . "\" T";
+
+		echo $query_string_2;
 
 		$extent = $conexion->get_consulta($query_string_2);
 
@@ -1360,17 +1381,17 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		$conexion = new ConexionGeovisores(); 
 
 		
-		$query_string = "SELECT * FROM mod_geovisores.get_coord(100001,$lon,$lat)";		
+		$query_string = 'SELECT * FROM "MIC-GEOVISORES".get_coord(100001,$lon,$lat)';		
 		$data = $conexion->get_consulta($query_string);
 		$lon100001 = $data[0]["nlon"];
 		$lat100001 = $data[0]["nlat"];
 
-		$query_string = "SELECT * FROM mod_geovisores.get_coord(100002,$lon,$lat)";		
+		$query_string = 'SELECT * FROM "MIC-GEOVISORES".get_coord(100002,$lon,$lat)';		
 		$data = $conexion->get_consulta($query_string);
 		$lon100002 = $data[0]["nlon"];
 		$lat100002 = $data[0]["nlat"];
 
-		$query_string = "SELECT * FROM mod_geovisores.get_coord(100003,$lon,$lat)";		
+		$query_string = 'SELECT * FROM "MIC-GEOVISORES".get_coord(100003,$lon,$lat)';		
 		$data = $conexion->get_consulta($query_string);
 		$lon100003 = $data[0]["nlon"];
 		$lat100003 = $data[0]["nlat"];
@@ -1383,7 +1404,11 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 		$json .= "}";
 
-		return $json;
+		$respuesta_op_server = new respuesta_error_geovisor();
+		$respuesta_op_server->flag = true;
+   		$respuesta_op_server->detalle = $json;
+
+		return $respuesta_op_server;
 
 	}
 
@@ -1447,16 +1472,34 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	public function get_layer_preview($layer_id)
 	{
-		$layer_id = $_POST["layer_id"];
-
+		
 		$query_string = 'SELECT clase_id,preview_titulo,preview_desc,preview_link FROM "MIC-GEOVISORES".vw_layers WHERE layer_id = ' . $layer_id;
 
 		$conexion = new ConexionGeovisores(); 
 
 		$data = $conexion->get_consulta($query_string);
+
+		$respuesta_op_server = new respuesta_error_geovisor();
+
+		if(!empty($data))
+		{	
+			$html = <<<EOD
+						<p class="title" id="layer-preview-title"> {$data[0]["preview_titulo"]} </p>
+						<p class="content"> {$data[0]["preview_desc"]}</p>
+					EOD;	
+
+		    $respuesta_op_server->flag = true;
+            $respuesta_op_server->detalle = $html;
 			
-		echo '<p class="title" id="layer-preview-title">'.$data[0]["preview_titulo"].'</p>';
-		echo '<p class="content">'.$data["preview_desc"].'</p>';	
+		}else{
+
+            $respuesta_op_server->flag = false;
+            $respuesta_op_server->detalle = "No se encontraron resultados";
+
+		}
+
+		return  $respuesta_op_server;
+	
 	
 	}
 
