@@ -4,12 +4,6 @@ require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.p
 require_once(dirname(__FILE__).'\CAPA-DOMINIO\CLASES\Clases.php');
 
 $_respuesta_catalogo = new Respuesta();
-//
-//$_POST['action'] = 'get_filtros';
-//$_POST['solapa'] = '1';
-//$_POST['cadena_filtros'] = '';
-//$_POST['recursos_restringidos'] = '';
-//$_POST['hay_que_filtrar'] = '';
 
 
 if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
@@ -58,7 +52,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
 
             case 'get_filtros':
 
-                if(isset($_POST['solapa']) ) // evaluo que contenga la variable action(contiene la funcion a requerir)
+                if((isset($_POST['solapa'])) && (is_numeric($_POST['solapa'])) ) // evaluo que contenga la variable action(contiene la funcion a requerir)
                 {   
 
                     $aux_solapa = $_POST['solapa'];
@@ -122,13 +116,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
         echo json_encode($datos_respuesta_catalogo);
     }
 
- }else{
-     
-     http_response_code(400);                
-     $datos_respuesta_catalogo = $_respuesta_catalogo->error_400("Solicitud Incorrecta"); 
-     echo json_encode($datos_respuesta_catalogo);
- 
- }
+}else{
+    
+    http_response_code(400);                
+    $datos_respuesta_catalogo = $_respuesta_catalogo->error_400("Solicitud Incorrecta"); 
+    echo json_encode($datos_respuesta_catalogo);
+
+}
 
 
 

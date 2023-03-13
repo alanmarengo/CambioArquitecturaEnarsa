@@ -2,7 +2,7 @@
 
 include("../pgconfig.php");
 include("./wms_tools.php");
-
+$_POST['layer_id'] = 768;
 $layer_id = $_POST["layer_id"];
 
 $string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;

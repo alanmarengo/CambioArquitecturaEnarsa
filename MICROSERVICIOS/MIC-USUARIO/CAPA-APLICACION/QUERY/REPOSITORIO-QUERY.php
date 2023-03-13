@@ -36,7 +36,7 @@ class RepositorioQueryUsuario implements IRepositorioQueryUsuario{
         // instancio la conexion
         $conexion = new ConexionUsuario();
 
-        $query = 'SELECT pe.objeto_id
+        $query = 'SELECT *
                   FROM "MIC-USUARIO".permisos as pe
                   WHERE pe.perfil_usuario_id != (SELECT pu.perfil_usuario_id 
                                                  FROM "MIC-USUARIO".user_data as ud 

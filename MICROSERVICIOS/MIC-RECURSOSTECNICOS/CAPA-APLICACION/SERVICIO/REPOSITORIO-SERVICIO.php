@@ -12,7 +12,6 @@ class RepositorioServicioRecursosTecnicos implements IRepositorioServicioRecurso
         $this->query= new RepositorioQueryRecursosTecnicos();
     }
 
-
     public function get_recursos_tecnicos($lista_recursos_restringidos, $current_page, $page_size, $order_by)
     {
         return $this->query->get_recursos_tecnicos($lista_recursos_restringidos, $current_page, $page_size, $order_by);

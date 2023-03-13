@@ -29,14 +29,22 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
             $lista_recursos_restringidos = $this->servicio_usuario->get_recursos_restringidos();
         }
 
-        for($x=0; $x<=count($lista_recursos_restringidos->detalle)-1; $x++)
+        $respuesta_op_server = new respuesta_error_geovisor();
+
+        foreach($lista_recursos_restringidos->detalle as $registro)
         {
-           if($lista_recursos_restringidos[$x]['objeto_id'] == $layer_id)
-           {
-               return true;
+           if(($registro['objeto_id'] == $layer_id) && ($registro['tipo_objeto_id'] == 0) ) 
+           {    
+                $respuesta_op_server->flag = true;
+                $respuesta_op_server->detalle = 'true';
            }            
         }
-        return false;
+
+        $respuesta_op_server->flag = true;
+        $respuesta_op_server->detalle = 'false';
+      
+        return $respuesta_op_server;
+
     }   
 
     public function ListaProyectos(){
@@ -118,7 +126,7 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
 
     public function get_layer_extent($layer_id)
     {
-        return $this->query->get_layer_extent($layer_id);
+            return $this->query->get_layer_extent($layer_id);
     }
 
     public function get_coor_transformed($lon, $lat){

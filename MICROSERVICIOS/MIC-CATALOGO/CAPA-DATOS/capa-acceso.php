@@ -6,14 +6,14 @@ require_once(dirname(__FILE__,3).'\CRED\conf.php');
 class ConexionCatalogo {
 
     // para uso en el host
-    private $host = "iobs-02.ieasa.com.ar";
-    private $user = "plataforma_readonly";
-    private $pass = "Plataforma100%";
+    //private $host = "iobs-02.ieasa.com.ar";
+    //private $user = "plataforma_readonly";
+    //private $pass = "Plataforma100%";
 
     // para uso en local 
-    //private $host = "localhost";
-    //private $user = "postgres";
-    //private $pass = "37159252";
+    private $host = "localhost";
+    private $user = "postgres";
+    private $pass = "37159252";
 
 
 

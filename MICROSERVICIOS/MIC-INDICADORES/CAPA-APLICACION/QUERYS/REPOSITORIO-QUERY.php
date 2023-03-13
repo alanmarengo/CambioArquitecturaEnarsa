@@ -115,26 +115,26 @@ class RepositorioQueryIndicadores implements IRepositorioQueryIndicadores{
 	} // fin DrawContainersInd
 
 	public function DrawIndicadores($lista_recursos_restringidos,$clase_id) 
-	{		
+	{
 	
-		$extension_recursos_restringidos = " AND r.recurso_id NOT IN (";
+		$extension_recursos_restringidos = " AND ip.recurso_id NOT IN (";
 
         // armo una cadena para usar como subconsulta en la query principal con los recursos restringidos
-        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        for($x=0; $x<=count($lista_recursos_restringidos->detalle)-1; $x++)
         {       
-            if($x==count($lista_recursos_restringidos)-1){
+            if($x==count($lista_recursos_restringidos->detalle)-1){
                 
-                $extension_recursos_restringidos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+                $extension_recursos_restringidos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].")";
             }else{
-                $extension_recursos_restringidos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+                $extension_recursos_restringidos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].",";
             }       
         }       
 
         $conexion = new ConexionIndicadores();
 
-        $query_string = 'SELECT DISTINCT * FROM "MIC-INDICADORES".ind_panel WHERE clase_id = '.$clase_id.'  ORDER BY ind_titulo ASC';
+        $query_string = 'SELECT DISTINCT * FROM "MIC-INDICADORES".ind_panel ip WHERE clase_id = '.$clase_id.'  ORDER BY ind_titulo ASC';
         
-        //echo $query_string; 
+        echo $query_string; 
 
         $resultado_consulta = $conexion->get_consulta($query_string);
 		

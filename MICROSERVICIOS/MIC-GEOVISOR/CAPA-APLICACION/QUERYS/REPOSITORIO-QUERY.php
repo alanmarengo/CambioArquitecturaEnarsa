@@ -38,7 +38,10 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	public function get_layer_info_pgda() // faltan registros para su funcionamiento 
 	{
-		
+		$layer_id_arr = array();
+		$layer_desc_arr = array();
+
+
 		$layer_id_arr = array(873,937,938,939,875);
 		$layer_title_arr = array(
 			"Provincia Santa Cruz",
@@ -64,7 +67,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 			
 			$query_string2 = 'SELECT * FROM mic_catalogo_fdw.vw_visor_pg_programas WHERE layer_id = ' . $layer_id . " ORDER BY programa ASC";
 			
-			$query2 = $conexion->get_consulta($query_string2);  ;
+			$query2 = $conexion->get_consulta($query_string2); 
 			
 			//$query_count = pg_num_rows($query2);
 			
@@ -1272,14 +1275,14 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		//realizo la consulta 
 		$data = $conexion->get_consulta($query_string);
 
-		$query_string_2 = "SELECT 
-						st_xmin(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS minx,
-						st_ymin(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS miny,
-						st_xmax(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS maxx,
-						st_ymax(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS maxy
-						FROM \"" . trim($data[0]["layer_schema"]) . "\".\"" . ($data[0]["layer_table"]) . "\" T";
+		$query_string_2 = 'SELECT 
+							st_xmin(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS minx,
+							st_ymin(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS miny,
+							st_xmax(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS maxx,
+							st_ymax(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS maxy
+						 FROM '.$data[0]["layer_schema"].'.'.$data[0]["layer_table"].'  T';
 
-		echo $query_string_2;
+		//echo $query_string_2;
 
 		$extent = $conexion->get_consulta($query_string_2);
 
@@ -1522,9 +1525,6 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 			
 		return $html;
     }
-
-	
-
 
 }; // fin interface 
 

@@ -6,8 +6,11 @@ require_once(dirname(__FILE__,3).'\CRED\conf.php');
 // clase para conexion a bd
 class ConexionIndicadores {
 
-    private $host = "179.43.126.101";    
-    private $pass = "plahe100%";
+    private $host = "localhost";    
+    private $pass = "37159252";
+
+    //private $host = "179.43.126.101";    
+    //private $pass = "plahe100%";
     private $user = "postgres";
     private $port = "5432";
     private $database = "MIC-INDICADORES";
