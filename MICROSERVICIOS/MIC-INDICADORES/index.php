@@ -6,13 +6,8 @@ include_once(dirname(__FILE__).'/CAPA-DOMINIO/CLASES/Clases.php');
 
 $_respuesta_indicadores = new Respuesta_Indicadores();
 
-$_POST['action'] = 'DrawIndicadores';
-$_POST['user_id'] = '22';
-$_POST['clase_id'] = '1';
-
-
-//if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
-//{           
+if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
+{           
     if(isset($_POST['action']) && !empty($_POST['action'])) // evaluo que contenga la variable action(contiene la funcion a requerir)
     {   
         $datos_respuesta; // variable que almacenara la respuesta final. 
@@ -86,49 +81,7 @@ $_POST['clase_id'] = '1';
 
                 break;
 
-            case 'DrawIndicadores' :
 
-                if(!empty($_POST['user_id']))
-                {   
-                    if(!empty($_POST['clase_id']))
-                    {                                    
-
-                        $datos_respuesta = $servicio_indicadores->DrawIndicadores($_POST['user_id'],$_POST['clase_id']);
-                                  
-                        if($datos_respuesta->flag)
-                        {
-
-                            http_response_code(200);                
-                            $datos_respuesta = $_respuesta_indicadores->error_200($datos_respuesta->detalle); 
-                            echo json_encode($datos_respuesta);
-
-                        }else{
-
-                            http_response_code(400);                
-                            $datos_respuesta = $_respuesta_indicadores->error_400($datos_respuesta->detalle); 
-                            echo json_encode($datos_respuesta);
-
-                        } 
-                    }else{
-
-                        http_response_code(400);                
-                        $datos_respuesta = $_respuesta_indicadores->error_400('Variable clase_id Vacia'); 
-                        echo json_encode($datos_respuesta);
-
-
-                    }     
-                
-
-                }else{
-
-                    http_response_code(400);                
-                    $datos_respuesta = $_respuesta_indicadores->error_400('Variable user_id Vacia'); 
-                    echo json_encode($datos_respuesta);
-                }
-
-                $servicio_indicadores = null;
-
-                break;
             case 'DrawIndicadoresSearch' :
 
                 if(!empty($_POST['user_id']))
@@ -199,7 +152,7 @@ $_POST['clase_id'] = '1';
             default :  
             
                 http_response_code(400);                
-                $datos_respuesta = $_respuesta->error_400("Solicitud Incorrecta"); 
+                $datos_respuesta = $_respuesta_indicadores->error_400("Solicitud Incorrecta"); 
                 echo json_encode($datos_respuesta); 
 
             break;
@@ -208,11 +161,11 @@ $_POST['clase_id'] = '1';
     } else {
         
         http_response_code(400);                
-        $datos_respuesta = $_respuesta->error_400("Solicitud Incorrecta"); 
+        $datos_respuesta = $_respuesta_indicadores->error_400("Solicitud Incorrecta"); 
         echo json_encode($datos_respuesta); 
 
     }
-//}
+}
 
 
 

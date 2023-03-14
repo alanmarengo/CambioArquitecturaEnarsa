@@ -6,15 +6,12 @@ require_once(dirname(__FILE__,3).'\CRED\conf.php');
 // clase para conexion a bd
 class ConexionIndicadores {
 
-    private $host = "localhost";    
-    private $pass = "37159252";
-
-    //private $host = "179.43.126.101";    
-    //private $pass = "plahe100%";
-    private $user = "postgres";
+    private $host = "iobs-02.ieasa.com.ar"; 
+    private $user = "plataforma_readonly";
+    private $pass = "Plataforma100%";
     private $port = "5432";
     private $database = "MIC-INDICADORES";
-    private $conect;    
+    private $conect;
     public $obj_conexion_db_externas; // objeto de conexion con credenciales. 
 
     public function __construct() // crea una nueva instancia de conexion
