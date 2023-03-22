@@ -126,28 +126,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
 
                 break;
 
-            case 'ComboCruce':
 
-                $datos_respuesta = $servicio_indicadores->ComboCruce();
-                          
-                if($datos_respuesta->flag)
-                {
-
-                    http_response_code(200);                
-                    $datos_respuesta = $_respuesta_indicadores->error_200($datos_respuesta->detalle); 
-                    echo json_encode($datos_respuesta);
-
-                }else{
-
-                    http_response_code(400);                
-                    $datos_respuesta = $_respuesta_indicadores->error_400($datos_respuesta->detalle); 
-                    echo json_encode($datos_respuesta);
-
-                } 
-
-                $servicio_indicadores = null;
- 
-                break;
 
             default :  
             

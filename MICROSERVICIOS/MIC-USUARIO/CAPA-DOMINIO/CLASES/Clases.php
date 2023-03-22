@@ -1,6 +1,6 @@
 <?php
 
-class Respuesta{
+class Respuesta_usuario{
 
     private $response = [
         'status' => "ok",
@@ -38,7 +38,7 @@ class Respuesta{
     }
 }
 
-Class respuesta_error{
+Class respuesta_error_usuario{
     public $flag;
     public $detalle;
 }

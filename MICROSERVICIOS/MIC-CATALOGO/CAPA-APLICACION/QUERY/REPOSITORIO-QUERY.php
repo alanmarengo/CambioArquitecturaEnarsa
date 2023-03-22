@@ -2,6 +2,8 @@
 require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\INTERFACE-QUERY\REPOSITORIO-INTERFACE-QUERY.php');
 require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DATOS\capa-acceso.php');
 require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\DTOS\DTOS.php');
+require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\CLASES\Clases.php');
+
 //INCLUIR LA LIBRERIA DTO.
 
 class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
@@ -20,13 +22,13 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
 
         if(!empty($resultado_query_info_territorio))
         {
-            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server = new respuesta_error_catalogo();
             $respuesta_op_server->flag = true;
             $respuesta_op_server->detalle = $resultado_query_info_territorio;  
 
         }else{
 
-            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server = new respuesta_error_catalogo();
             $respuesta_op_server->flag = false;
             $respuesta_op_server->detalle = "No se encontraron resultados";
 
@@ -127,13 +129,13 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         
         if(!empty($filtros))
         {
-            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server = new respuesta_error_catalogo();
             $respuesta_op_server->flag = true;
             $respuesta_op_server->detalle = $filtros;  
 
         }else{
 
-            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server = new respuesta_error_catalogo();
             $respuesta_op_server->flag = false;
             $respuesta_op_server->detalle = "No se encontraron resultados";
 
@@ -689,7 +691,6 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
 
 
     }
-
 
 }
 

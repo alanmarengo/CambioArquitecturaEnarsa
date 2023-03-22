@@ -33,3 +33,7 @@ class RepositorioServicioRecursosTecnicos implements IRepositorioServicioRecurso
     }
 
 }
+
+//$test = new RepositorioServicioRecursosTecnicos();
+
+//print_r($test->get_recursos_tecnicos("", 1, 20, 1));

@@ -33,7 +33,7 @@ class RecursoTecnico{
         $this->estudios_id = $estudios_id;
         $this->fecha = $fecha;
         $this->tema = $tema;
-        $this->ico = $ico;
+        //$this->ico = $ico;
         $this->territorio_id = $territorio_id;
         $this->territorio_desc;
         $this->territorio_fec_bbdd_date;
@@ -41,7 +41,7 @@ class RecursoTecnico{
         $this->territorio_fec_bbdd;       
 
         // si id_territorio es distinto de vacio, se llama al metodo para completar la informacion 
-        if($territorio_id != null){
+        if(!empty($territorio_id)){
 
             $RepoCatalogo= new RepositorioServicioCatalogo();
             $InfoTerritorio = $RepoCatalogo->get_info_territorio($this->territorio_id);

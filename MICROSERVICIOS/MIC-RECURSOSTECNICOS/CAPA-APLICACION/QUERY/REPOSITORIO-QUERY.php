@@ -14,13 +14,13 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         // se crea un string para adicionar a la consulta base a realizar
         $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; 
 
-        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        for($x=0; $x<=count($lista_recursos_restringidos->detalle)-1; $x++)
         {       
-           if($x==count($lista_recursos_restringidos)-1){
+           if($x==count($lista_recursos_restringidos->detalle)-1){
                
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].")";
            }else{
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].",";
            }       
         }   
 
@@ -50,79 +50,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
 
         //LOGICA DE PAGINADOR
         $aux_consulta_paginador= <<<EOD
-                        SELECT COUNT(*) as total_registros FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
-                        G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
-                        G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
-                        10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
-                        G.recurso_desc, G.recurso_titulo, NULL::date AS recurso_fecha,
-                        NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
-                        NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,
-                        (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
-                        'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
-                        NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                        FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_geovisores}',
-                        'SELECT c.origen_id_especifico, c.origen_search_text, 
-                                c.subclase_id, c.estudios_id, 
-                                c.cod_esia_id, c.cod_temporalidad_id, 
-                                c.objetos_id, c.fecha_observatorio, 
-                                l.preview_desc  AS recurso_desc,
-                                l.preview_titulo  AS recurso_titulo       
-                        FROM "MIC-GEOVISORES".catalogo c
-                        INNER JOIN "MIC-GEOVISORES".layer l on l.layer_id=c.origen_id_especifico') 
-                                        as G (origen_id_especifico bigint, origen_search_text text, subclase_id bigint, estudios_id bigint, 
-                                        cod_esia_id bigint, cod_temporalidad_id bigint, objetos_id bigint, fecha_observatorio date, recurso_desc text, recurso_titulo text)
-                        
-                        UNION ALL
-                        SELECT 'Estadistica'::text AS origen, 2 AS origen_id, 
-                                dt.dt_id AS origen_id_especifico, dt.dt_titulo AS origen_search_text, 
-                                NULL::bigint AS subclase_id, NULL::bigint AS estudios_id, 
-                                NULL::bigint AS cod_esia_id, NULL::bigint AS cod_temporalidad_id, 
-                                NULL::bigint AS objetos_id, dt.fecha_observatorio, 29::bigint AS recurso_categoria_id,
-                                'Estadísticas'::text AS recurso_categoria_desc,  dt_desc AS recurso_desc, dt_titulo AS recurso_titulo, 
-                                NULL::date AS recurso_fecha, NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
-                                NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
-                                'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
-                                NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_estadisticas}',
-                                                'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
-                                                as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)
-                        
-                        UNION ALL
-                        SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
-                                r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
-                                r.subclase_id,r.estudios_id,NULL::bigint AS cod_esia_id,r.cod_temporalidad_id,
-                                NULL::bigint AS objetos_id,r.fecha_observatorio,r.recurso_categoria_id,
-                                rc.recurso_categoria_desc,r.recurso_desc,r.recurso_titulo,r.recurso_fecha,   
-                                r.recurso_autores, r.recurso_path_url,  r.recurso_size,r.territorio_id,
-                                f.tipo_formato_id, f.visualizacion_tipo_id,f.formato_desc,f.formato_extension, 
-                                vt.visualizacion_tipo_desc,tf.tipo_formato_desc,tf.tipo_formato_solapa, r.sub_proyecto_id as sub_proyecto_id 
-                                FROM "MIC-MEDIATECA".recurso r
-                                LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
-                                LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
-                                LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
-                                LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
-                                WHERE tf.tipo_formato_solapa = 2 ) as u
-                        EOD; 
-
-        
-        $CONSULTA_PAGINADOR = $aux_consulta_paginador.' '.$extension_consulta_filtro_recursos;
-        
-        $total_registros = $conexion_rec_tecnicos->get_consulta($CONSULTA_PAGINADOR);
-
-        $cant_paginas= ceil(intval($total_registros[0]['total_registros'], 10)/$page_size) ;
-        $inicio = ($current_page - 1) * $page_size;         
-
-        $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;
-
-        // fin paginador ---------------------------------
-
-
-
-        // OBTENCION DE RECURSOS
-
-        $aux_consulta_recursos = <<<EOD
-                                SELECT * FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
+                                SELECT COUNT(*) as total_registros FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
                                 G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
                                 G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
                                 10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
@@ -132,18 +60,14 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                 (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
                                 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                 NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_geovisores}',
-                                'SELECT c.origen_id_especifico, c.origen_search_text, 
+                                FROM (SELECT c.origen_id_especifico, c.origen_search_text, 
                                         c.subclase_id, c.estudios_id, 
                                         c.cod_esia_id, c.cod_temporalidad_id, 
                                         c.objetos_id, c.fecha_observatorio, 
                                         l.preview_desc  AS recurso_desc,
                                         l.preview_titulo  AS recurso_titulo       
-                                FROM "MIC-GEOVISORES".catalogo c
-                                INNER JOIN "MIC-GEOVISORES".layer l on l.layer_id=c.origen_id_especifico') 
-                                                as G (origen_id_especifico bigint, origen_search_text text, subclase_id bigint, estudios_id bigint, 
-                                                cod_esia_id bigint, cod_temporalidad_id bigint, objetos_id bigint, fecha_observatorio date, recurso_desc text, recurso_titulo text)
-                                
+                                FROM mic_geovisores_fdw.catalogo c
+                                INNER JOIN mic_geovisores_fdw.layer l on l.layer_id=c.origen_id_especifico)as G                                 
                                 UNION ALL
                                 SELECT 'Estadistica'::text AS origen, 2 AS origen_id, 
                                         dt.dt_id AS origen_id_especifico, dt.dt_titulo AS origen_search_text, 
@@ -155,9 +79,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                         NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
                                         'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                         NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                        FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_estadisticas}',
-                                                        'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
-                                                        as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)                                
+                                        FROM (SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM mic_estadistica_fdw.dt) as dt
                                 UNION ALL
                                 SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
                                         r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
@@ -167,17 +89,95 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                         r.recurso_autores, r.recurso_path_url,  r.recurso_size,r.territorio_id,
                                         f.tipo_formato_id, f.visualizacion_tipo_id,f.formato_desc,f.formato_extension, 
                                         vt.visualizacion_tipo_desc,tf.tipo_formato_desc,tf.tipo_formato_solapa, r.sub_proyecto_id as sub_proyecto_id 
-                                        FROM "MIC-MEDIATECA".recurso r
-                                        LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
-                                        LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
-                                        LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
-                                        LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                        LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
-                                        WHERE tf.tipo_formato_solapa = 2 ) as u
-                                EOD;        
+                                        FROM mic_mediateca_fdw.recurso r
+                                        LEFT JOIN mic_mediateca_fdw.tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+                                        LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = r.formato_id
+                                        LEFT JOIN mic_mediateca_fdw.recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+                                        LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                        LEFT JOIN mic_mediateca_fdw.visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
+                                        WHERE tf.tipo_formato_solapa = 2 ) as u 
+                        EOD; 
+        
+        
+        $CONSULTA_PAGINADOR = $aux_consulta_paginador.' '.$extension_consulta_filtro_recursos;
+        
+        //echo $CONSULTA_PAGINADOR;
+
+        $total_registros = $conexion_rec_tecnicos->get_consulta($CONSULTA_PAGINADOR);
+
+        $cant_paginas= ceil(intval($total_registros[0]['total_registros'], 10)/$page_size) ;
+        
+        if($current_page == 0)
+        {
+            $inicio = 0;
+        }elseif($current_page > 0){
+            $inicio = ($current_page - 1) * $page_size; 
+        }  
+        
+        //$inicio = ($current_page - 1) * $page_size;         
+
+        $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;
+
+        // fin paginador ---------------------------------
+
+
+
+        // OBTENCION DE RECURSOS
+
+        $aux_consulta_recursos = <<<EOD
+        
+                                    SELECT * FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
+                                    G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
+                                    G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
+                                    10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
+                                    G.recurso_desc, G.recurso_titulo, NULL::date AS recurso_fecha,
+                                    NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
+                                    NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,
+                                    (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
+                                    'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
+                                    NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
+                                    FROM (SELECT c.origen_id_especifico, c.origen_search_text, 
+                                            c.subclase_id, c.estudios_id, 
+                                            c.cod_esia_id, c.cod_temporalidad_id, 
+                                            c.objetos_id, c.fecha_observatorio, 
+                                            l.preview_desc  AS recurso_desc,
+                                            l.preview_titulo  AS recurso_titulo       
+                                    FROM mic_geovisores_fdw.catalogo c
+                                    INNER JOIN mic_geovisores_fdw.layer l on l.layer_id=c.origen_id_especifico)as G                                 
+                                    UNION ALL
+                                    SELECT 'Estadistica'::text AS origen, 2 AS origen_id, 
+                                            dt.dt_id AS origen_id_especifico, dt.dt_titulo AS origen_search_text, 
+                                            NULL::bigint AS subclase_id, NULL::bigint AS estudios_id, 
+                                            NULL::bigint AS cod_esia_id, NULL::bigint AS cod_temporalidad_id, 
+                                            NULL::bigint AS objetos_id, dt.fecha_observatorio, 29::bigint AS recurso_categoria_id,
+                                            'Estadísticas'::text AS recurso_categoria_desc,  dt_desc AS recurso_desc, dt_titulo AS recurso_titulo, 
+                                            NULL::date AS recurso_fecha, NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
+                                            NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
+                                            'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
+                                            NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
+                                            FROM (SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM mic_estadistica_fdw.dt) as dt
+                                    UNION ALL
+                                    SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+                                            r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
+                                            r.subclase_id,r.estudios_id,NULL::bigint AS cod_esia_id,r.cod_temporalidad_id,
+                                            NULL::bigint AS objetos_id,r.fecha_observatorio,r.recurso_categoria_id,
+                                            rc.recurso_categoria_desc,r.recurso_desc,r.recurso_titulo,r.recurso_fecha,   
+                                            r.recurso_autores, r.recurso_path_url,  r.recurso_size,r.territorio_id,
+                                            f.tipo_formato_id, f.visualizacion_tipo_id,f.formato_desc,f.formato_extension, 
+                                            vt.visualizacion_tipo_desc,tf.tipo_formato_desc,tf.tipo_formato_solapa, r.sub_proyecto_id as sub_proyecto_id 
+                                            FROM mic_mediateca_fdw.recurso r
+                                            LEFT JOIN mic_mediateca_fdw.tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+                                            LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = r.formato_id
+                                            LEFT JOIN mic_mediateca_fdw.recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+                                            LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                            LEFT JOIN mic_mediateca_fdw.visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
+                                            WHERE tf.tipo_formato_solapa = 2 ) as u 
+                    EOD;        
         
         $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS = $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.
                                                  $filtro_fecha_observatorio.' '.$ORDER.' '.$paginador;
+
+        //echo $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS;
         $recursos_tecnicos = $conexion_rec_tecnicos->get_consulta( $CONSULTA_DEFINITIVA_RECURSOS_TECNICOS);
 
         //creo un array para guardar todos los recursos  tecnicos
@@ -198,15 +198,20 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
             $estudios_id= $recursos_tecnicos[$x]['sub_proyecto_id'];            
             $metatag= $recursos_tecnicos[$x]['recurso_categoria_desc'];
             $tema= $recursos_tecnicos[$x]['recurso_categoria_desc'];            
-            $ico= $recursos_tecnicos[$x]['ico'];
+            //$ico= $recursos_tecnicos[$x]['ico'];
 
     
             // por cada registro, se agrega un objeto recurso al array contenedor 
-            $recurso = new RecursoTecnico($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id,$ico);
+            $recurso = new RecursoTecnico($origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id,"");
             array_push($array_recursos_tecnicos,$recurso);                    
         }
          
-        return new RecursosTecnicos($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos);         
+        $respuesta_recursos_tecnicos = new respuesta_error_rectec();
+        $respuesta_recursos_tecnicos->flag = true;
+        $respuesta_recursos_tecnicos->detalle = new RecursosTecnicos($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos);
+        
+        return $respuesta_recursos_tecnicos;
+
     } // fin function get_recursos_tecnicos 
 
     public function get_recursos_tecnicos_filtrado($lista_recursos_restringidos, $current_page,$page_size,$qt,$desde,$hasta,
@@ -216,13 +221,13 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
          $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
          // armo una cadena para usar como subconsulta en la query principal 
                  
-         for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+         for($x=0; $x<=count($lista_recursos_restringidos->detalle)-1; $x++)
          {       
-            if($x==count($lista_recursos_restringidos)-1){
+            if($x==count($lista_recursos_restringidos->detalle)-1){
                 
-                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].")";
             }else{
-                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+                $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].",";
             }       
          }   
         
@@ -232,79 +237,74 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
 
         //LOGICA DE PAGINADOR
         $aux_consulta_paginador= <<<EOD
-                                    SELECT COUNT(*) AS total_registros FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
-                                    G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
-                                    G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
-                                    10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
-                                    G.recurso_desc, G.recurso_titulo, NULL::date AS recurso_fecha,
-                                    NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
-                                    NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,
-                                    (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
-                                    'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
-                                    NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                    FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_geovisores}',
-                                    'SELECT c.origen_id_especifico, c.origen_search_text, 
-                                            c.subclase_id, c.estudios_id, 
-                                            c.cod_esia_id, c.cod_temporalidad_id, 
-                                            c.objetos_id, c.fecha_observatorio, 
-                                            l.preview_desc  AS recurso_desc,
-                                            l.preview_titulo  AS recurso_titulo       
-                                    FROM "MIC-GEOVISORES".catalogo c
-                                    INNER JOIN "MIC-GEOVISORES".layer l on l.layer_id=c.origen_id_especifico') 
-                                                    as G (origen_id_especifico bigint, origen_search_text text, subclase_id bigint, estudios_id bigint, 
-                                                    cod_esia_id bigint, cod_temporalidad_id bigint, objetos_id bigint, fecha_observatorio date, recurso_desc text, recurso_titulo text)
-                                    
-                                    UNION ALL
-                                    SELECT 'Estadistica'::text AS origen, 2 AS origen_id, 
-                                            dt.dt_id AS origen_id_especifico, dt.dt_titulo AS origen_search_text, 
-                                            NULL::bigint AS subclase_id, NULL::bigint AS estudios_id, 
-                                            NULL::bigint AS cod_esia_id, NULL::bigint AS cod_temporalidad_id, 
-                                            NULL::bigint AS objetos_id, dt.fecha_observatorio, 29::bigint AS recurso_categoria_id,
-                                            'Estadísticas'::text AS recurso_categoria_desc,  dt_desc AS recurso_desc, dt_titulo AS recurso_titulo, 
-                                            NULL::date AS recurso_fecha, NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
-                                            NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
-                                            'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
-                                            NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                            FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_estadisticas}',
-                                                            'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
-                                                            as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)
-                                    
-                                    UNION ALL
-                                    SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
-                                            r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
-                                            r.subclase_id,r.estudios_id,NULL::bigint AS cod_esia_id,r.cod_temporalidad_id,
-                                            NULL::bigint AS objetos_id,r.fecha_observatorio,r.recurso_categoria_id,
-                                            rc.recurso_categoria_desc,r.recurso_desc,r.recurso_titulo,r.recurso_fecha,   
-                                            r.recurso_autores, r.recurso_path_url,  r.recurso_size,r.territorio_id,
-                                            f.tipo_formato_id, f.visualizacion_tipo_id,f.formato_desc,f.formato_extension, 
-                                            vt.visualizacion_tipo_desc,tf.tipo_formato_desc,tf.tipo_formato_solapa, r.sub_proyecto_id as sub_proyecto_id 
-                                            FROM "MIC-MEDIATECA".recurso r
-                                            LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
-                                            LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
-                                            LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
-                                            WHERE tf.tipo_formato_solapa = 2 ) as u 
-                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
-                            'SELECT estudios_id, estudios_palabras_clave,nombre,equipo,institucion,responsable
-                                FROM "MIC-CATALOGO".estudios') 
-                            as e(estudios_id bigint, estudios_palabras_clave text, nombre text, equipo text, institucion text, responsable text)
-                            ON u.estudios_id = e.estudios_id
-                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
-                            'SELECT cod_temporalidad_id,desde AS tempo_desde, hasta AS tempo_hasta FROM "MIC-CATALOGO".cod_temporalidad')
-                            as ct(cod_temporalidad_id bigint, tempo_desde date, tempo_hasta date) ON u.cod_temporalidad_id = ct.cod_temporalidad_id
-                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
-                            'SELECT subclase_id, clase_id FROM "MIC-CATALOGO".subclase')
-                            as sc(subclase_id bigint,clase_id bigint) ON u.subclase_id = sc.subclase_id
+                                    SELECT COUNT(*) as total_registros FROM 
+                                        ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
+                                        G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
+                                        G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
+                                        10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
+                                        G.recurso_desc, G.recurso_titulo, NULL::date AS recurso_fecha,
+                                        NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
+                                        NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,
+                                        (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
+                                        'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
+                                        NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
+                                        FROM (SELECT c.origen_id_especifico, c.origen_search_text, 
+                                                c.subclase_id, c.estudios_id, 
+                                                c.cod_esia_id, c.cod_temporalidad_id, 
+                                                c.objetos_id, c.fecha_observatorio, 
+                                                l.preview_desc  AS recurso_desc,
+                                                l.preview_titulo  AS recurso_titulo       
+                                        FROM mic_geovisores_fdw.catalogo c
+                                        INNER JOIN mic_geovisores_fdw.layer l on l.layer_id=c.origen_id_especifico)as G                                 
+                                        UNION ALL
+                                        SELECT 'Estadistica'::text AS origen, 2 AS origen_id, 
+                                                dt.dt_id AS origen_id_especifico, dt.dt_titulo AS origen_search_text, 
+                                                NULL::bigint AS subclase_id, NULL::bigint AS estudios_id, 
+                                                NULL::bigint AS cod_esia_id, NULL::bigint AS cod_temporalidad_id, 
+                                                NULL::bigint AS objetos_id, dt.fecha_observatorio, 29::bigint AS recurso_categoria_id,
+                                                'Estadísticas'::text AS recurso_categoria_desc,  dt_desc AS recurso_desc, dt_titulo AS recurso_titulo, 
+                                                NULL::date AS recurso_fecha, NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
+                                                NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
+                                                'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
+                                                NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
+                                                FROM (SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM mic_estadistica_fdw.dt) as dt
+                                        UNION ALL
+                                        SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+                                                r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
+                                                r.subclase_id,r.estudios_id,NULL::bigint AS cod_esia_id,r.cod_temporalidad_id,
+                                                NULL::bigint AS objetos_id,r.fecha_observatorio,r.recurso_categoria_id,
+                                                rc.recurso_categoria_desc,r.recurso_desc,r.recurso_titulo,r.recurso_fecha,   
+                                                r.recurso_autores, r.recurso_path_url,  r.recurso_size,r.territorio_id,
+                                                f.tipo_formato_id, f.visualizacion_tipo_id,f.formato_desc,f.formato_extension, 
+                                                vt.visualizacion_tipo_desc,tf.tipo_formato_desc,tf.tipo_formato_solapa, r.sub_proyecto_id as sub_proyecto_id 
+                                                FROM mic_mediateca_fdw.recurso r
+                                                LEFT JOIN mic_mediateca_fdw.tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+                                                LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = r.formato_id
+                                                LEFT JOIN mic_mediateca_fdw.recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+                                                LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                                LEFT JOIN mic_mediateca_fdw.visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
+                                                WHERE tf.tipo_formato_solapa = 2 ) as u 
+                                    INNER JOIN "MIC-CATALOGO".estudios as e ON u.estudios_id = e.estudios_id
+                                    INNER JOIN "MIC-CATALOGO".cod_temporalidad as ct  ON u.cod_temporalidad_id = ct.cod_temporalidad_id
+                                    INNER JOIN "MIC-CATALOGO".subclase as sc ON u.subclase_id = sc.subclase_id 
                         EOD; 
 
         
         $CONSULTA_PAGINADOR = $aux_consulta_paginador.' '.$extension_consulta_filtro_recursos.' '.$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
-                
+        
+        //echo $CONSULTA_PAGINADOR;
         $total_registros = $conexion_rec_tecnicos->get_consulta($CONSULTA_PAGINADOR);
 
         $cant_paginas= ceil(intval($total_registros[0]['total_registros'], 10)/$page_size) + 1;
-        $inicio = ($current_page - 1) * $page_size;         
+        
+        if($current_page == 0)
+        {
+            $inicio = 0;
+        }elseif($current_page > 0){
+            $inicio = ($current_page - 1) * $page_size; 
+        }  
+        
+        //$inicio = ($current_page - 1) * $page_size;         
 
         $paginador = ' LIMIT '.$page_size.' OFFSET '.$inicio;
 
@@ -334,7 +334,9 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         // OBTENCION DE RECURSOS
 
         $aux_consulta_recursos = <<<EOD
-                                    SELECT * FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
+        
+                                    SELECT * FROM 
+                                    ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
                                     G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
                                     G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
                                     10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
@@ -344,18 +346,14 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                     (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
                                     'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                     NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                    FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_geovisores}',
-                                    'SELECT c.origen_id_especifico, c.origen_search_text, 
+                                    FROM (SELECT c.origen_id_especifico, c.origen_search_text, 
                                             c.subclase_id, c.estudios_id, 
                                             c.cod_esia_id, c.cod_temporalidad_id, 
                                             c.objetos_id, c.fecha_observatorio, 
                                             l.preview_desc  AS recurso_desc,
                                             l.preview_titulo  AS recurso_titulo       
-                                    FROM "MIC-GEOVISORES".catalogo c
-                                    INNER JOIN "MIC-GEOVISORES".layer l on l.layer_id=c.origen_id_especifico') 
-                                                    as G (origen_id_especifico bigint, origen_search_text text, subclase_id bigint, estudios_id bigint, 
-                                                    cod_esia_id bigint, cod_temporalidad_id bigint, objetos_id bigint, fecha_observatorio date, recurso_desc text, recurso_titulo text)
-                                    
+                                    FROM mic_geovisores_fdw.catalogo c
+                                    INNER JOIN mic_geovisores_fdw.layer l on l.layer_id=c.origen_id_especifico)as G                                 
                                     UNION ALL
                                     SELECT 'Estadistica'::text AS origen, 2 AS origen_id, 
                                             dt.dt_id AS origen_id_especifico, dt.dt_titulo AS origen_search_text, 
@@ -367,10 +365,7 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                             NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
                                             'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
                                             NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                            FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_estadisticas}',
-                                                            'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
-                                                            as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)
-                                    
+                                            FROM (SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM mic_estadistica_fdw.dt) as dt
                                     UNION ALL
                                     SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
                                             r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
@@ -380,24 +375,16 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
                                             r.recurso_autores, r.recurso_path_url,  r.recurso_size,r.territorio_id,
                                             f.tipo_formato_id, f.visualizacion_tipo_id,f.formato_desc,f.formato_extension, 
                                             vt.visualizacion_tipo_desc,tf.tipo_formato_desc,tf.tipo_formato_solapa, r.sub_proyecto_id as sub_proyecto_id 
-                                            FROM "MIC-MEDIATECA".recurso r
-                                            LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
-                                            LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
-                                            LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
+                                            FROM mic_mediateca_fdw.recurso r
+                                            LEFT JOIN mic_mediateca_fdw.tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+                                            LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = r.formato_id
+                                            LEFT JOIN mic_mediateca_fdw.recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+                                            LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                            LEFT JOIN mic_mediateca_fdw.visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
                                             WHERE tf.tipo_formato_solapa = 2 ) as u 
-                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
-                            'SELECT estudios_id, estudios_palabras_clave,nombre,equipo,institucion,responsable
-                                FROM "MIC-CATALOGO".estudios') 
-                            as e(estudios_id bigint, estudios_palabras_clave text, nombre text, equipo text, institucion text, responsable text)
-                            ON u.estudios_id = e.estudios_id
-                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
-                            'SELECT cod_temporalidad_id,desde AS tempo_desde, hasta AS tempo_hasta FROM "MIC-CATALOGO".cod_temporalidad')
-                            as ct(cod_temporalidad_id bigint, tempo_desde date, tempo_hasta date) ON u.cod_temporalidad_id = ct.cod_temporalidad_id
-                            INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
-                            'SELECT subclase_id, clase_id FROM "MIC-CATALOGO".subclase')
-                            as sc(subclase_id bigint,clase_id bigint) ON u.subclase_id = sc.subclase_id
+                                INNER JOIN "MIC-CATALOGO".estudios as e ON u.estudios_id = e.estudios_id
+                                INNER JOIN "MIC-CATALOGO".cod_temporalidad as ct  ON u.cod_temporalidad_id = ct.cod_temporalidad_id
+                                INNER JOIN "MIC-CATALOGO".subclase as sc ON u.subclase_id = sc.subclase_id 
                             EOD;
         
         
@@ -422,15 +409,20 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
             $estudios_id= $recursos_tecnicos[$x]['sub_proyecto_id'];            
             $metatag= $recursos_tecnicos[$x]['recurso_categoria_desc'];
             $tema= $recursos_tecnicos[$x]['recurso_categoria_desc'];            
-            $ico= $recursos_tecnicos[$x]['ico'];
+            //$ico= $recursos_tecnicos[$x]['ico'];
 
     
             // por cada registro, se agrega un objeto recurso al array contenedor 
-            $recurso = new RecursoTecnico($solapa,$origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id,$ico);
+            $recurso = new RecursoTecnico($origen_id,$id_recurso,$titulo,$descripcion,$link_imagen,$metatag,$autores,$estudios_id,$fecha,$tema,$territorio_id,"");
             array_push($array_recursos_tecnicos,$recurso);                    
         }               
+            
+                 
+        $respuesta_recursos_tecnicos = new respuesta_error_rectec();
+        $respuesta_recursos_tecnicos->flag = true;
+        $respuesta_recursos_tecnicos->detalle = new RecursosTecnicosFiltrado($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos,$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad));       
         
-        return new RecursosTecnicosFiltrado($array_recursos_tecnicos,$cant_paginas ,$extension_consulta_filtro_recursos,$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad));       
+        return $respuesta_recursos_tecnicos;
     }
 
 
@@ -442,12 +434,23 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
 
         if(!empty($qt)) // variable que viene del buscador.
         {            
-            $aux_cadena_filtros .= " AND ( lower(unaccent(u.origen_search_text)) LIKE  lower(unaccent('%".$qt."%'))"; // este ya esta 
-            $aux_cadena_filtros .= " OR lower(unaccent(e.estudios_palabras_clave)) LIKE  lower(unaccent('%".$qt."%'))"; // este y los de abajo se buscan en MIC-CATALOGO.estudios 
-            $aux_cadena_filtros .= " OR lower(unaccent(e.nombre)) LIKE  lower(unaccent('%".$qt."%')) ";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.equipo)) LIKE  lower(unaccent('%".$qt."%')) ";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.institucion)) LIKE  lower(unaccent('%".$qt."%')) ";
-            $aux_cadena_filtros .= " OR lower(unaccent(e.responsable)) LIKE  lower(unaccent('%".$qt."%')) ) "; 
+            $aux_cadena_filtros = <<<EOD
+            AND ( lower("MIC-CATALOGO".unaccent(u.origen_search_text)) LIKE  lower("MIC-CATALOGO".unaccent('%$qt%'))
+            OR lower("MIC-CATALOGO".unaccent(e.estudios_palabras_clave)) LIKE  lower("MIC-CATALOGO".unaccent('%$qt%'))
+            OR lower("MIC-CATALOGO".unaccent(e.nombre)) LIKE  lower("MIC-CATALOGO".unaccent('%$qt%'))
+            OR lower("MIC-CATALOGO".unaccent(e.equipo)) LIKE  lower("MIC-CATALOGO".unaccent('%$qt%')) 
+            OR lower("MIC-CATALOGO".unaccent(e.institucion)) LIKE  lower("MIC-CATALOGO".unaccent('%$qt%'))
+            OR lower("MIC-CATALOGO".unaccent(e.responsable)) LIKE  lower("MIC-CATALOGO".unaccent('%$qt%')) )
+            EOD;
+
+
+
+            //$aux_cadena_filtros .= " AND ( lower("MIC-CATALOGO".unaccent(u.origen_search_text)) LIKE  lower("MIC-CATALOGO".unaccent('%".$qt."%'))"; // este ya esta 
+            //$aux_cadena_filtros .= " OR lower("MIC-CATALOGO".unaccent(e.estudios_palabras_clave)) LIKE  lower("MIC-CATALOGO".unaccent('%".$qt."%'))"; // este y los de abajo se buscan en MIC-CATALOGO.estudios 
+            //$aux_cadena_filtros .= " OR lower("MIC-CATALOGO".unaccent(e.nombre)) LIKE  lower("MIC-CATALOGO".unaccent('%".$qt."%')) ";
+            //$aux_cadena_filtros .= " OR lower("MIC-CATALOGO".unaccent(e.equipo)) LIKE  lower("MIC-CATALOGO".unaccent('%".$qt."%')) ";
+            //$aux_cadena_filtros .= " OR lower("MIC-CATALOGO".unaccent(e.institucion)) LIKE  lower("MIC-CATALOGO".unaccent('%".$qt."%')) ";
+            //$aux_cadena_filtros .= " OR lower("MIC-CATALOGO".unaccent(e.responsable)) LIKE  lower("MIC-CATALOGO".unaccent('%".$qt."%')) ) "; 
              
         }
         
@@ -530,13 +533,13 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         $extension_consulta_filtro_recursos = "WHERE u.origen_id_especifico NOT IN ("; // apuntar al campo deseado 
         // armo una cadena para usar como subconsulta en la query principal 
                 
-        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        for($x=0; $x<=count($lista_recursos_restringidos->detalle)-1; $x++)
         {       
-           if($x==count($lista_recursos_restringidos)-1){
+           if($x==count($lista_recursos_restringidos->detalle)-1){
                
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].")";
            }else{
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].",";
            }       
         }   
        
@@ -547,77 +550,69 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
         $conexion_rec_tecnicos = new ConexionRecursosTecnicos();
 
        $aux_consulta_recursos = <<<EOD
-                                    SELECT COUNT(*) FROM ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
-                                    G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
-                                    G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
-                                    10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
-                                    G.recurso_desc, G.recurso_titulo, NULL::date AS recurso_fecha,
-                                    NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
-                                    NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,
-                                    (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
-                                    'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
-                                    NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
-                                    FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_geovisores}',
-                                    'SELECT c.origen_id_especifico, c.origen_search_text, 
-                                            c.subclase_id, c.estudios_id, 
-                                            c.cod_esia_id, c.cod_temporalidad_id, 
-                                            c.objetos_id, c.fecha_observatorio, 
-                                            l.preview_desc  AS recurso_desc,
-                                            l.preview_titulo  AS recurso_titulo       
-                                    FROM "MIC-GEOVISORES".catalogo c
-                                    INNER JOIN "MIC-GEOVISORES".layer l on l.layer_id=c.origen_id_especifico') 
-                                                    as G (origen_id_especifico bigint, origen_search_text text, subclase_id bigint, estudios_id bigint, 
-                                                    cod_esia_id bigint, cod_temporalidad_id bigint, objetos_id bigint, fecha_observatorio date, recurso_desc text, recurso_titulo text)
-                                    
-                                    UNION ALL
-                                    SELECT 'Estadistica'::text AS origen, 2 AS origen_id, 
-                                            dt.dt_id AS origen_id_especifico, dt.dt_titulo AS origen_search_text, 
-                                            NULL::bigint AS subclase_id, NULL::bigint AS estudios_id, 
-                                            NULL::bigint AS cod_esia_id, NULL::bigint AS cod_temporalidad_id, 
-                                            NULL::bigint AS objetos_id, dt.fecha_observatorio, 29::bigint AS recurso_categoria_id,
-                                            'Estadísticas'::text AS recurso_categoria_desc,  dt_desc AS recurso_desc, dt_titulo AS recurso_titulo, 
-                                            NULL::date AS recurso_fecha, NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
-                                            NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
-                                            'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
-                                            NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
-                                            FROM dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_estadisticas}',
-                                                            'SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM "MIC-ESTADISTICAS".dt') 
-                                                            as dt(dt_id bigint, dt_titulo text, fecha_observatorio date , dt_desc text)
-                                    
-                                    UNION ALL
-                                    SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
-                                            r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
-                                            r.subclase_id,r.estudios_id,NULL::bigint AS cod_esia_id,r.cod_temporalidad_id,
-                                            NULL::bigint AS objetos_id,r.fecha_observatorio,r.recurso_categoria_id,
-                                            rc.recurso_categoria_desc,r.recurso_desc,r.recurso_titulo,r.recurso_fecha,   
-                                            r.recurso_autores, r.recurso_path_url,  r.recurso_size,r.territorio_id,
-                                            f.tipo_formato_id, f.visualizacion_tipo_id,f.formato_desc,f.formato_extension, 
-                                            vt.visualizacion_tipo_desc,tf.tipo_formato_desc,tf.tipo_formato_solapa, r.sub_proyecto_id as sub_proyecto_id 
-                                            FROM "MIC-MEDIATECA".recurso r
-                                            LEFT JOIN "MIC-MEDIATECA".tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
-                                            LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = r.formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
-                                            LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
-                                            WHERE tf.tipo_formato_solapa = 2 ) as u 
-                                INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
-                                'SELECT estudios_id, estudios_palabras_clave,nombre,equipo,institucion,responsable
-                                FROM "MIC-CATALOGO".estudios') 
-                                as e(estudios_id bigint, estudios_palabras_clave text, nombre text, equipo text, institucion text, responsable text)
-                                ON u.estudios_id = e.estudios_id
-                                INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
-                                'SELECT cod_temporalidad_id,desde AS tempo_desde, hasta AS tempo_hasta FROM "MIC-CATALOGO".cod_temporalidad')
-                                as ct(cod_temporalidad_id bigint, tempo_desde date, tempo_hasta date) ON u.cod_temporalidad_id = ct.cod_temporalidad_id
-                                INNER JOIN dblink('{$conexion_rec_tecnicos->obj_conexion_db_externas->string_con_mic_catalogo}',
-                                'SELECT subclase_id, clase_id FROM "MIC-CATALOGO".subclase')
-                                as sc(subclase_id bigint,clase_id bigint) ON u.subclase_id = sc.subclase_id
+
+                            SELECT COUNT(*) as total_registros FROM 
+                            ( SELECT 'GIS'::text AS origen, 0 AS origen_id,G.origen_id_especifico,
+                            G.origen_search_text,G.subclase_id,G.estudios_id,G.cod_esia_id,
+                            G.cod_temporalidad_id,G.objetos_id,G.fecha_observatorio,
+                            10::bigint AS recurso_categoria_id,'Capas Geográficas'::text AS recurso_categoria_desc,
+                            G.recurso_desc, G.recurso_titulo, NULL::date AS recurso_fecha,
+                            NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
+                            NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,
+                            (-1) AS visualizacion_tipo_id,'Modulo Interno'::text AS formato_desc,
+                            'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
+                            NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id                    
+                            FROM (SELECT c.origen_id_especifico, c.origen_search_text, 
+                                    c.subclase_id, c.estudios_id, 
+                                    c.cod_esia_id, c.cod_temporalidad_id, 
+                                    c.objetos_id, c.fecha_observatorio, 
+                                    l.preview_desc  AS recurso_desc,
+                                    l.preview_titulo  AS recurso_titulo       
+                            FROM mic_geovisores_fdw.catalogo c
+                            INNER JOIN mic_geovisores_fdw.layer l on l.layer_id=c.origen_id_especifico)as G                                 
+                            UNION ALL
+                            SELECT 'Estadistica'::text AS origen, 2 AS origen_id, 
+                                    dt.dt_id AS origen_id_especifico, dt.dt_titulo AS origen_search_text, 
+                                    NULL::bigint AS subclase_id, NULL::bigint AS estudios_id, 
+                                    NULL::bigint AS cod_esia_id, NULL::bigint AS cod_temporalidad_id, 
+                                    NULL::bigint AS objetos_id, dt.fecha_observatorio, 29::bigint AS recurso_categoria_id,
+                                    'Estadísticas'::text AS recurso_categoria_desc,  dt_desc AS recurso_desc, dt_titulo AS recurso_titulo, 
+                                    NULL::date AS recurso_fecha, NULL::text AS recurso_autores, NULL::text AS recurso_path_url,
+                                    NULL::bigint AS recurso_size, NULL::bigint AS territorio_id,(-1) AS tipo_formato_id,(-1) AS visualizacion_tipo_id,
+                                    'Modulo Interno'::text AS formato_desc, 'MI'::text AS formato_extension,'En modulo'::text AS visualizacion_tipo_desc,
+                                    NULL::text AS tipo_formato_desc,2::bigint AS tipo_formato_solapa,NULL::bigint AS sub_proyecto_id
+                                    FROM (SELECT dt_id, dt_titulo, fecha_observatorio, dt_desc FROM mic_estadistica_fdw.dt) as dt
+                            UNION ALL
+                            SELECT 'recurso mediateca'::text AS origen, 5::bigint AS origen_id, 
+                                    r.recurso_id AS origen_id_especifico, r.recurso_titulo AS origen_search_text,
+                                    r.subclase_id,r.estudios_id,NULL::bigint AS cod_esia_id,r.cod_temporalidad_id,
+                                    NULL::bigint AS objetos_id,r.fecha_observatorio,r.recurso_categoria_id,
+                                    rc.recurso_categoria_desc,r.recurso_desc,r.recurso_titulo,r.recurso_fecha,   
+                                    r.recurso_autores, r.recurso_path_url,  r.recurso_size,r.territorio_id,
+                                    f.tipo_formato_id, f.visualizacion_tipo_id,f.formato_desc,f.formato_extension, 
+                                    vt.visualizacion_tipo_desc,tf.tipo_formato_desc,tf.tipo_formato_solapa, r.sub_proyecto_id as sub_proyecto_id 
+                                    FROM mic_mediateca_fdw.recurso r
+                                    LEFT JOIN mic_mediateca_fdw.tipo_recurso tr ON tr.tipo_recurso_id = r.tipo_recurso_id
+                                    LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = r.formato_id
+                                    LEFT JOIN mic_mediateca_fdw.recurso_categoria rc ON rc.recurso_categoria_id = r.recurso_categoria_id
+                                    LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
+                                    LEFT JOIN mic_mediateca_fdw.visualizacion_tipo vt ON vt.visualizacion_tipo_id = f.visualizacion_tipo_id
+                                    WHERE tf.tipo_formato_solapa = 2 ) as u 
+                        INNER JOIN "MIC-CATALOGO".estudios as e ON u.estudios_id = e.estudios_id
+                        INNER JOIN "MIC-CATALOGO".cod_temporalidad as ct  ON u.cod_temporalidad_id = ct.cod_temporalidad_id
+                        INNER JOIN "MIC-CATALOGO".subclase as sc ON u.subclase_id = sc.subclase_id 
+       
                 EOD;      
         
         $CONSULTA_DEFINITIVA_ESTADISTICA_RT =  $aux_consulta_recursos.' '.$extension_consulta_filtro_recursos.' '.$this->get_string_filtros($qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad);
         
         $total_registros = $conexion_rec_tecnicos->get_consulta($CONSULTA_DEFINITIVA_ESTADISTICA_RT);
+         
+        $respuesta_recursos_tecnicos = new respuesta_error_rectec();
+        $respuesta_recursos_tecnicos->flag = true;
+        $respuesta_recursos_tecnicos->detalle = $total_registros;       
         
-        return  $total_registros ;
+        return $respuesta_recursos_tecnicos; 
     }
 
 

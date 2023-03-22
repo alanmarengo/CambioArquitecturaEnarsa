@@ -15,13 +15,13 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
         $extension_consulta_filtro_recursos = " AND r.recurso_id NOT IN (";
 
         // armo una cadena para usar como subconsulta en la query principal 
-        for($x=0; $x<=count($lista_recursos_restringidos)-1; $x++)
+        for($x=0; $x<=count($lista_recursos_restringidos->detalle)-1; $x++)
         {       
-           if($x==count($lista_recursos_restringidos)-1){
+           if($x==count($lista_recursos_restringidos->detalle)-1){
                
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].")";
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].")";
            }else{
-               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos[$x]['objeto_id'].",";
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].",";
            }       
         }
 
@@ -690,4 +690,4 @@ class RepositorioQueryMediateca implements IRepositorioQueryMediateca{
 
 
 //$test = new RepositorioQueryMediateca();
-//echo $test->noticias_mediateca();
+//echo $test->get_recursos($lista_recursos_restringidos, $solapa, $current_page,$page_size,$order_by);

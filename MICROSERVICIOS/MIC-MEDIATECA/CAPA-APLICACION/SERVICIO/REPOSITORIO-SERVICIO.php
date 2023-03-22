@@ -5,6 +5,8 @@
  require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
  require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
  require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\DTOS\DTOS.php');
+ require_once(dirname(__FILE__,4).'\MIC-MEDIATECA\CAPA-DOMINIO\CLASES\Clases.php');
+
  require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
 
 //$rola = dirname(__FILE__,4); no tocar es un ejemplo de como cponseguir la ruta absoluta
@@ -116,12 +118,11 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 
         }
         
-        $respuesta->filtros=$filtros;
+        $respuesta->filtros=$filtros->detalle;
         $respuesta->recordset=$recursos_mediateca->recursos;       
         
         $respuesta_final = new respuesta_servidor();
         $respuesta_final->flag = true;
-        $respuesta_final->cod_status = 200;
         $respuesta_final->detalle = $respuesta;
 
         return  $respuesta_final;
@@ -152,26 +153,27 @@ class RepositorioServicioMediateca  implements IRepositorioServicioMediateca
 // a partir de aqui, lo de abajo son pruebas de aplicacion.
 
  //prueba de aplicacion 
- //$obtener_recursos_mediateca = new RepositorioServicioMediateca();
+
+ $obtener_recursos_mediateca = new RepositorioServicioMediateca();
  
 
- // si no hay que filtrar 
- // test solapa 0 - documentos 
- // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
- //  $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 0, 1,20,"","","","","","","","","",0,0,1); // test solapa cero, sin filtros 
- //  print_r($recursos_mediateca);
+// si no hay que filtrar 
+// test solapa 0 - documentos 
+//function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
+// $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 0, 1,20,"","","","","","","","","",0,0,1); // test solapa cero, sin filtros 
+// print_r($recursos_mediateca);
 
 
  // test solapa 1 - recursos audiovisuales 
  // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
- //  $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 1, 1,20,"","","","","","","","","",0,0,1); // test solapa cero, sin filtros 
- //  print_r($recursos_mediateca);
+  //$recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 1, 1,20,"","","","","","","","","",0,0,1); // test solapa cero, sin filtros 
+  //print_r($recursos_mediateca);
 
 
 // test solapa 2 - recursos tecnicos 
  // public function get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,$subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
-// $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 2, 1,20,"","","","","","","","","",0,0,1); // test solapa cero, sin filtros 
-// print_r($recursos_mediateca);
+ $recursos_mediateca = $obtener_recursos_mediateca->get_Recursos("", 2, 1,20,"","","","","","","","","",0,0,1); // test solapa cero, sin filtros 
+ print_r($recursos_mediateca);
 
 
 // test solapa 3 - novedades

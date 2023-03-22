@@ -46,10 +46,10 @@ class Recurso{
             $RepoCatalogo= new RepositorioServicioCatalogo();
             $InfoTerritorio = $RepoCatalogo->get_info_territorio($this->territorio_id);
             
-            $this->territorio_desc = $InfoTerritorio[0]['descripcion'];
-            $this->territorio_fec_bbdd_date = $InfoTerritorio[0]['fec_bbdd_date'];;
-            $this->territorio_simpli = $InfoTerritorio[0]['territorio_simpli'];
-            $this->territorio_fec_bbdd = $InfoTerritorio[0]['fec_bbdd'];
+            $this->territorio_desc = $InfoTerritorio->detalle[0]['descripcion'];
+            $this->territorio_fec_bbdd_date = $InfoTerritorio->detalle[0]['fec_bbdd_date'];;
+            $this->territorio_simpli = $InfoTerritorio->detalle[0]['territorio_simpli'];
+            $this->territorio_fec_bbdd = $InfoTerritorio->detalle[0]['fec_bbdd'];
 
         } 
     }

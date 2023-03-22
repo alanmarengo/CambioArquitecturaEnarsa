@@ -3,7 +3,7 @@
 include_once(dirname(__FILE__).'/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php'); // Implementamos la interfaz de servicio del microservicio
 include_once(dirname(__FILE__).'/CAPA-DOMINIO/CLASES/Clases.php');
 
-$_respuesta = new Respuesta();
+$_respuesta = new Respuesta_usuario();
 
 // interfaz donde se implementara la API para consumir los servicios del Microservicio Usuario
 

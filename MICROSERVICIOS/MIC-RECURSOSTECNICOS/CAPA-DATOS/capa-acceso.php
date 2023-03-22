@@ -8,7 +8,7 @@ class ConexionRecursosTecnicos {
     private $user = "plataforma_readonly";
     private $pass = "Plataforma100%";
     private $port = "5432";
-    private $database = "MIC-MEDIATECA";
+    private $database = "MIC-CATALOGO";
     private $conect;
     public $obj_conexion_db_externas; // objeto de conexion con credenciales. 
 

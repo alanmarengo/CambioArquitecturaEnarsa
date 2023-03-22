@@ -5,7 +5,7 @@ include_once(dirname(__FILE__).'\CAPA-DOMINIO\clase_request.php');
 include_once(dirname(__FILE__).'\CAPA-DOMINIO\clase_respuesta.php');
 include_once(dirname(__FILE__).'\CAPA-DOMINIO\clases.php');
 
-$_respuesta = new Respuesta();
+$_respuesta = new Respuesta_mediateca();
 $datos_respuesta; // variable que almacenara la respuesta final. 
 
 /*
@@ -40,8 +40,8 @@ busqueda_mediateca($str_filtro_mediateca)
 carrusel_represas($represa)
 noticias_mediateca() */
 
-//if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
-//{ 
+if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
+{ 
     if(isset($_POST['action']) && !empty($_POST['action'])) // evaluo que contenga la variable action(contiene la funcion a requerir)
     {  
 
@@ -100,11 +100,11 @@ noticias_mediateca() */
         echo json_encode($datos_respuesta);
     }          
    
-//}
+}
 
 
 
-/*
+
 if($_SERVER['REQUEST_METHOD'] == "GET")
 {
 
@@ -153,7 +153,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
     
     //print_r($filtros_recibidos);
 }
-*/
+
 
 
 

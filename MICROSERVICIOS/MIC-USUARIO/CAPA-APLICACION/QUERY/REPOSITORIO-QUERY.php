@@ -16,13 +16,13 @@ class RepositorioQueryUsuario implements IRepositorioQueryUsuario{
 
         if(!empty($resultado))
         {
-            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server = new respuesta_error_usuario();
             $respuesta_op_server->flag = true;
             $respuesta_op_server->detalle = $resultado;        
 
         }else{
 
-            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server = new respuesta_error_usuario();
             $respuesta_op_server->flag = false;
             $respuesta_op_server->detalle = "No se encontraron resultados";
 
@@ -47,13 +47,13 @@ class RepositorioQueryUsuario implements IRepositorioQueryUsuario{
 
         if(!empty($resultado))
         {
-            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server = new respuesta_error_usuario();
             $respuesta_op_server->flag = true;
             $respuesta_op_server->detalle = $resultado;        
 
         }else{
 
-            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server = new respuesta_error_usuario();
             $respuesta_op_server->flag = false;
             $respuesta_op_server->detalle = "No se encontraron resultados";
 
@@ -117,7 +117,7 @@ class RepositorioQueryUsuario implements IRepositorioQueryUsuario{
                     $detalle_respuesta['logged'] = true;
                     $detalle_respuesta['user_info'] = $resultado_user;
 
-                    $respuesta_op_server = new respuesta_error();
+                    $respuesta_op_server = new respuesta_error_usuario();
                     $respuesta_op_server->flag = true;
                     $respuesta_op_server->detalle = $detalle_respuesta;
 
@@ -125,7 +125,7 @@ class RepositorioQueryUsuario implements IRepositorioQueryUsuario{
 
                 }else{ 
 
-                    $respuesta_op_server = new respuesta_error();
+                    $respuesta_op_server = new respuesta_error_usuario();
                     $respuesta_op_server->flag = false;
                     $respuesta_op_server->detalle = "Invalid Token";
 
@@ -170,7 +170,7 @@ class RepositorioQueryUsuario implements IRepositorioQueryUsuario{
 
         } else {
 
-            $respuesta_op_server = new respuesta_error();
+            $respuesta_op_server = new respuesta_error_usuario();
             $respuesta_op_server->flag = false;
             $respuesta_op_server->detalle = " Usuario Incorrecto";
                     
