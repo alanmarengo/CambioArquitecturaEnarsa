@@ -1,5 +1,5 @@
 <?php
-
+/*
 class Respuesta_mediateca{
 
     private $response = [
@@ -36,11 +36,11 @@ class Respuesta_mediateca{
 
         return $this->response;
     }
-}
+} 
 
 Class respuesta_error_mediateca{
     public $flag;
     public $detalle;
 }
-
+*/
 ?>

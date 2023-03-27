@@ -1,59 +1,172 @@
 <?php
 
-require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
-include_once(dirname(__FILE__).'\CAPA-DOMINIO\clase_request.php');
-include_once(dirname(__FILE__).'\CAPA-DOMINIO\clase_respuesta.php');
-include_once(dirname(__FILE__).'\CAPA-DOMINIO\clases.php');
+
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
+error_reporting(-1);
+require_once(dirname(__FILE__).'/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
+include_once(dirname(__FILE__).'/CAPA-DOMINIO/CLASES/clase_request.php');
+include_once(dirname(__FILE__).'/CAPA-DOMINIO/CLASES/clase_respuesta.php');
+include_once(dirname(__FILE__).'/CAPA-DOMINIO/CLASES/clases.php');
+
 
 $_respuesta = new Respuesta_mediateca();
 $datos_respuesta; // variable que almacenara la respuesta final. 
-
 /*
+$_POST['action'] = 'get_recursos_mediateca';
+$_POST['si_tengo_que_filtrar'] = 1;
+$_POST['o'] = 1;
+$_POST['salto'] = 10;
+$_POST['user_id'] = "";
+$_POST['solapa'] = 1;
+$_POST['s'] = 'ahrsc';
+$_POST['pagina'] = 0;
+$_POST['tipo_temporalidad'] = 2;
+$_POST['ds'] ='01/01/2020'; // desde 
+$_POST['de'] = '01/03/2023'; // hasta
+$_POST['ft'] = 1;
+ 
 
-$_REQUEST['s'] = null;
-$_REQUEST['o'] =4;
-$_REQUEST['ds'] =null;
-$_REQUEST['de'] = null;
-$_REQUEST['ft'] =2;
-$_REQUEST['proyecto'] = null;
-$_REQUEST['documento'] = null;
-$_REQUEST['tema'] = null;
-$_REQUEST['subtema'] = null;
-$_REQUEST['mode'] = '-1';
-$_REQUEST['mode_id'] = '';
-$_REQUEST['solapa'] = '0';
-$_REQUEST['pagina'] = null;
-$_REQUEST['salto'] = null;
-$_REQUEST['tipo_elemento'] = null;
-$_REQUEST['user_id'] = null;
+//print_r($_SERVER);exit;
+
+
+s=&
+o=4&
+ds=24%2F03%2F2023&
+de=24%2F03%2F2023&
+ft=2&
+proyecto=&
+documento=&
+tema=&
+subtema=&
+mode=-1&
+mode_id=0&
+solapa=0&
+pagina=0&
+salto=20&
+tipo_elemento='' 
+$_GET['s'] = ""; // search- busqueda
+$_GET['o'] = 4;
+$_GET['ds'] ='01/01/2020'; // desde 
+$_GET['de'] = '01/03/2023'; // hasta
+$_GET['ft'] =1;
+$_GET['proyecto'] = null;
+$_GET['documento'] = null;
+$_GET['tema'] = null;
+$_GET['subtema'] = null;
+$_GET['mode'] = '-1';
+$_GET['mode_id'] = '';
+$_GET['solapa'] = '0';
+$_GET['pagina'] = '0';
+$_GET['salto'] = 20;
+$_GET['tipo_elemento'] = null;
+$_GET['user_id'] = null;
+$_GET['si_tengo_que_filtrar'] = "1";
+
+
+
 */
 
+//if($_SERVER['REQUEST_METHOD'] == "POST")
+//{
 
+    if(isset($_POST['action']) && !empty($_POST['action']))
+    {
+        $datos_respuesta = "";
 
-
-$_POST['action'] = '';
-
-/*
-get_Recursos($user_id, $solapa, $current_page,$page_size,$qt,$desde,$hasta,$proyecto,$clase,
-                                $subclase,$tipo_doc,$filtro_temporalidad,$tipo_temporalidad,$si_tengo_que_filtrar,$calculo_estadistica,$order_by)
-busqueda_mediateca($str_filtro_mediateca)
-carrusel_represas($represa)
-noticias_mediateca() */
-
-if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
-{ 
-    if(isset($_POST['action']) && !empty($_POST['action'])) // evaluo que contenga la variable action(contiene la funcion a requerir)
-    {  
-
-        switch ($_POST['action']) 
+        switch ($_POST['action'])
         {
-            case 'carrusel_represas':
+
+            case 'get_recursos_mediateca'; 
+                    
+              
+
+                $filtros_recibidos = new request_filtros();        
+                if(!empty($_POST['s'])){$filtros_recibidos->busqueda = $_POST['s']; }
+                if(!empty($_POST['ds'])){$filtros_recibidos->desde = $_POST['ds']; }
+                if(!empty($_POST['de'])){$filtros_recibidos->hasta = $_POST['de']; }
+                if(!empty($_POST['ft'])){$filtros_recibidos->filtro_temporalidad = $_POST['ft']; }
+                if(!empty($_POST['proyecto'])){$filtros_recibidos->proyecto = $_POST['proyecto']; }
+                if(!empty($_POST['tema'])){$filtros_recibidos->clase = $_POST['tema']; }
+                if(!empty($_POST['subtema'])){$filtros_recibidos->subclase = $_POST['subtema']; }
+                if(!empty($_POST['documento'])){$filtros_recibidos->tipo_doc = $_POST['documento']; }
+                if(!empty($_POST['o'])){$filtros_recibidos->orden = $_POST['o']; }
+                if(!empty($_POST['estudio_id'])){$filtros_recibidos->estudio_id = $_POST['estudio_id']; }
+                if(!empty($_POST['ra'])){$filtros_recibidos->ra = $_POST['ra']; }
+                if(!empty($_POST['solapa'])){$filtros_recibidos->solapa = $_POST['solapa']; }
+                if(!empty($_POST['mode'])){$filtros_recibidos->mode = $_POST['mode']; }
+                if(!empty($_POST['mode_id'])){$filtros_recibidos->mode_id = $_POST['mode_id']; }
+                if(!empty($_POST['mode_label'])){$filtros_recibidos->mode_label = $_POST['mode_label']; }
+                if(!empty($_POST['tipo_elemento'])){$filtros_recibidos->tipo_elemento = $_POST['tipo_elemento']; }
+                if(!empty($_POST['user_id'])){$filtros_recibidos->usuario_id = $_POST['user_id']; }
+                if(!empty($_POST['pagina'])){$filtros_recibidos->pagina = $_POST['pagina']; }
+                if(!empty($_POST['salto'])){$filtros_recibidos->salto = $_POST['salto']; }
+                if(!empty($_POST['tipo_temporalidad'])){$filtros_recibidos->tipo_temporalidad = $_POST['tipo_temporalidad']; }
+                if(!empty($_POST['si_tengo_que_filtrar'])){$filtros_recibidos->si_tengo_que_filtrar = $_POST['si_tengo_que_filtrar']; }
                 
-                if((isset($_POST['represa'])) && (!empty($_POST['represa'])))
+
+                $servicio_mediateca = new RepositorioServicioMediateca();
+
+                $respuesta = $servicio_mediateca->get_Recursos($filtros_recibidos->user_id, $filtros_recibidos->solapa, $filtros_recibidos->pagina,$filtros_recibidos->salto,
+                $filtros_recibidos->busqueda, $filtros_recibidos->desde, $filtros_recibidos->hasta, $filtros_recibidos->proyecto, $filtros_recibidos->clase, $filtros_recibidos->subclase,
+                $filtros_recibidos->tipo_elemento, $filtros_recibidos->filtro_temporalidad, $filtros_recibidos->tipo_temporalidad,$filtros_recibidos->si_tengo_que_filtrar,
+                $filtros_recibidos->calculo_estadistica,$filtros_recibidos->orden);
+
+                if($respuesta->flag)
+                {
+                    $respuesta_final = new respuesta_server();
+                    http_response_code($respuesta_final->error_code);
+                    $respuesta_final->detalle = $respuesta->detalle;
+                    echo json_encode($respuesta_final);
+
+                }else{
+
+                    http_response_code(400);
+                    echo $respuesta->detalle;
+                }
+
+                break;
+
+            
+            case 'busqueda_mediateca':
+
+                
+                if(!empty($_POST['texto_busqueda']))
+                {                    
+                    $servicio_mediateca = new RepositorioServicioMediateca();
+                    $datos_respuesta = $servicio_mediateca->busqueda_mediateca($_POST['texto_busqueda']);
+                                  
+                    if($datos_respuesta->flag)
+                    {
+                        http_response_code(200);                
+                        $datos_respuesta = $_respuesta->error_200($datos_respuesta->detalle); 
+                        echo json_encode($datos_respuesta);
+
+                    }else{
+
+                        http_response_code(400);                
+                        $datos_respuesta = $_respuesta->error_400($datos_respuesta->detalle); 
+                        echo json_encode($datos_respuesta);
+
+                    }                 
+                    $servicio_mediateca = null;
+
+                }else{
+
+                    http_response_code(400);                
+                    $datos_respuesta = $_respuesta->error_400('Variable texto_busqueda vacia.'); 
+                    echo json_encode($datos_respuesta);
+                }
+
+                break;                                 
+                
+            case 'carrusel_represas':
+
+                if(!empty($_POST['represa']))
                 {                    
                     $servicio_mediateca = new RepositorioServicioMediateca();
 
-                    $datos_respuesta =  $servicio_mediateca->carrusel_represas($_POST['carrusel_represas']);        
+                    $datos_respuesta = $servicio_mediateca->carrusel_represas($_POST['represa']);
                                   
                     if($datos_respuesta->flag)
                     {
@@ -69,75 +182,102 @@ if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
                         echo json_encode($datos_respuesta);
 
                     } 
-
-                    // vaciamos el objeto servicio_geovisor
-                    $servicio_mediateca = null;   
+                
+                    $servicio_mediateca = null;
 
                 }else{
 
                     http_response_code(400);                
-                    $datos_respuesta = $_respuesta->error_400('Variable represa Vacia'); 
+                    $datos_respuesta = $_respuesta->error_400('Variable represa vacia.'); 
                     echo json_encode($datos_respuesta);
 
                 }
 
-                break;
+                break;                             
 
-            default : 
+            case 'noticias_mediateca':
+
+                $servicio_mediateca = new RepositorioServicioMediateca();
+
+                $datos_respuesta = $servicio_mediateca->noticias_mediateca();
+                                  
+                if($datos_respuesta->flag)
+                {
+
+                    http_response_code(200);                
+                    $datos_respuesta_server = $_respuesta->error_200($datos_respuesta->detalle); 
+                    print_r($datos_respuesta_server);
+
+                }else{
+
+                    http_response_code(400);                
+                    $datos_respuesta_server = $_respuesta->error_400("No se encontraron resultados"); 
+                    echo json_encode($datos_respuesta_server);
+
+                } 
+
+                $servicio_mediateca = null;
+
+                break;
+            
+            default: 
 
                 http_response_code(400);                
-                $datos_respuesta = $_respuesta->error_400('Variable Usuario Vacia'); 
+                $datos_respuesta = $_respuesta->error_400('Peticion Incorrecta '); 
                 echo json_encode($datos_respuesta);
 
-            break;
-            
+                break;
         }
+
+    }else{
         
-    } else {
-
         http_response_code(400);                
-        $datos_respuesta = $_respuesta->error_400('Peticion Inconrrecta!'); 
+        $datos_respuesta = $_respuesta->error_400('Peticion Incorrecta.'); 
         echo json_encode($datos_respuesta);
-    }          
-   
-}
+    }
+//}
 
+
+
+/*
 
 
 
 if($_SERVER['REQUEST_METHOD'] == "GET")
-{
+{   
 
-    //print_r($_REQUEST);
+    //print_r($_GET);
 
     $filtros_recibidos = new request_filtros();        
-    if(!empty($_REQUEST['s'])){$filtros_recibidos->busqueda = $_REQUEST['s']; }
-    if(!empty($_REQUEST['ds'])){$filtros_recibidos->desde = $_REQUEST['ds']; }
-    if(!empty($_REQUEST['de'])){$filtros_recibidos->hasta = $_REQUEST['de']; }
-    if(!empty($_REQUEST['ft'])){$filtros_recibidos->filtro_temporalidad = $_REQUEST['ft']; }
-    if(!empty($_REQUEST['proyecto'])){$filtros_recibidos->proyecto = $_REQUEST['proyecto']; }
-    if(!empty($_REQUEST['tema'])){$filtros_recibidos->clase = $_REQUEST['tema']; }
-    if(!empty($_REQUEST['subtema'])){$filtros_recibidos->subclase = $_REQUEST['subtema']; }
-    if(!empty($_REQUEST['documento'])){$filtros_recibidos->tipo_doc = $_REQUEST['documento']; }
-    if(!empty($_REQUEST['o'])){$filtros_recibidos->orden = $_REQUEST['o']; }
-    if(!empty($_REQUEST['estudio_id'])){$filtros_recibidos->estudio_id = $_REQUEST['estudio_id']; }
-    if(!empty($_REQUEST['ra'])){$filtros_recibidos->ra = $_REQUEST['ra']; }
-    if(!empty($_REQUEST['solapa'])){$filtros_recibidos->solapa = $_REQUEST['solapa']; }
-    if(!empty($_REQUEST['mode'])){$filtros_recibidos->mode = $_REQUEST['mode']; }
-    if(!empty($_REQUEST['mode_id'])){$filtros_recibidos->mode_id = $_REQUEST['mode_id']; }
-    if(!empty($_REQUEST['mode_label'])){$filtros_recibidos->mode_label = $_REQUEST['mode_label']; }
-    if(!empty($_REQUEST['tipo_elemento'])){$filtros_recibidos->tipo_elemento = $_REQUEST['tipo_elemento']; }
-    if(!empty($_REQUEST['user_id'])){$filtros_recibidos->usuario_id = $_REQUEST['user_id']; }
-    if(!empty($_REQUEST['pagina'])){$filtros_recibidos->pagina = $_REQUEST['pagina']; }
-    if(!empty($_REQUEST['salto'])){$filtros_recibidos->salto = $_REQUEST['salto']; }
-    if(!empty($_REQUEST['tipo_temporalidad'])){$filtros_recibidos->tipo_temporalidad = $_REQUEST['tipo_temporalidad']; }
+    if(!empty($_GET['s'])){$filtros_recibidos->busqueda = $_GET['s']; }
+    if(!empty($_GET['ds'])){$filtros_recibidos->desde = $_GET['ds']; }
+    if(!empty($_GET['de'])){$filtros_recibidos->hasta = $_GET['de']; }
+    if(!empty($_GET['ft'])){$filtros_recibidos->filtro_temporalidad = $_GET['ft']; }
+    if(!empty($_GET['proyecto'])){$filtros_recibidos->proyecto = $_GET['proyecto']; }
+    if(!empty($_GET['tema'])){$filtros_recibidos->clase = $_GET['tema']; }
+    if(!empty($_GET['subtema'])){$filtros_recibidos->subclase = $_GET['subtema']; }
+    if(!empty($_GET['documento'])){$filtros_recibidos->tipo_doc = $_GET['documento']; }
+    if(!empty($_GET['o'])){$filtros_recibidos->orden = $_GET['o']; }
+    if(!empty($_GET['estudio_id'])){$filtros_recibidos->estudio_id = $_GET['estudio_id']; }
+    if(!empty($_GET['ra'])){$filtros_recibidos->ra = $_GET['ra']; }
+    if(!empty($_GET['solapa'])){$filtros_recibidos->solapa = $_GET['solapa']; }
+    if(!empty($_GET['mode'])){$filtros_recibidos->mode = $_GET['mode']; }
+    if(!empty($_GET['mode_id'])){$filtros_recibidos->mode_id = $_GET['mode_id']; }
+    if(!empty($_GET['mode_label'])){$filtros_recibidos->mode_label = $_GET['mode_label']; }
+    if(!empty($_GET['tipo_elemento'])){$filtros_recibidos->tipo_elemento = $_GET['tipo_elemento']; }
+    if(!empty($_GET['user_id'])){$filtros_recibidos->usuario_id = $_GET['user_id']; }
+    if(!empty($_GET['pagina'])){$filtros_recibidos->pagina = $_GET['pagina']; }
+    if(!empty($_GET['salto'])){$filtros_recibidos->salto = $_GET['salto']; }
+    if(!empty($_GET['tipo_temporalidad'])){$filtros_recibidos->tipo_temporalidad = $_GET['tipo_temporalidad']; }
+    if(!empty($_GET['si_tengo_que_filtrar'])){$filtros_recibidos->si_tengo_que_filtrar = $_GET['si_tengo_que_filtrar']; }
     
 
     $servicio_mediateca = new RepositorioServicioMediateca();
 
-    $respuesta = $servicio_mediateca->get_Recursos($filtros_recibidos->user_id,$filtros_recibidos->solapa,$filtros_recibidos->pagina,$filtros_recibidos->salto,$filtros_recibidos->busqueda,
-                                                    $filtros_recibidos->desde,$filtros_recibidos->hasta,$filtros_recibidos->proyecto,$filtros_recibidos->clase,$filtros_recibidos->subclase,$filtros_recibidos->tipo_elemento,
-                                                    $filtros_recibidos->filtro_temporalidad,$filtros_recibidos->tipo_temporalidad,$filtros_recibidos->si_tengo_que_filtrar,$filtros_recibidos->calculo_estadistica,$filtros_recibidos->orden);
+    $respuesta = $servicio_mediateca->get_Recursos($filtros_recibidos->user_id, $filtros_recibidos->solapa, $filtros_recibidos->pagina,$filtros_recibidos->salto,
+    $filtros_recibidos->busqueda, $filtros_recibidos->desde, $filtros_recibidos->hasta, $filtros_recibidos->proyecto, $filtros_recibidos->clase, $filtros_recibidos->subclase,
+    $filtros_recibidos->tipo_elemento, $filtros_recibidos->filtro_temporalidad, $filtros_recibidos->tipo_temporalidad,$filtros_recibidos->si_tengo_que_filtrar,
+    $filtros_recibidos->calculo_estadistica,$filtros_recibidos->orden);
 
     if($respuesta->flag)
     {
@@ -156,7 +296,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
 
 
 
-
+*/
 
 
 

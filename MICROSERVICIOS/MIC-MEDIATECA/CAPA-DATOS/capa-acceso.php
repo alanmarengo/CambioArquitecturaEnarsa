@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__,3).'\CRED\conf.php');
+require_once(dirname(__FILE__,3).'/CRED/conf.php');
 
 // clase para conexion a bd
 class ConexionMediateca {
@@ -8,11 +8,6 @@ class ConexionMediateca {
     private $host = "iobs-02.ieasa.com.ar"; 
     private $user = "plataforma_readonly";
     private $pass = "Plataforma100%";
-
-    // uso en local 
-    //private $host = "localhost"; 
-    //private $user = "postgres";
-    //private $pass = "37159252";
 
     private $port = "5432";
     private $database = "MIC-MEDIATECA";

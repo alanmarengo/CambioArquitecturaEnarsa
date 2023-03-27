@@ -4,6 +4,8 @@ require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\REPOSITORIO
 require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DATOS\capa-acceso.php');
 require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\DTOS\DTOS.php');
 require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\ENTIDADES\ENTIDADES.php');
+require_once(dirname(__FILE__,4).'\MIC-RECURSOSTECNICOS\CAPA-DOMINIO\CLASES\Clases.php');
+
 
 
 class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecnicos{
@@ -454,67 +456,103 @@ class RepositorioQueryRecursosTecnicos implements IRepositorioQueryRecursosTecni
              
         }
         
-        switch ($tipo_temporalidad) { // dependiendo del valor de $tipo_temporalidad, el filtro de fecha se hace en campos diferentes
-                    case 0:
-                        if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
-                        {
-                            $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta)  
-                                                    OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";  // SE buscan en MIC-CATALOGO".cod_temporalidad'
-                        
-                        }else{ 
-                            if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
-                            {
-                                $aux_cadena_filtros .= "  AND (('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
-                                                        OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";// MIC-CATALOGO".cod_temporalidad'
+        switch ($filtro_temporalidad) { // dependiendo del valor de $tipo_temporalidad, el filtro de fecha se hace en campos diferentes
+
+            case 0:
+                
+                if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
+                {
+
+                    $date_hasta = date_create(str_replace("/","-",$hasta));
+                    $aux_hora_hasta = date_format($date_hasta, 'Y-m-d');
+
+                    $date_desde = date_create(str_replace("/","-",$desde));
+                    $aux_hora_desde = date_format($date_desde, 'Y-m-d');
+
+
+                    $aux_cadena_filtros .= "  AND (('$aux_hora_desde' BETWEEN ct.tempo_desde AND ct.tempo_hasta)  
+                                              OR('$aux_hohra_hasta' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";  // SE buscan en MIC-CATALOGO".cod_temporalidad'
+                
+                }else{ 
+                    
+                    if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
+                    {
+                        $aux_cadena_filtros .= "  AND (('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                OR('".$hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";// MIC-CATALOGO".cod_temporalidad'
         
-                            }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
-                            {
-                                $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
-                                                        OR('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))"; // MIC-CATALOGO".cod_temporalidad'
+                    }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
+                    {
+                        $aux_cadena_filtros .= "  AND (('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                OR('".$desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))"; // MIC-CATALOGO".cod_temporalidad'
         
-                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
-                                $aux_cadena_filtros .= "";
-                            }
+                    }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                        $aux_cadena_filtros .= "";
+                    }
         
-                        } break;
+                } 
+                
+                break;
+
+
                     case 1:
+
                         if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
                         {
-                            $aux_cadena_filtros .= " AND ((u.fecha_observatorio IS NOT NULL)   AND
-                                                          (u.fecha_observatorio BETWEEN ".$desde." AND ".$hasta."))"; // este campo ya esta 
-                            if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
-                            {
-                                $aux_cadena_filtros .= "  AND ((u.fecha_observatorio IS NOT NULL)  AND 
-                                                               (u.fecha_observatorio <= ".$hasta."))"; // este campo ya esta 
+                            $date_hasta = date_create(str_replace("/","-",$hasta));
+                            $aux_hora_hasta = date_format($date_hasta, 'Y-m-d');
+
+                            $date_desde = date_create(str_replace("/","-",$desde));
+                            $aux_hora_desde = date_format($date_desde, 'Y-m-d');
+
+                            $aux_cadena_filtros .= " AND (u.fecha_observatorio IS NOT NULL) AND (u.fecha_observatorio BETWEEN '$aux_hora_desde' AND '$aux_hora_hasta')"; // este campo ya esta
+                            
+
+                        }else if(empty($desde) && !empty($hasta)){ // si desde viene vacio y hasta no.
+                            
+                            $date_hasta = date_create(str_replace("/","-",$hasta));
+                            $aux_hora_hasta = date_format($date_hasta, 'Y-m-d');
+
+                            $aux_cadena_filtros .= "  AND (u.fecha_observatorio IS NOT NULL) AND (u.fecha_observatorio <= '$aux_hora_hasta')"; // este campo ya esta 
         
-                            }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
-                            {
-                                $aux_cadena_filtros .= "  AND ((u.fecha_observatorio IS NOT NULL)  AND 
-                                                               (u.fecha_observatorio >= ".$desde."))"; // este campo ya esta 
+                        }else if(!empty($desde) && empty($hasta)){ // si desde no viene vacio y hasta si.
+                            
+                            $date_desde = date_create(str_replace("/","-",$desde));
+                            $aux_hora_desde = date_format($date_desde, 'Y-m-d');
+
+                            $aux_cadena_filtros .= "  AND (u.fecha_observatorio IS NOT NULL) AND (u.fecha_observatorio >= '$aux_hora_desde')"; // este campo ya esta 
         
-                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
-                                $aux_cadena_filtros .= "";
-                            }
-                        } break;
+                        }
+
+                        break;
+
                     case 2:
+
                         if(!empty($desde) && !empty($hasta)) // si ningun filtro viene vacio. 
                         {
-                            $aux_cadena_filtros .= " AND ((u.recurso_fecha IS NOT NULL)   AND
-                                                          (u.recurso_fecha BETWEEN ".$desde." AND ".$hasta."))"; // estos campos ya estan
-                            if(empty($desde) && !empty($hasta)) // si desde viene vacio y hasta no. 
-                            {
-                                $aux_cadena_filtros .= "  AND ((u.recurso_fecha IS NOT NULL)  AND 
-                                                               (u.recurso_fecha <= ".$hasta."))"; // estos campos ya estan
+                                   
+                            $date_desde = date_create(str_replace("/","-",$desde));
+                            $aux_hora_desde = date_format($date_desde, 'Y-m-d');
+                                                
+                            $date_hasta = date_create(str_replace("/","-",$hasta));
+                            $aux_hora_hasta = date_format($date_hasta, 'Y-m-d');
+
+                            $aux_cadena_filtros .= " AND (u.recurso_fecha IS NOT NULL) AND (u.recurso_fecha BETWEEN '$aux_hora_desde' AND '$aux_hora_hasta')"; 
+
+
+                        }else if(empty($desde) && !empty($hasta)){
+
+                            $date_hasta = date_create(str_replace("/","-",$hasta));
+                            $aux_hora_hasta = date_format($date, 'Y-m-d');
+
+                            $aux_cadena_filtros .= "  AND (u.recurso_fecha IS NOT NULL) AND (u.recurso_fecha <= '$aux_hora_hasta')"; // estos campos ya estan
         
-                            }else if(!empty($desde) && empty($hasta)) // si desde no viene vacio y hasta si.
-                            {
-                                $aux_cadena_filtros .= "  AND ((u.recurso_fecha IS NOT NULL)  AND 
-                                                               (u.recurso_fecha >= ".$desde."))"; // estos campos ya estan
+                        }else if(!empty($desde) && empty($hasta)){
+
+                                $aux_cadena_filtros .= " AND (u.recurso_fecha IS NOT NULL) AND (u.recurso_fecha >= '$desde')"; // estos campos ya estan
         
-                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
-                                $aux_cadena_filtros .= "";
-                            }
-                        } break;
+                        }
+                        
+                        break;
         }
                 
         if(!empty($proyecto)) { $aux_cadena_filtros .= " AND u.sub_proyecto_id = ".$proyecto; } // se busca en MIC-CATALOGO.estudios 

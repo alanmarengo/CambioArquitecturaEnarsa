@@ -2,29 +2,8 @@
 
 include_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php'); // Implementamos la interfaz de servicio del microservicio
 include_once(dirname(__FILE__).'\CAPA-DOMINIO\CLASES\Clases.php');
-require_once(dirname(__FILE__,2).'\MIC-USUARIO\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
 
 $_respuesta_rectec = new Respuesta_rectec();
-
-$servicio_usuario = new RepositorioServicioUsuario();
-$lista_recursos_restringidos = $servicio_usuario->get_recursos_restringidos();
-
-$_POST['action'] = 'get_recursos_tecnicos_filtrado';
-$_POST['lista_recursos_restringidos'] = $lista_recursos_restringidos;
-$_POST['current_page'] = '0';
-$_POST['page_size'] = 20;
-$_POST['qt'] = '';
-$_POST['desde'] = "";
-$_POST['hasta'] = "";
-$_POST['proyecto'] = ""; 
-$_POST['clase'] = "";
-$_POST['subclase'] = ""; 
-$_POST['tipo_doc'] = "";
-$_POST['filtro_temporalidad'] = "";
-$_POST['tipo_temporalidad'] = "";
-$_POST['order_by'] = 1; 
-$_POST['si_tengo_que_filtrar'] = 1;
-$_POST['calculo_estadistica'] = 1;
 
 // interfaz donde se implementara la API para consumir los servicios del Microservicio Usuario
 

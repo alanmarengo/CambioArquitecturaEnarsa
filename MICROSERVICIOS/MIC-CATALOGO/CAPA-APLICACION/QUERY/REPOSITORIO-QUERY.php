@@ -100,7 +100,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
 
 
             $conexion = New ConexionCatalogo(); //
-           // echo $QUERY_DEFINITIVA;
+            //echo $QUERY_DEFINITIVA; exit;
 
             $resultado_final_filtros = $conexion->get_consulta($QUERY_DEFINITIVA);
             
@@ -149,15 +149,188 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
  
     }
 
-    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa,$aux_cadena_filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar){
+    public function ConstruirQueryUnion($lista_filtros_solapa, $solapa,$filtros,$lista_recursos_restringidos,$si_tengo_que_filtrar){
 
         $QUERY_RETURN = "("; // variable contenedora de la union de filtros
 
         $conect_mic_catalogo = new ConexionCatalogo;
         
-        $auxiliar_extensiones_filtros = ""; // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario,                                                    
+        
+        
+        // SECCION DE ARMADO DE FILTTROS 
+        
+        $auxiliar_extensiones_filtros = ""; // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario,    
+
+        $extension_consulta_filtro_recursos = "AND r.recurso_id NOT IN (";
+
+                // armo una cadena para usar como subconsulta en la query principal 
+        for($x=0; $x<=count($lista_recursos_restringidos->detalle)-1; $x++)
+        {       
+           if($x==count($lista_recursos_restringidos->detalle)-1){
+               
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].")";
+           }else{
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].",";
+           }       
+        }
+        
+                // validacion de filtros 
+                $aux_cadena_filtros = "";
+
+        if(!empty($filtros))
+        {                       
+
+            $aux_cadena_filtros = ""; // variable contenedora, almacenara un string con todas las adeciones de filtros a la consulta principal
+            
+            if(!empty($filtros->qt)) // variable que viene del buscador.
+            {            
+
+                $aux_cadena_filtros = <<<EOD
+                AND ( lower("MIC-CATALOGO".unaccent(r.origen_search_text)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%'))
+                OR lower("MIC-CATALOGO".unaccent(e.estudios_palabras_clave)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%'))
+                OR lower("MIC-CATALOGO".unaccent(e.nombre)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%'))
+                OR lower("MIC-CATALOGO".unaccent(e.equipo)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%')) 
+                OR lower("MIC-CATALOGO".unaccent(e.institucion)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%'))
+                OR lower("MIC-CATALOGO".unaccent(e.responsable)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%')) )
+                EOD;
+        
+        
+                /*
+                
+                $aux_cadena_filtros .= " AND ( lower(unaccent(T.origen_search_text)) LIKE  lower(unaccent('%".$qt."%'))"; // con unaccent  lower(unaccent('my_MMuíèles'))
+                $aux_cadena_filtros .= " OR lower(unaccent(e.estudios_palabras_clave)) LIKE  lower(unaccent('%".$qt."%'))";
+                $aux_cadena_filtros .= " OR lower(unaccent(e.nombre)) LIKE  lower(unaccent('%".$qt."%')) ";
+                $aux_cadena_filtros .= " OR lower(unaccent(e.equipo)) LIKE  lower(unaccent('%".$qt."%')) ";
+                $aux_cadena_filtros .= " OR lower(unaccent(e.institucion)) LIKE  lower(unaccent('%".$qt."%')) ";
+                $aux_cadena_filtros .= " OR lower(unaccent(e.responsable)) LIKE  lower(unaccent('%".$qt."%')) ) "; */
+                
+            }
+            
+            if(!empty($filtros->filtro_temporalidad)){
+
+                switch ($filtros->filtro_temporalidad) { // dependiendo del valor de $tipo_temporalidad, el filtro de fecha se hace en campos diferentes
+                    
+                    case 0:
+    
+                        if(!empty($filtros->desde) && !empty($filtros->hasta)) // si ningun filtro viene vacio. 
+                        {
+    
+                            $date_hasta = date_create(str_replace("/","-",$filtros->hasta));
+                            $aux_hora_hasta = date_format($date_hasta, 'Y-m-d');
+    
+                            $date_desde = date_create(str_replace("/","-",$filtros->desde));
+                            $aux_hora_desde = date_format($date_desde, 'Y-m-d');
+    
+                            $aux_cadena_filtros .= "  AND (('$aux_hora_desde' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                    OR('$aux_hora_hasta' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";  
+                        
+                        }else{ 
+    
+                            if(empty($filtros->desde) && !empty($filtros->hasta)) // si desde viene vacio y hasta no. 
+                            {
+                                $date_hasta = date_create(str_replace("/","-",$filtros->hasta));
+                                $aux_hora_hasta = date_format($date_hasta, 'Y-m-d');
+    
+                                $aux_cadena_filtros .= "  AND (('$aux_hora_hasta' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                        OR('$aux_hora_hasta' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";
+        
+                            }else if(!empty($filtros->desde) && empty($filtros->hasta)) // si desde no viene vacio y hasta si.
+                            {
+    
+                                $date_desde = date_create(str_replace("/","-",$filtros->desde));
+                                $aux_hora_desde = date_format($date_desde, 'Y-m-d');
+    
+                                $aux_cadena_filtros .= "  AND (('$aux_hora_desde' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                        OR('$aux_hora_desde' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";
+        
+                            }
+                        }
+        
+                        break;
+    
+                    case 1:
+    
+                        if(!empty($filtros->desde) && !empty($filtros->hasta)) // si ningun filtro viene vacio. 
+                        {
+                            $date_hasta = date_create(str_replace("/","-",$filtros->hasta));
+                            $aux_hora_hasta = date_format($date_hasta, 'Y-m-d');
+    
+                            $date_desde = date_create(str_replace("/","-",$filtros->desde));
+                            $aux_hora_desde = date_format($date_desde, 'Y-m-d');
+    
+                            $aux_cadena_filtros .= " AND (fecha_observatorio IS NOT NULL) AND (fecha_observatorio BETWEEN '$aux_hora_desde' AND '$aux_hora_hasta')";
+    
+                        } else if(empty($filtros->desde) && !empty($filtros->hasta)){              // si desde viene vacio y hasta no. 
+    
+                            $date_hasta = date_create(str_replace("/","-",$filtros->hasta));
+                            $aux_hora_hasta = date_format($date_hasta, 'Y-m-d');
+    
+                            $aux_cadena_filtros .= "  AND (fecha_observatorio IS NOT NULL) AND (fecha_observatorio <= '$aux_hora_hasta')";
+        
+                        }else if(!empty($filtros->desde) && empty($filtros->hasta)){ // si desde no viene vacio y hasta si.
+                            
+                            $date_desde = date_create(str_replace("/","-",$filtros->desde));
+                            $aux_hora_desde = date_format($date_desde, 'Y-m-d');
+    
+                            $aux_cadena_filtros .= "  AND (fecha_observatorio IS NOT NULL) AND (fecha_observatorio >= '$aux_hora_desde')";
+        
+                        }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                            $aux_cadena_filtros .= "";
+    
+                        }
+                        
+                        break;
+    
+                    case 2:
+    
+                        if(!empty($filtros->desde) || !empty($filtros->hasta)) // si ningun filtro viene vacio. 
+                        {
+                            
+                            if(empty($filtros->desde) && !empty($filtros->hasta)) // si desde viene vacio y hasta no. 
+                            {                                   
+                                $date_hasta = date_create(str_replace("/","-",$filtros->hasta));
+                                $aux_hora_hasta = date_format($date_hasta, 'Y-m-d');
+    
+                                $aux_cadena_filtros .= "  AND (recurso_fecha IS NOT NULL)  AND 
+                                                               (recurso_fecha <= '$haaux_hora_hasta')";
+        
+                            }else if(!empty($filtros->desde) && empty($filtros->hasta)) // si desde no viene vacio y hasta si.
+                            {
+                                $date_desde = date_create(str_replace("/","-",$filtros->desde));
+                                $aux_hora_desde = date_format($date_desde, 'Y-m-d');
+    
+                                $aux_cadena_filtros .= "  AND (recurso_fecha IS NOT NULL) AND (recurso_fecha >= '$aux_hora_desde')";
+        
+                            }else if(!empty($filtros->desde) && !empty($filtros->hasta)){
+    
+                                $date_hasta = date_create(str_replace("/","-",$filtros->hasta));
+                                $aux_hora_hasta = date_format($date_hasta, 'Y-m-d');
+    
+                                $date_desde = date_create(str_replace("/","-",$filtros->desde));
+                                $aux_hora_desde = date_format($date_desde, 'Y-m-d');
+    
+                                $aux_cadena_filtros .= " AND (recurso_fecha IS NOT NULL) AND (recurso_fecha BETWEEN '$aux_hora_desde' AND '$aux_hora_hasta')";
+                            }
+    
+                        } 
+                        break;
+                }
+    
+            }    
+            
+            
+            if(!empty($filtros->proyecto)) { $aux_cadena_filtros .= " AND e.sub_proyecto_id = ".$filtros->proyecto; }
+            if(!empty($filtros->clase)) { $aux_cadena_filtros .= " AND sc.clase_id = ".$filtros->clase; }
+            if(!empty($filtros->subclase)) { $aux_cadena_filtros .= "AND sc.subclase_id =".$filtros->subclase; }
+            if(!empty($filtros->tipo_doc)) { $aux_cadena_filtros .= "AND r.recurso_categoria_id = ".$filtros->tipo_doc; }
+            
+                    // fin validacion de filtros   
+
+         }
+        
+        
+        $auxiliar_extensiones_filtros = ' '.$aux_cadena_filtros.' '.$extension_consulta_filtro_recursos; // se concatena el string de los filtros y los recursos restringidos
        
-        $auxiliar_extensiones_filtros = ' '.$aux_cadena_filtros.' '.$lista_recursos_restringidos; // se concatena el string de los filtros y los recursos restringidos
       
         for($x=0;$x<=count($lista_filtros_solapa)-1; $x++) // por cada filtro_id que exista en la lista 
         {            
@@ -172,8 +345,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                 ELSE r.sub_proyecto_id
                             END  AS valor_id ,
                             COUNT(*)::BIGINT AS total 
-                            FROM (SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id,
-                                        t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                            FROM (select *, t.recurso_titulo as origen_search_text, t.recurso_categoria_id as categoria_id, rc.recurso_categoria_desc as categoria_desc
                                     FROM mic_mediateca_fdw.recurso t 
                                     LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = t.formato_id 
                                     LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
@@ -187,42 +359,14 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
 
                         EOD; 
 
-                                    /* query con dblink
-
-                                    SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,
-                                      sp.sub_proyecto_desc::TEXT AS desc,
-                                        CASE
-                                            WHEN r.sub_proyecto_id IS NULL THEN e.sub_proyecto_id
-                                            ELSE r.sub_proyecto_id
-                                        END  AS valor_id ,
-                                        COUNT(*)::BIGINT AS total 
-                                    FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_mic_mediateca}',
-                                                'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id,
-                                                 t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                                FROM "MIC-MEDIATECA".recurso t 
-                                                LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
-                                                LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                                LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
-                                            as r (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, 
-                                                 sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                    LEFT JOIN "MIC-CATALOGO".vw_estudio e ON r.estudios_id = e.estudios_id
-                                    LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = r.cod_temporalidad_id
-                                    LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = r.subclase_id
-                                    LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = r.subclase_id -- añadir tabla sub proyecto
-                                    WHERE r.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros      
-                                    
-                                    */
-
-                                    //echo $query_parcial;
-
                     break;              
                     
                 case 1: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
                     $query_parcial = <<<EOD
-                                        SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
-                                        r.recurso_categoria_id::BIGINT AS valor_id,
+                                        SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, r.categoria_desc::TEXT AS desc,
+                                        r.categoria_id::BIGINT AS valor_id,
                                         COUNT(*)::BIGINT AS total 
-                                    FROM (SELECT t.recurso_id, t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                    FROM ( select *, t.recurso_titulo as origen_search_text, t.recurso_categoria_id as categoria_id, rc.recurso_categoria_desc as categoria_desc
                                             FROM mic_mediateca_fdw.recurso t 
                                             LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = t.formato_id 
                                             LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
@@ -234,39 +378,17 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                     LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = r.subclase_id -- añadir tabla sub proyecto
                                     WHERE r.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros   
                                     
-                                    EOD; 
-                                    
-                                    /* consulta con dblink (descontinuada por fdw)
-                                    
-                                        SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
-                                        r.recurso_categoria_id::BIGINT AS valor_id,
-                                        COUNT(*)::BIGINT AS total 
-                                    FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_mic_mediateca}',
-                                            'SELECT t.recurso_id, t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                                FROM "MIC-MEDIATECA".recurso t 
-                                            LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
-                                            LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                            LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
-                                            as r (recurso_id bigint, origen_search_text text,estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                    LEFT JOIN "MIC-CATALOGO".vw_estudio e ON r.estudios_id = e.estudios_id
-                                    LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = r.cod_temporalidad_id
-                                    LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = r.subclase_id
-                                    LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = r.subclase_id -- añadir tabla sub proyecto
-                                    WHERE r.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros
-                                    
-                                    
-                                    
-                                    */
-                    //echo $query_parcial;
+                                    EOD;                                   
                                  
                     break;
+
                 case 2: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
                         $query_parcial = <<<EOD
 
-                            SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
-                                r.recurso_categoria_id::BIGINT AS valor_id,
+                            SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, r.categoria_desc::TEXT AS desc,
+                                r.categoria_id::BIGINT AS valor_id,
                                 COUNT(*)::BIGINT AS total 
-                            FROM (SELECT t.recurso_id, t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                            FROM (select *, t.recurso_titulo as origen_search_text, t.recurso_categoria_id as categoria_id, rc.recurso_categoria_desc as categoria_desc
                                     FROM mic_mediateca_fdw.recurso t 
                                     LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = t.formato_id 
                                     LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
@@ -279,33 +401,13 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
 
                             EOD;
 
-                            /* consulta con dblink (Descontinuada)
-                            
-                            SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id, recurso_categoria_desc::TEXT AS desc,
-                                            r.recurso_categoria_id::BIGINT AS valor_id,
-                                            COUNT(*)::BIGINT AS total 
-                                        FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_mic_mediateca}',
-                                                'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                                    FROM "MIC-MEDIATECA".recurso t 
-                                                LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
-                                                LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                                LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
-                                                as r (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                        LEFT JOIN "MIC-CATALOGO".vw_estudio e ON r.estudios_id = e.estudios_id
-                                        LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = r.cod_temporalidad_id
-                                        LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = r.subclase_id
-                                        LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = r.subclase_id -- añadir tabla sub proyecto
-                                        WHERE r.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros      
-                            
-                            
-                            */
-
-
                         break;    
+
                 case 3:
+
                     $query_parcial = <<<EOD
                                         SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,'tema'::TEXT AS desc,clase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
-                                        FROM (SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                        FROM (select *, t.recurso_titulo as origen_search_text, t.recurso_categoria_id as categoria_id, rc.recurso_categoria_desc as categoria_desc
                                                 FROM mic_mediateca_fdw.recurso t 
                                                 LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = t.formato_id 
                                                 LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
@@ -318,36 +420,14 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                         
                                         EOD;
 
-
-                                        /* consulta con dblink (descomtinuada)
-                                        
-                                        SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,'tema'::TEXT AS desc,clase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
-                                        FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_mic_mediateca}',
-                                                    'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                                        FROM "MIC-MEDIATECA".recurso t 
-                                                    LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
-                                                    LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                                    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
-                                                as r (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                        LEFT JOIN "MIC-CATALOGO".vw_estudio e ON r.estudios_id = e.estudios_id
-                                        LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = r.cod_temporalidad_id
-                                        LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = r.subclase_id
-                                        LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = r.subclase_id -- añadir tabla sub proyecto
-                                        WHERE r.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros
-                                        
-                                        
-                                        
-                                        */
-
-
-                        // echo $query_parcial; 
-
                     break;   
+
                 case 4:
+
                     $query_parcial = <<<EOD
 
                                 SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,subclase_desc::TEXT AS desc,r.subclase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
-                                FROM (SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                                FROM (select *, t.recurso_titulo as origen_search_text, t.recurso_categoria_id as categoria_id, rc.recurso_categoria_desc as categoria_desc
                                         FROM mic_mediateca_fdw.recurso t 
                                         LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = t.formato_id 
                                         LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
@@ -360,32 +440,14 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                        
                                 EOD;
                                    
-                                /* consulta con dblink descontinuada
-                                
-                                 SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,subclase_desc::TEXT AS desc,r.subclase_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total			
-                                        FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_mic_mediateca}',
-                                                    'SELECT t.recurso_id, t.recurso_titulo as origen_search_text, t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                                        FROM "MIC-MEDIATECA".recurso t 
-                                                    LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
-                                                    LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                                    LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
-                                                as r (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                                        LEFT JOIN "MIC-CATALOGO".vw_estudio e ON r.estudios_id = e.estudios_id
-                                        LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = r.cod_temporalidad_id
-                                        LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = r.subclase_id
-                                        LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = r.subclase_id -- añadir tabla sub proyecto
-                                        WHERE r.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros
-                                
-                                */
-
-
-                                //echo $query_parcial;
                     break;  
+
                 case 5:
+
                     $query_parcial = <<<EOD
 
-                        SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,recurso_categoria_desc::TEXT AS desc,recurso_categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
-                        FROM (SELECT t.recurso_id ,t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
+                        SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,r.categoria_desc::TEXT AS desc,r.categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
+                        FROM (SELECT *, t.recurso_titulo as origen_search_text, t.recurso_categoria_id as categoria_id, rc.recurso_categoria_desc as categoria_desc
                                 FROM mic_mediateca_fdw.recurso t 
                                 LEFT JOIN mic_mediateca_fdw.formato f ON f.formato_id = t.formato_id 
                                 LEFT JOIN mic_mediateca_fdw.tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
@@ -398,27 +460,6 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                             
                         EOD;
 
-                         /* consulta con dblink() descontinuada 
-                         
-                         SELECT $lista_filtros_solapa[$x]::BIGINT AS filtro_id,recurso_categoria_desc::TEXT AS desc,recurso_categoria_id::BIGINT AS valor_id,COUNT(*)::BIGINT AS total 
-                             FROM dblink('{$conect_mic_catalogo->obj_conexion_db_externas->string_mic_mediateca}',
-                                         'SELECT t.recurso_id ,t.recurso_titulo as origen_search_text,t.estudios_id, t.cod_temporalidad_id,t.subclase_id, t.sub_proyecto_id, tf.tipo_formato_solapa,rc.recurso_categoria_desc,t.recurso_categoria_id
-                                             FROM "MIC-MEDIATECA".recurso t 
-                                         LEFT JOIN "MIC-MEDIATECA".formato f ON f.formato_id = t.formato_id 
-                                         LEFT JOIN "MIC-MEDIATECA".tipo_formato tf ON tf.tipo_formato_id = f.tipo_formato_id
-                                         LEFT JOIN "MIC-MEDIATECA".recurso_categoria rc ON rc.recurso_categoria_id = t.recurso_categoria_id')
-                                     as r (recurso_id bigint, origen_search_text text, estudios_id bigint, cod_temporalidad_id bigint,subclase_id bigint, sub_proyecto_id bigint, tipo_formato_solapa bigint, recurso_categoria_desc text,recurso_categoria_id bigint)
-                             LEFT JOIN "MIC-CATALOGO".vw_estudio e ON r.estudios_id = e.estudios_id
-                             LEFT JOIN "MIC-CATALOGO".cod_temporalidad ct ON ct.cod_temporalidad_id = r.cod_temporalidad_id
-                             LEFT JOIN "MIC-CATALOGO".subclase sc ON sc.subclase_id = r.subclase_id
-                             LEFT JOIN "MIC-CATALOGO".sub_proyecto sp ON sp.sub_proyecto_id = r.subclase_id -- añadir tabla sub proyecto
-                             WHERE r.tipo_formato_solapa = $solapa $auxiliar_extensiones_filtros                         
-                         
-                         
-                         */
-
-
-                        // echo $query_parcial;
                     break;                      
             }
             
@@ -444,11 +485,151 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         
         $conect_mic_catalogo = New ConexionCatalogo();
 
-        $QUERY_RETURN = "("; // variable contenedora de la union de filtros
+        $QUERY_RETURN = "("; // variable contenedora de la union de 
+ 
+        
+        // SECCION DE ARMADO DE FILTTROS 
+        
+        $auxiliar_extensiones_filtros = ""; // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario,    
+
+        $extension_consulta_filtro_recursos = "AND r.recurso_id NOT IN (";
+
+                // armo una cadena para usar como subconsulta en la query principal 
+        for($x=0; $x<=count($lista_recursos_restringidos->detalle)-1; $x++)
+        {       
+           if($x==count($lista_recursos_restringidos->detalle)-1){
+               
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].")";
+           }else{
+               $extension_consulta_filtro_recursos.=$lista_recursos_restringidos->detalle[$x]['objeto_id'].",";
+           }       
+        }
+        
+        
+        // validacion de filtros 
+        $aux_cadena_filtros = "";
+
+        if(!empty($filtros))
+        {                       
+
+            $aux_cadena_filtros = ""; // variable contenedora, almacenara un string con todas las adeciones de filtros a la consulta principal
+            
+            if(!empty($filtros->qt)) // variable que viene del buscador.
+            {            
+                               
+                $aux_cadena_filtros = <<<EOD
+                AND ( lower("MIC-CATALOGO".unaccent(r.origen_search_text)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%'))
+                OR lower("MIC-CATALOGO".unaccent(e.estudios_palabras_clave)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%'))
+                OR lower("MIC-CATALOGO".unaccent(e.nombre)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%'))
+                OR lower("MIC-CATALOGO".unaccent(e.equipo)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%')) 
+                OR lower("MIC-CATALOGO".unaccent(e.institucion)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%'))
+                OR lower("MIC-CATALOGO".unaccent(e.responsable)) LIKE  lower("MIC-CATALOGO".unaccent('%$filtros->qt%')) )
+                EOD;
+        
+        
+                /*
+                
+                $aux_cadena_filtros .= " AND ( lower(unaccent(T.origen_search_text)) LIKE  lower(unaccent('%".$qt."%'))"; // con unaccent  lower(unaccent('my_MMuíèles'))
+                $aux_cadena_filtros .= " OR lower(unaccent(e.estudios_palabras_clave)) LIKE  lower(unaccent('%".$qt."%'))";
+                $aux_cadena_filtros .= " OR lower(unaccent(e.nombre)) LIKE  lower(unaccent('%".$qt."%')) ";
+                $aux_cadena_filtros .= " OR lower(unaccent(e.equipo)) LIKE  lower(unaccent('%".$qt."%')) ";
+                $aux_cadena_filtros .= " OR lower(unaccent(e.institucion)) LIKE  lower(unaccent('%".$qt."%')) ";
+                $aux_cadena_filtros .= " OR lower(unaccent(e.responsable)) LIKE  lower(unaccent('%".$qt."%')) ) "; */
+                
+            }
+            
+            if(!empty($filtros->tipo_temporalidad))
+            {
+                switch ($filtros->tipo_temporalidad) { // dependiendo del valor de $tipo_temporalidad, el filtro de fecha se hace en campos diferentes
+                 
+                    case 0:
+
+                        if(!empty($filtros->desde) && !empty($filtros->hasta)) // si ningun filtro viene vacio. 
+                        {
+                            $aux_cadena_filtros .= "  AND (('".$filtros->desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                 OR('".$filtros->hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";  
+                     
+                        }else{
+                            
+                            if(empty($filtros->desde) && !empty($filtros->hasta)) // si desde viene vacio y hasta no. 
+                            {
+                                $aux_cadena_filtros .= "  AND (('".$filtros->hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                        OR('".$filtros->hasta."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";
+                    
+                            }else if(!empty($filtros->desde) && empty($filtros->hasta)) // si desde no viene vacio y hasta si.
+                            {
+                                $aux_cadena_filtros .= "  AND (('".$filtros->desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta) 
+                                                        OR('".$filtros->desde."' BETWEEN ct.tempo_desde AND ct.tempo_hasta))";
+                    
+                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                                $aux_cadena_filtros .= "";
+                            }
+                
+                        }
+
+                    break;
+
+                    case 1:
+
+                        if(!empty($filtros->desde) && !empty($filtros->hasta)) // si ningun filtro viene vacio. 
+                        {
+                            $aux_cadena_filtros .= " AND ((r.fecha_observatorio IS NOT NULL)   AND
+                                                        (r.fecha_observatorio BETWEEN ".$filtros->desde." AND ".$filtros->hasta."))";
+                            if(empty($filtros->desde) && !empty($filtros->hasta)) // si desde viene vacio y hasta no. 
+                            {
+                                $aux_cadena_filtros .= "  AND ((r.fecha_observatorio IS NOT NULL)  AND 
+                                                            (r.fecha_observatorio <= ".$filtros->hasta."))";
+                    
+                            }else if(!empty($filtros->desde) && empty($filtros->hasta)) // si desde no viene vacio y hasta si.
+                            {
+                                $aux_cadena_filtros .= "  AND ((r.fecha_observatorio IS NOT NULL)  AND 
+                                                            (r.fecha_observatorio >= ".$filtros->desde."))";
+                    
+                            }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                                $aux_cadena_filtros .= "";
+                            }
+                            
+                        } 
+                        break;
+
+                    case 2:
+                         if(!empty($filtros->desde) && !empty($filtros->hasta)) // si ningun filtro viene vacio. 
+                         {
+                             $aux_cadena_filtros .= " AND ((r.recurso_fecha IS NOT NULL)   AND
+                                                         (r.recurso_fecha BETWEEN ".$filtros->desde." AND ".$filtros->hasta."))";
+                             if(empty($filtros->desde) && !empty($filtros->hasta)) // si desde viene vacio y hasta no. 
+                             {
+                                 $aux_cadena_filtros .= "  AND ((r.recurso_fecha IS NOT NULL)  AND 
+                                                             (r.recurso_fecha <= ".$filtros->hasta."))";
+                
+                             }else if(!empty($filtros->desde) && empty($filtros->hasta)) // si desde no viene vacio y hasta si.
+                             {
+                                 $aux_cadena_filtros .= "  AND ((r.recurso_fecha IS NOT NULL)  AND 
+                                                             (r.recurso_fecha >= ".$filtros->desde."))";
+                
+                             }else{ // si llego a este punto, ninguno de los parametros tiene datos, por lo que no asigna nada a la variable.
+                                 $aux_cadena_filtros .= "";
+                             }
+                         }
+                         
+                        break;
+                            
+                }
+            } 
+            
+            
+            if(!empty($filtros->proyecto)) { $aux_cadena_filtros .= " AND e.sub_proyecto_id = ".$filtros->proyecto; }
+            if(!empty($filtros->clase)) { $aux_cadena_filtros .= " AND sc.clase_id = ".$filtros->clase; }
+            if(!empty($filtros->subclase)) { $aux_cadena_filtros .= "AND sc.subclase_id =".$filtros->subclase; }
+            if(!empty($filtros->tipo_doc)) { $aux_cadena_filtros .= "AND r.recurso_categoria_id = ".$filtros->tipo_doc; }
+            
+                    // fin validacion de filtros   
+
+         }
 
         // variable que concatenara los filtros y los recursos restringidos en caso de ser necesario, sino no hay que filtrar. solo ira vacio.
        
-        $auxiliar_extensiones_filtros = $lista_recursos_restringidos;
+        $auxiliar_extensiones_filtros = $extension_consulta_filtro_recursos;
        
         if($si_tengo_que_filtrar == 1)
         {
@@ -524,7 +705,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                             ELSE u.sub_proyecto_id
                                         END  AS valor_id ,COUNT(*)::BIGINT AS total ";                   
 
-                    $query_parcial .= ' '.$from.' '.$auxiliar_extensiones_filtros;
+                    $query_parcial .= ' '.$from.' '.$aux_cadena_filtros;
                     break;                                  
 
                 case 1: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
@@ -533,7 +714,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                       u.recurso_categoria_id::BIGINT AS valor_id,
                                       COUNT(*)::BIGINT AS total  "; 
 
-                     $query_parcial .= ' '.$from.' '.$auxiliar_extensiones_filtros;
+                     $query_parcial .= ' '.$from.' '.$aux_cadena_filtros;
                      break;
 
                 case 2: // nota: entre el caso 1 y dos, solo varia el valor del campo recurso_categoria_filtro  en 1 y 2, por lo que queda pre seteado. 
@@ -543,7 +724,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                                 u.recurso_categoria_id::BIGINT AS valor_id,
                                                 COUNT(*)::BIGINT AS total  "; 
 
-                    $query_parcial .= ' '.$from.' '.$auxiliar_extensiones_filtros;
+                    $query_parcial .= ' '.$from.' '.$aux_cadena_filtros;
                     break;
 
                 case 3:
@@ -553,7 +734,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                      clase_id::BIGINT AS valor_id,
                                      COUNT(*)::BIGINT AS total  ";
                                      
-                    $query_parcial .= ' '.$from.' '.$auxiliar_extensiones_filtros;
+                    $query_parcial .= ' '.$from.' '.$aux_cadena_filtros;
                     break;
 
                 case 4:
@@ -563,7 +744,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                       u.subclase_id::BIGINT AS valor_id,
                                       COUNT(*)::BIGINT AS total ";                                      
                       
-                    $query_parcial .= ' '.$from.' '.$auxiliar_extensiones_filtros;
+                    $query_parcial .= ' '.$from.' '.$aux_cadena_filtros;
                     break;  
 
                 case 5:
@@ -573,7 +754,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
                                       recurso_categoria_id::BIGINT AS valor_id,
                                       COUNT(*)::BIGINT AS total ";
 
-                    $query_parcial .= ' '.$from.' '.$auxiliar_extensiones_filtros;   
+                    $query_parcial .= ' '.$from.' '.$aux_cadena_filtros;   
                     break;         
             }
 
@@ -610,18 +791,18 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         //FILTRO ID 0
         $CONSULTA_PROYECTO=' GROUP BY sp.sub_proyecto_desc,valor_id '; // nota: reemplazo el valor sub_proyecto_id_principal por la variable valor_ir(contienen el mismo valor y se obtiene de la misma manera, cambia el nombre nomas)
         //FILTRO ID 1 
-        $CONSULTA_AREA_GESTION=" AND r.recurso_categoria_id IN (SELECT recurso_categoria_id FROM mic_mediateca_fdw.recurso_categoria WHERE recurso_categoria_filtro=1) 
-                                    GROUP BY recurso_categoria_desc,recurso_categoria_id ";
+        $CONSULTA_AREA_GESTION=" AND r.categoria_id IN (SELECT recurso_categoria_id FROM mic_mediateca_fdw.recurso_categoria WHERE recurso_categoria_filtro=1) 
+                                    GROUP BY r.categoria_desc,r.categoria_id ";
         //FILTRO ID 2
-        $CONSULTA_RECURSOS_TECNICOS=" AND r.recurso_categoria_id IN (SELECT recurso_categoria_id FROM mic_mediateca_fdw.recurso_categoria WHERE recurso_categoria_filtro=2)
-                                      GROUP BY recurso_categoria_desc,recurso_categoria_id ";
+        $CONSULTA_RECURSOS_TECNICOS=" AND r.categoria_id IN (SELECT recurso_categoria_id FROM mic_mediateca_fdw.recurso_categoria WHERE recurso_categoria_filtro=2)
+                                      GROUP BY r.categoria_desc,r.categoria_id ";
         //FILTRO ID 3 
         $CONSULTA_AREA_TEMATICA=' GROUP BY clase_id ';
         //FILTRO ID 4
         $CONSULTA_TEMA=' GROUP BY subclase_desc,r.subclase_id';
         //FILTRO ID 5
-        $CONSULTA_RECURSOS_AUDIOVISUALES= " AND r.recurso_categoria_id IN (SELECT recurso_categoria_id FROM mic_mediateca_fdw.recurso_categoria WHERE recurso_categoria_filtro=5)
-                                            GROUP BY recurso_categoria_desc,recurso_categoria_id ";
+        $CONSULTA_RECURSOS_AUDIOVISUALES= " AND r.categoria_id IN (SELECT recurso_categoria_id FROM mic_mediateca_fdw.recurso_categoria WHERE recurso_categoria_filtro=5)
+                                            GROUP BY r.categoria_desc,r.categoria_id ";
         
         $conect_mic_catalogo = null;
         
