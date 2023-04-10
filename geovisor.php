@@ -1,7 +1,18 @@
-<?php include("pgconfig.php"); ?>
-<?php include("geovisor.fn.php"); ?>
-<?php include("./fn.php"); ?>
-<?php include("./login.php"); ?>
+<?php
+
+
+
+include("pgconfig.php"); 
+//include("geovisor.fn.php"); 
+// include("./fn.php"); 
+include("./login.php");
+
+require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+
+ 
+ 
+ 
+?>
 
 <!DOCTYPE html>
 <html lang="es">

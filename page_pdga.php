@@ -1,4 +1,9 @@
-<?php include("./fn.php"); ?>
+<?php
+
+include("./fn.php"); 
+include_once("pgconfig.php");
+
+?>
 
 <!DOCTYPE html>
 <html lang="es">

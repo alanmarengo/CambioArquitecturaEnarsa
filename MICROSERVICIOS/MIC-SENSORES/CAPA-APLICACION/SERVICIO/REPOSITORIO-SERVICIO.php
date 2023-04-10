@@ -11,5 +11,14 @@ class RepositorioServicioSensores implements IRepositorioServicioSensores{
     public function __construct(){
         $this->query= new RepositorioQuerySensores();
     }
+    
+    public function json_sensores(){
+        return $this->query->json_sensores();
+    }
+
+    public function csv_redes_hidro($parametro_id,$fd, $fh, $estacion_id, $categoria_parametro_id){
+        $this->query->csv_redes_hidro($parametro_id,$fd, $fh, $estacion_id, $categoria_parametro_id);
+    }
+
 
 }

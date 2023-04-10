@@ -6,6 +6,8 @@ include("./tools.php");
 header("Content-Type: text/csv");
 header("Content-Disposition: attachment; filename=file.csv");
 
+$_GET['q'] = 'test';
+
 $q = $_GET["q"];
 
 $string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;

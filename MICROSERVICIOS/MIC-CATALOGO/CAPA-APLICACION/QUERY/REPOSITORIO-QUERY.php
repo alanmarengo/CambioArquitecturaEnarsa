@@ -8,6 +8,21 @@ require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\CLASES\Clases.php')
 
 class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
 
+
+    public function get_consulta($query_string)
+    {
+        $conexion = new ConexionCatalogo();
+        $resultado = $conexion->get_consulta($query_string);
+
+        if(!empty($resultado))
+        {
+            return $resultado;
+        }else{
+            return 'la consulta no produjo resultados.';
+        }
+    }
+
+
     // metodo para obtener datos del territorio a partir del id 
     public function get_info_territorio($territorio_id)
     {
@@ -859,19 +874,32 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         }
     }
 
-    public function get_link($ID){
+    public function GET_LINK($ID)
+    {
 
-        //aca instancio a la conexion 
+        $link = "";          
+
         $conexion = new ConexionCatalogo();
-
-        $query = 'SELECT t.fec_bbdd_date, t.territorio_simpli,t.fec_bbdd,t.descripcion 
-                              FROM "MIC-CATALOGO".territorio t 
-                              WHERE t.territorio_id = '.$territorio_id;
         
-        return $conexion->get_consulta($query); // retorno el resultado de la consulta ejecutada
+        //global $conn;
+        $SQL= 'SELECT RRA.link FROM "MIC-CATALOGO".redireccion_recursos_asociados as RRA WHERE RRA.id = '.$ID;
 
+        //$resultado = ($query_string);
+        
+        $RESULT = $conexion->get_consulta($SQL);
+        //$RESULT=pg_query($conn,$SQL);
+
+        foreach($RESULT as $pre_link)
+        {
+            $link = $pre_link;
+        }
+
+        return $link;
 
     }
+        
+        
+
+    
 
 }
-

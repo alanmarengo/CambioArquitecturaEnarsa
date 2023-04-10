@@ -178,7 +178,8 @@ $test->filter_proyectos_advanced($user_id, $adv_search_busqueda, $adv_search_fde
 
 */
 
-//$test = new RepositorioServicioGeovisor();
+$test = new RepositorioServicioGeovisor();
+echo $test->get_layer_info_pgda();
 
 // teste filtro $adv_search_busqueda
 //$test->filter_proyectos_advanced(-1, "represa",'', '','', '', '','', '', '', 1);

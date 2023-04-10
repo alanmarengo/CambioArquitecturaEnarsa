@@ -203,7 +203,7 @@
 
                     <h5>Base de datos espacial:</h5>
                     <p>
-                        <b>- PostgresQL 9.2.24 version en Red Hat 4.8.5-28, modulo espacial PostGIS versión: 2.0.7:</b> Motor de base de datos relacional open source                     
+                        <b>- PostgresQL 14.4 version en Red Hat 8.5, modulo espacial PostGIS versión: 3.2.1:</b> Motor de base de datos relacional open source                     
                     </p>
 
                     <h5>Servidores de mapas web:</h5>

@@ -2,46 +2,19 @@
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-$db_name = "ahrsc";
+require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-CATALOGO/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
 
-
-if((strpos($_SERVER["SCRIPT_FILENAME"],"wamp64")) || (strpos($_SERVER["SCRIPT_FILENAME"],"wamp")))
-{
-	define("pg_server","iobs-02.ieasa.com.ar");
-	define("pg_user","plataforma_readonly");
-	define("pg_password","Plataforma100%");
-	define("pg_portv","5432");
-	define("pg_db",$db_name);
-	
-}else{
-	
-	define("pg_server","iobs-02.ieasa.com.ar");
-	define("pg_user","plataforma_readonly");
-	define("pg_password","Plataforma100%");
-	define("pg_portv",5432);
-	define("pg_db",$db_name);
-	
-}
-
-function limpiar_global($str)
-{
-         return str_replace(array("\n","\r","\""),'',$str);
-};
-
+ 
 function modo_mantenimiento() 
 {		
 
-	$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+	$servicio_catalogo = new RepositorioServicioCatalogo();
 	
-	$conn = pg_connect($string_conn);
+	$query_string = 'SELECT modo_mantenimiento,mensaje FROM "MIC-CATALOGO".modo_mantenimiento limit 1;';
+
+	$r = $servicio_catalogo->get_consulta($query_string);	
 	
-	$query_string = "SELECT modo_mantenimiento,mensaje FROM mod_catalogo.modo_mantenimiento limit 1";
-	
-	$query = pg_query($conn,$query_string);
-	
-	$r = pg_fetch_assoc($query);
-	
-	if($r["modo_mantenimiento"]=='t')/* Entra en modo mantenimiento */
+	if($r[0]["modo_mantenimiento"]=='t')/* Entra en modo mantenimiento */
 	{
 		include("./scripts.default.php");
 		include("./scripts.onresize.php");
@@ -53,10 +26,11 @@ function modo_mantenimiento()
 		echo '			<!--<img src="./images/logo_observatorio_ieasa.png" height="40">-->';
 		echo '		</a>';
 		echo '	</div>';
-		die('<span style="font-size:30px;color:white;width:100%;display:block;text-align:center;position:absolute;top:50%; ">'.$r["mensaje"].'</span>');
+		die('<span style="font-size:30px;color:white;width:100%;display:block;text-align:center;position:absolute;top:50%; ">'.$r[0]["mensaje"].'</span>');
 		
 	};
 	
+	$servicio_catalogo = null;
 };
 
 ?>

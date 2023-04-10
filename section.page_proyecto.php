@@ -3,7 +3,15 @@
 <script src="./js/galeria_imagenes.js"></script>
 
 <?php
-include("./Get_Link.php");
+//include("./Get_Link.php");
+
+include_once("pgconfig.php");
+
+
+$servicio_catalogo = new RepositorioServicioCatalogo();
+
+
+
 ?>
 <div id="page_proyecto" class="page page_template">
     <div>
@@ -224,7 +232,7 @@ include("./Get_Link.php");
 <!-- 
 <br />
 Link   a inmagenes en la mediateka 
-<a target="_blank" href="<?php  echo GET_LINK(8);?>" >Néstor Kirchner en imágenes</a> 
+<a target="_blank" href="<?php $servicio_catalogo->GET_LINK(8);?>" >Néstor Kirchner en imágenes</a> 
 <br />
 -->
             
@@ -326,7 +334,7 @@ Link   a inmagenes en la mediateka
  
 
 <!-- Link a imagenes en mediateka
-<a target="_blank" href="<?php  echo GET_LINK(7);?>" >Jorge Cepernic en imágenes</a> 
+<a target="_blank" href="<?php   $servicio_catalogo->GET_LINK(7);?>" >Jorge Cepernic en imágenes</a> 
 -->
 <!--
 <a target="_blank" href="./sga/recursos/difusion/lb_ficha.pdf">Ficha técnica</a>        

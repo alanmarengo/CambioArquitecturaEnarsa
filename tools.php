@@ -63,7 +63,12 @@ function parseSQLToCSV($recordset)
 				
 			};
 			
-/*			
+
+
+
+
+
+			/*			
 $conn = pg_connect("host=localhost port=5432 dbname=ahrsc user=postgres password=plahe100%");
 
 $SQL = "SELECT * FROM obra.area_obra_uso";
