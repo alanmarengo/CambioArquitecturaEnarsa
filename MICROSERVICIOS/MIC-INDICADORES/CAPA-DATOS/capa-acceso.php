@@ -1,15 +1,15 @@
 <?php
 
 // importacion de archivo de credenciales para uso de db_link()
-require_once(dirname(__FILE__,3).'\CRED\conf.php');
+require_once(dirname(__FILE__,3).'/CRED/conf.php');
 
 // clase para conexion a bd
 class ConexionIndicadores {
 
-    private $host = "localhost"; 
+    private $host = "iobs-02.ieasa.com.ar"; 
     private $user = "plataforma_readonly";
     private $pass = "Plataforma100%";
-    private $port = "5433";
+    private $port = "5432";
     private $database = "MIC-INDICADORES";
     private $conect;
     public $obj_conexion_db_externas; // objeto de conexion con credenciales. 

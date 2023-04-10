@@ -1,9 +1,10 @@
 <?php
 
 
-require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DOMINIO\INTERFACE-REPOSITORIO-SERVICIO\INTERFACE-REPOSITORIO-SERVICIO.php');
-require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-APLICACION\QUERYS\REPOSITORIO-QUERY.php');
-require_once(dirname(__FILE__,4).'\MIC-USUARIO\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
+require_once(dirname(__FILE__,4).'/MIC-GEOVISOR/CAPA-DOMINIO/INTERFACE-REPOSITORIO-SERVICIO/INTERFACE-REPOSITORIO-SERVICIO.php');
+require_once(dirname(__FILE__,4).'/MIC-GEOVISOR/CAPA-APLICACION/QUERYS/REPOSITORIO-QUERY.php');
+require_once(dirname(__FILE__,4).'/MIC-USUARIO/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
+
 
 
 class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
@@ -159,7 +160,7 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
     }
     
 
-}               	
+}                	
 
 //$test = new RepositorioServicioGeovisor();
 //$test->ListaProyectos();
@@ -178,8 +179,7 @@ $test->filter_proyectos_advanced($user_id, $adv_search_busqueda, $adv_search_fde
 
 */
 
-$test = new RepositorioServicioGeovisor();
-echo $test->get_layer_info_pgda();
+//$test = new RepositorioServicioGeovisor();
 
 // teste filtro $adv_search_busqueda
 //$test->filter_proyectos_advanced(-1, "represa",'', '','', '', '','', '', '', 1);

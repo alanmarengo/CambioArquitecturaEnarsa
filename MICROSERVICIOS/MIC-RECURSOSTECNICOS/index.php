@@ -1,7 +1,11 @@
 <?php
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
+error_reporting(-1);
 
-include_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php'); // Implementamos la interfaz de servicio del microservicio
-include_once(dirname(__FILE__).'\CAPA-DOMINIO\CLASES\Clases.php');
+
+include_once(dirname(__FILE__).'/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php'); // Implementamos la interfaz de servicio del microservicio
+include_once(dirname(__FILE__).'/CAPA-DOMINIO/CLASES/Clases.php');
 
 $_respuesta_rectec = new Respuesta_rectec();
 

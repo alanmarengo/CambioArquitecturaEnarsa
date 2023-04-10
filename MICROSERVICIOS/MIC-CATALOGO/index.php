@@ -1,7 +1,7 @@
 <?php
 
-require_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIO\REPOSITORIO-SERVICIO.php');
-require_once(dirname(__FILE__).'\CAPA-DOMINIO\CLASES\Clases.php');
+require_once(dirname(__FILE__).'/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
+require_once(dirname(__FILE__).'/CAPA-DOMINIO/CLASES/Clases.php');
 
 $_respuesta_catalogo = new Respuesta_catalogo();
 

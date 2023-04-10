@@ -3,12 +3,12 @@
 // clase para conexion a bd
 class ConexionUsuario {
 
-    // para uso en host
-    private $host = "localhost";
+    // datos de conexion
+    
+    private $host = "iobs-02.ieasa.com.ar";
     private $user = "plataforma_readonly";
     private $pass = "Plataforma100%";
-    
-    private $port = "5433";
+    private $port = "5432";
     private $database = "MIC-USUARIO";
     public $conect;
 

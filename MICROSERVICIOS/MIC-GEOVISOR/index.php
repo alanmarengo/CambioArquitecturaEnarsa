@@ -1,8 +1,12 @@
 <?php
 
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 //require_once 'CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php';
-include_once(dirname(__FILE__).'\CAPA-APLICACION\SERVICIOS\REPOSITORIO-SERVICIO.php'); //\ Implementamos la interfaz de servicio del microservicio
-include_once(dirname(__FILE__).'\CAPA-DOMINIO\CLASES\Clases.php');
+include_once(dirname(__FILE__).'/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php'); //\ Implementamos la interfaz de servicio del microservicio
+include_once(dirname(__FILE__).'/CAPA-DOMINIO/CLASES/Clases.php');
 
 // Archivo de evaluacion de peticiones POST
 // Este archivo sera el encargado las nueva peticiones post que reciba la pagina,
@@ -11,7 +15,6 @@ include_once(dirname(__FILE__).'\CAPA-DOMINIO\CLASES\Clases.php');
 // el metodo requerido del micoservicio Geovisores
 
 // verifica usuario_id en la variable session y si no exitiste, user_id = -1, que corresponde al usuario publico.
-
 
 
 $_respuesta_geovisor = new Respuesta_geovisor();
@@ -197,4 +200,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
     }
     
 }
+
+
+
+
 

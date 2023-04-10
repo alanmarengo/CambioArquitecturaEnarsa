@@ -57,7 +57,14 @@
 
 				<div id="abr-container">
 				
-					<?php DrawAbr(); ?>
+					<?php
+					
+					$servicio_geovisor = new RepositorioServicioGeovisor();
+
+					echo $servicio_geovisor->DrawAbr();
+					
+					
+					DrawAbr(); ?>
 				
 				</div>
 				

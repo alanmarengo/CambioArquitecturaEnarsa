@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__,3).'\CRED\conf.php');
+require_once(dirname(__FILE__,3).'/CRED/conf.php');
 
 // clase para conexion a bd
 class ConexionSensores {

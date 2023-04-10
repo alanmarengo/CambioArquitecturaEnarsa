@@ -1,7 +1,7 @@
 <?php
-require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DOMINIO\INTERFACE-REPOSITORIO-QUERY\INTERFACE-REPOSITORIO-QUERY.php');
-require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DATOS\capa-acceso.php');
-require_once(dirname(__FILE__,4).'\MIC-GEOVISOR\CAPA-DOMINIO\CLASES\Clases.php');
+require_once(dirname(__FILE__,4).'/MIC-GEOVISOR/CAPA-DOMINIO/INTERFACE-REPOSITORIO-QUERY/INTERFACE-REPOSITORIO-QUERY.php');
+require_once(dirname(__FILE__,4).'/MIC-GEOVISOR/CAPA-DATOS/capa-acceso.php');
+require_once(dirname(__FILE__,4).'/MIC-GEOVISOR/CAPA-DOMINIO/CLASES/Clases.php');
 
 //reemplazar los paths aboslutos por la nueva y linda forma que encontramos
 
@@ -38,8 +38,8 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
 	public function get_layer_info_pgda() // faltan registros para su funcionamiento 
 	{
-		//$layer_id_arr = array();
-		//$layer_desc_arr = array();
+		$layer_id_arr = array();
+		$layer_desc_arr = array();
 
 
 		$layer_id_arr = array(873,937,938,939,875);
@@ -1526,15 +1526,15 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		return $html;
     }
 
-}; // fin interface 
+};// fin interface 
 
 
 
 // test
 
-$test = new RepositorioQueryGeovisor();
-$respuesta = $test->get_layer_info_pgda();
-echo $respuesta;
+//$test = new RepositorioQueryGeovisor();
+//$respuesta = $test->get_layer_info_pgda();
+//echo $respuesta;
 
 
 

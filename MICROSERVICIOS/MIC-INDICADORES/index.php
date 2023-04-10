@@ -1,6 +1,10 @@
 <?php
 
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+
 include_once(dirname(__FILE__).'/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIOS.php'); // Implementamos la interfaz de servicio del microservicio
 include_once(dirname(__FILE__).'/CAPA-DOMINIO/CLASES/Clases.php');
 
@@ -126,7 +130,28 @@ if($_SERVER['REQUEST_METHOD'] == "POST") // si el request es de tipo post
 
                 break;
 
+            case 'ComboCruce':
 
+                $datos_respuesta = $servicio_indicadores->ComboCruce();
+                          
+                if($datos_respuesta->flag)
+                {
+
+                    http_response_code(200);                
+                    $datos_respuesta = $_respuesta_indicadores->error_200($datos_respuesta->detalle); 
+                    echo json_encode($datos_respuesta);
+
+                }else{
+
+                    http_response_code(400);                
+                    $datos_respuesta = $_respuesta_indicadores->error_400($datos_respuesta->detalle); 
+                    echo json_encode($datos_respuesta);
+
+                } 
+
+                $servicio_indicadores = null;
+ 
+                break;
 
             default :  
             

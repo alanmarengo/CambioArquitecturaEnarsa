@@ -1,8 +1,8 @@
 <?php
 
-require_once(dirname(__FILE__,4).'\MIC-SENSORES\CAPA-DOMINIO\REPOSITORIO-INTERFACE-QUERY\REPOSITORIO-INTERFACE-QUERY.php');
-require_once(dirname(__FILE__,4).'\MIC-SENSORES\CAPA-DATOS\capa-acceso.php');
-require_once(dirname(__FILE__,4).'\MIC-SENSORES\CAPA-DOMINIO\CLASES\Clases.php');
+require_once(dirname(__FILE__,4).'/MIC-SENSORES/CAPA-DOMINIO/REPOSITORIO-INTERFACE-QUERY/REPOSITORIO-INTERFACE-QUERY.php');
+require_once(dirname(__FILE__,4).'/MIC-SENSORES/CAPA-DATOS/capa-acceso.php');
+require_once(dirname(__FILE__,4).'/MIC-SENSORES/CAPA-DOMINIO/CLASES/Clases.php');
 
 
 class RepositorioQuerySensores implements IRepositorioQuerySensores{
@@ -140,7 +140,7 @@ class RepositorioQuerySensores implements IRepositorioQuerySensores{
 
             $respuesta_op_server = new respuesta_error_sensor();
             $respuesta_op_server->flag = false;
-            $respuesta_op_server->detalle = "No se encontraron registros";  
+            $respuesta_op_server->detalle = "No se encontraron registros.S";  
             
             return $respuesta_op_server;
 

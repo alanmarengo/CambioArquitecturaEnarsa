@@ -1,8 +1,8 @@
 <?php
-require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\INTERFACE-QUERY\REPOSITORIO-INTERFACE-QUERY.php');
-require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DATOS\capa-acceso.php');
-require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\DTOS\DTOS.php');
-require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\CLASES\Clases.php');
+require_once(dirname(__FILE__,4).'/MIC-CATALOGO/CAPA-DOMINIO/INTERFACE-QUERY/REPOSITORIO-INTERFACE-QUERY.php');
+require_once(dirname(__FILE__,4).'/MIC-CATALOGO/CAPA-DATOS/capa-acceso.php');
+require_once(dirname(__FILE__,4).'/MIC-CATALOGO/CAPA-DOMINIO/DTOS/DTOS.php');
+require_once(dirname(__FILE__,4).'/MIC-CATALOGO/CAPA-DOMINIO/CLASES/Clases.php');
 
 //INCLUIR LA LIBRERIA DTO.
 

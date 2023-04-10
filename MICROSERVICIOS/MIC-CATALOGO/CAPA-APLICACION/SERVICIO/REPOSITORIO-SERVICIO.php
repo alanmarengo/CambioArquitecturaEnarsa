@@ -1,6 +1,6 @@
 <?php
-require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-DOMINIO\INTERFACE-SERVICIO\REPOSITORIO-INTERFACE-SERVICIO.php');
-require_once(dirname(__FILE__,4).'\MIC-CATALOGO\CAPA-APLICACION\QUERY\REPOSITORIO-QUERY.php');
+require_once(dirname(__FILE__,4).'/MIC-CATALOGO/CAPA-DOMINIO/INTERFACE-SERVICIO/REPOSITORIO-INTERFACE-SERVICIO.php');
+require_once(dirname(__FILE__,4).'/MIC-CATALOGO/CAPA-APLICACION/QUERY/REPOSITORIO-QUERY.php');
 
 class RepositorioServicioCatalogo implements IRepositorioServicioCatalogo{
     public $query;
