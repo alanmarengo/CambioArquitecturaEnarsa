@@ -10,7 +10,7 @@ $_GET['q'] = 'test';
 
 $q = $_GET["q"];
 
-echo $q;
+echo $q; exit;
 $string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 	
 $conn = pg_connect($string_conn);

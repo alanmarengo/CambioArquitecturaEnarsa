@@ -465,9 +465,10 @@ $(document).ready(function() {
         top: 80
     }); */
 
-    $.getJSON(model.apiUrlBase + '/mediateca_noticias_index.php', function(data) {
+    $.getJSON(model.apiUrlBase + 'mediateca_noticias_index.php', function(data) {
         model.noticias = data;
 
+        console.log(model.apiUrlBase);
         let slides_qty = (Math.trunc((data.length) / model.noticiasxslide)) + 1;
         let html = '';
 

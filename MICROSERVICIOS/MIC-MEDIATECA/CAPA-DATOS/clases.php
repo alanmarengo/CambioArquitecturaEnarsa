@@ -21,12 +21,12 @@ class Imagen{ // clase para guardar la info de las imagenes
 
  class Noticia_mediateca{
 
-    private $path_img;
-    private $titulo;
-    private $fecha;           
-    private $path_pdf;           
-    private $desc;            
-    private $fecha_inicial; 
+    public $path_img;
+    public $titulo;
+    public $fecha;           
+    public $path_pdf;           
+    public $desc;            
+    public $fecha_inicial; 
     
     public function __construct($path_img,$titulo,$fecha,$path_pdf,$desc,$fecha_inicial){
 
