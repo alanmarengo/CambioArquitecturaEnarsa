@@ -1,8 +1,21 @@
-<?php include("pgconfig.php"); ?>
-<?php include("geovisor.fn.php"); ?>
-<?php include("indicadores.fn.php"); ?>
-<?php include("./fn.php"); ?>
-<?php //include("./login.php"); ?>
+<?php
+
+//include("pgconfig.php");
+//include("geovisor.fn.php");
+//include("indicadores.fn.php"); 
+//include("./fn.php");
+
+$_GET["ind_id"] = 6;
+
+require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-INDICADORES/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIOS.php');
+
+
+//$servicio_geovisor = new RepositorioServicioGeovisor();
+
+
+?>
+
 
 <!DOCTYPE html>
 <html lang="es">

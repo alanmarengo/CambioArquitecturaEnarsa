@@ -1,18 +1,34 @@
 <?php
 
-include("./pgconfig.php");
+//include("./pgconfig.php");
+
+require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-INDICADORES/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIOS.php');
+
+
+
+$_POST["ind_id"] = 3;
+$_POST["pos"] = 1;
 
 $ind_id = $_POST["ind_id"];
 $pos = $_POST["pos"];
 
-$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+//$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 	
-$conn = pg_connect($string_conn);
+//$conn = pg_connect($string_conn);
 
-$query_string = "SELECT *,(select extent from mod_indicadores.ind_capa where ind_id=$ind_id and posicion=$pos limit 1)as ext FROM mod_indicadores.vw_recursos WHERE ind_id = $ind_id AND posicion = $pos";
+
+$query_string = <<<EOD
+				SELECT *,(select extent from "MIC-INDICADORES".ind_capa where ind_id = $ind_id and posicion = $pos limit 1)as ext 
+				FROM "MIC-INDICADORES".vw_recursos WHERE ind_id = $ind_id AND posicion = $pos;								
+EOD;
+
+//$query_string = "SELECT *,(select extent from mod_indicadores.ind_capa where ind_id=$ind_id and posicion=$pos limit 1)as ext FROM mod_indicadores.vw_recursos WHERE ind_id = $ind_id AND posicion = $pos";
 //$query_string = "SELECT * FROM mod_indicadores.vw_recursos WHERE ind_id = 1 AND posicion = 1";
 
-$query = pg_query($conn,$query_string);
+//$query = pg_query($conn,$query_string);
+
+$servicio_indicadores_get_recurso = new RepositorioServicioIndicadores();
+$result = $servicio_indicadores_get_recurso->get_consulta($query_string);
 
 $layer_id = array();
 $layer_name = array();
@@ -25,20 +41,22 @@ $tabla_fuente = null;
 
 $type = "noresource";
 
-while($r = pg_fetch_assoc($query)) {
+while($result) {
 	
-	$titulo_ind = $r["titulo"];
-	$desc_ind = $r["desc"];
+	$titulo_ind = $result[0]["titulo"];
+	$desc_ind = $result[0]["desc"];
 	
-	switch($r["resource_type"]) {
+	switch($result[0]["resource_type"]) {
 		
 		case "capa":
-		$type = "capa";
-		array_push($layer_id,$r["resource_id"]);
-		array_push($layer_name,$r["layer_name"]);
-		array_push($layer_server,$r["layer_server"]);
-		$layer_extent = $r["ext"]; /*Fix*/
-		break;
+
+			$type = "capa";
+			array_push($layer_id,$result["resource_id"]);
+			array_push($layer_name,$result["layer_name"]);
+			array_push($layer_server,$result["layer_server"]);
+			$layer_extent = $result["ext"]; /*Fix*/
+
+			break;
 		
 		case "tabla":
 		$type = "tabla";
@@ -98,29 +116,42 @@ while($r = pg_fetch_assoc($query)) {
 		break;
 		
 		case "grafico":	
-		$type = "grafico";
-		
-		$query_string = "SELECT * FROM mod_graficos.grafico WHERE grafico_id = " . $r["resource_id"];
-		$query_grafico = pg_query($conn,$query_string);
-		$data = pg_fetch_assoc($query_grafico);
-		
 
-        $query_color="SELECT * FROM mod_graficos.grafico_color where grafico_id= " . $r["resource_id"];
-		$query_color_AUX="SELECT row_to_json(T)::text AS r FROM($query_color)T ";
-		$RESULT_COLOR=pg_query($conn,$query_color_AUX);
+			$type = "grafico";
+		
+			$query_grafico = "SELECT * FROM graficos.grafico WHERE grafico_id = " . $result[0]["resource_id"];
+
+			//echo $query_string;
+			//$query_grafico = pg_query($conn,$query_string);
+			//$data = pg_fetch_assoc($query_grafico);
+
+			$data = $servicio_indicadores_get_recurso->get_consulta($query_grafico);
+			
+
+			$query_color="SELECT * FROM graficos.grafico_color where grafico_id= " . $result[0]["resource_id"];
+			$query_color_AUX="SELECT row_to_json(T)::text AS r FROM($query_color)T ";
+
+			//echo $query_color_AUX;
+			//$RESULT_COLOR=pg_query($conn,$query_color_AUX);
+			
+			$row_color =  $servicio_indicadores_get_recurso->get_consulta($query_color_AUX);
+
 	
-        $query_sector_visibilidad="SELECT * FROM mod_graficos.grafico_sector_visibilidad where grafico_id= " . $r["resource_id"];
+        $query_sector_visibilidad="SELECT * FROM graficos.grafico_sector_visibilidad where grafico_id= " . $result[0]["resource_id"];
 		$query_sector_AUX="SELECT row_to_json(T)::text AS r FROM($query_sector_visibilidad)T ";
-		$RESULT_SECTOR=pg_query($conn,$query_sector_AUX);
-      
+		//echo $query_sector_AUX;
+		//$RESULT_SECTOR=pg_query($conn,$query_sector_AUX);
+
+		$row_sector = $servicio_indicadores_get_recurso->get_consulta($query_sector_AUX);
+		
 		$RecordList=array();
-		while($row_color=pg_fetch_row($RESULT_COLOR)){
+		while($row_color){
 			$objeto= json_decode($row_color[0]);
 			array_push($RecordList,$objeto);
 		}
 
 		$RecordListSector=array();
-		while($row_sector=pg_fetch_row($RESULT_SECTOR)){
+		while($row_sector){
 			$objeto= json_decode($row_sector[0]);
 			array_push($RecordListSector,$objeto);
 		}
@@ -129,11 +160,11 @@ while($r = pg_fetch_assoc($query)) {
 
 
 
-		$g_tipo = $data["grafico_tipo"];
-		$g_titulo = $data["grafico_titulo"];
-		$g_desc = $data["grafico_desc"];
-		$g_data_schema = $data["grafico_data_schema"];
-		$g_data_tabla = $data["grafico_data_tabla"];		
+		$g_tipo = $data[0]["grafico_tipo"];
+		$g_titulo = $data[0]["grafico_titulo"];
+		$g_desc = $data[0]["grafico_desc"];
+		$g_data_schema = $data[0]["grafico_data_schema"];
+		$g_data_tabla = $data[0]["grafico_data_tabla"];		
 		switch ($g_data_tabla) {
 
 			case "scatter":
@@ -311,6 +342,7 @@ while($r = pg_fetch_assoc($query)) {
 				$query_grafico_data_string = "SELECT * FROM \"" . $g_data_schema . "\".\"" . $g_data_tabla . "\"";
 				$query_grafico_data = pg_query($conn,$query_grafico_data_string);
 				
+				echo $query_grafico_data_string;
 				$sector = "-1";
 				$labels = array();
 				$labelUnique = array();

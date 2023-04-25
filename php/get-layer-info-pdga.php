@@ -1,16 +1,18 @@
 <?php
 
-include("../pgconfig.php");
+require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+
+//include("../pgconfig.php");
 include("../tools.php");
 
-$results = $_POST["results"];
+// $results = $_POST["results"];
 
 $layer_id_arr = array();
 $layer_desc_arr = array();
 
-$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+//$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 	
-$conn = pg_connect($string_conn);
+//$conn = pg_connect($string_conn);
 /*
 for ($i=0; $i<sizeof($results); $i++) {
 	
@@ -42,22 +44,37 @@ $html = "";
 
 for ($i=0; $i<sizeof($layer_id_arr); $i++) {
 	
-	$query_string = "SELECT DISTINCT layer_id,layer_desc FROM mod_geovisores.vw_layers WHERE layer_id = '" . $layer_id_arr[$i] . "' LIMIT 1";
+	$query_string = 'SELECT DISTINCT layer_id,layer_desc FROM "MIC-GEOVISORES".vw_layers WHERE layer_id = '. $layer_id_arr[$i]. ' LIMIT 1;';
 	
-	$query = pg_query($conn,$query_string);
+	//$query = pg_query($conn,$query_string);
 
-	$data = pg_fetch_assoc($query);
+	//$data = pg_fetch_assoc($query);
 
-	$layer_id = $data["layer_id"];
-	$layer_desc = $data["layer_desc"];
+	$servicio_geovisor = new RepositorioServicioGeovisor();
+
+	$data = $servicio_geovisor->get_consulta($query_string);
+
+
+	$layer_id = $data[0]["layer_id"];
+	$layer_desc = $data[0]["layer_desc"];
 	
-	$query_string2 = "SELECT * FROM mod_catalogo.vw_visor_pg_programas WHERE layer_id = " . $layer_id . " ORDER BY programa ASC";
+	$query_string2 = "SELECT * FROM mic_catalogo_fdw.vw_visor_pg_programas WHERE layer_id = " . $layer_id . " ORDER BY programa ASC";
 	
-	$query2 = pg_query($conn,$query_string2);
+	// $query2 = pg_query($conn,$query_string2);
 	
-	$query_count = pg_num_rows($query2);
+	// $query_count = pg_num_rows($query2);
+
 	
-	$metadata_url = $data["metadata_url"];
+	$query2 = $servicio_geovisor->get_consulta($query_string2);
+	$query_count = count($query2);
+
+	$metadata_url = "";
+	
+	if(isset($data["metadata_url"]))
+	{
+		$metadata_url = $data["metadata_url"];
+	}
+	
 	$target = " target=\"_blank\"";
 					
 	if ($metadata_url == "") {
@@ -85,13 +102,23 @@ for ($i=0; $i<sizeof($layer_id_arr); $i++) {
 			$html .= "<th>Programas Asociados</th>";
 			$html .= "</tr>";
 	
-		while($r = pg_fetch_assoc($query2)) {
+
+			foreach($query2 as $programa)
+			{
+				$html .= "<tr>";
+				$html .= "<td>" . $programa["programa"] . "</td>";
+				$html .= "</tr>";
 				
-			$html .= "<tr>";
-			$html .= "<td>" . $r["programa"] . "</td>";
-			$html .= "</tr>";
-			
-		}
+			}
+
+				/*
+			while($r = pg_fetch_assoc($query2)) {
+					
+				$html .= "<tr>";
+				$html .= "<td>" . $r["programa"] . "</td>";
+				$html .= "</tr>";
+				
+			} */
 	
 		$html .= "</table>";
 	$html .= "</div>";

@@ -7,6 +7,7 @@ interface IRepositorioQueryIndicadores{
     public function DrawIndicadores($lista_recursos_restringidos,$clase_id); 
     public function DrawIndicadoresSearch($lista_recursos_restringidos,$pattern);
     public function ComboCruce(); 
+    public function get_consulta($query_string);
     
 }
 

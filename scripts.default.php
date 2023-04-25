@@ -128,7 +128,7 @@
     // DEFINICION DE URL PARA API
     $remote_addr = $_SERVER["REMOTE_ADDR"];
     $api_url = $remote_addr=='127.0.0.1' || $remote_addr=='::1' ? 
-        'http://observatorio.atic.com.ar' : // LOCAL
+        'https://observatorio-dev.energia-argentina.com.ar/' : // LOCAL
         '.'; // SERVER
 
     echo "var GlobalApiUrl = '$api_url';";

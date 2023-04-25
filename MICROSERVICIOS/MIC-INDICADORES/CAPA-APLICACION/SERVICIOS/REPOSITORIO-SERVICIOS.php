@@ -82,6 +82,11 @@ class RepositorioServicioIndicadores implements IRepositorioServicioIndicadores{
         $this->query->ComboCruce();
     }
 
+    public function get_consulta($query_string){
+        
+       return $this->query->get_consulta($query_string);
+    }
+
 }
 
 

@@ -11,7 +11,7 @@ class ConexionGeovisores {
     private $port = "5432";
     private $database = "MIC-GEOVISORES";
     private $conect;
-    public $obj_conexion_db_externas; // objeto de conexion con credenciales. 
+    // public $obj_conexion_db_externas; // objeto de conexion con credenciales. 
 
     public function __construct()
     {
@@ -28,7 +28,7 @@ class ConexionGeovisores {
             echo "ERROR: ".$e->getMessage(); // y el tipo de error devuelto por la db.
         }
 
-        $this->obj_conexion_db_externas = New conect_db_link();
+        // $this->obj_conexion_db_externas = New conect_db_link();
 
     }
 
@@ -43,9 +43,37 @@ class ConexionGeovisores {
         $resultado = $consulta->fetchall(PDO::FETCH_ASSOC);
         return $resultado; // 
     }
+
+    public function get_consulta_ahrsc($query_string)
+    {   
+        $host_ahrsc = "iobs-02.ieasa.com.ar"; 
+        $user_ahrsc = "postgres";
+        $pass_ahrsc = "obs@ieasa";
+        $port_ahrsc = "5432";
+        $database_ahrsc = "ahrsc";
+        //$conect;
+        $conexion_ahrsc = pg_connect("host=$host_ahrsc dbname=$database_ahrsc user=$user_ahrsc password=$pass_ahrsc");
+
+        if($conexion_ahrsc)
+        {
+            
+            $query_ahrsc = pg_query($conexion_ahrsc, $query_string);
+
+            $datos = pg_fetch_all($query_ahrsc);
+
+            return $datos;
+
+        }else{
+
+            return "No se pudo conectar con la DB.";
+        }
+
+    }
+
+
 }
 
  // $prueba_conexion = new ConexionGeovisores();
-
+//$prueba_conexion->get_consulta_ahrsc();
 
 ?>

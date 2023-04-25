@@ -1,7 +1,7 @@
 <?php
 
-include("./fn.php"); 
-include_once("pgconfig.php");
+//include("./fn.php"); 
+//include_once("pgconfig.php");
 
 ?>
 

@@ -48,7 +48,9 @@ function ol_indicadores() {
 			},
 			success:function(d){}			
 			
-		});		
+		});	
+		
+		
 		
 		this.current_ind = ind_id;
 		this.current_title = titulo;

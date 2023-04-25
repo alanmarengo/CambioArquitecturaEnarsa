@@ -1,28 +1,45 @@
 <?php
 
-include("../pgconfig.php");
-include("../tools.php");
+//include("../pgconfig.php");
+//include("../tools.php");
 
-$results = $_POST["results"];
+require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+
+$servicio_geovisor = new RepositorioServicioGeovisor();
+$results[0] = "ahrsc:vp_geo_gegam_turbidez_pga1;398 ";
+
+
+//$results = $_POST["results"];
+//print_r($_POST);
+
+//Array ( [results] => Array ( [0] => ahrsc:vp_geo_higeo_acuiferos_pga1;1 ) )
+
+
 
 $layer_names = array();
 $layer_desc = array();
 $estudios_id = array();
 $gids = array();
 
-$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+//$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 	
-$conn = pg_connect($string_conn);
+//$conn = pg_connect($string_conn);
 
 for ($i=0; $i<sizeof($results); $i++) {
 	
 	$sep = explode(";",$results[$i]);
 	
-	$qs_name = "SELECT layer_desc,cod_oficial FROM mod_geovisores.vw_layers WHERE layer_wms_layer = '" . $sep[0] . "' LIMIT 1";
-	$qs_query = pg_query($conn,$qs_name);
-	$qs_name_data = pg_fetch_assoc($qs_query);
-	$layer_d = $qs_name_data["layer_desc"];
-	$cod_oficial = $qs_name_data["cod_oficial"];
+	$qs_name = 'SELECT layer_desc,cod_oficial FROM "MIC-GEOVISORES".vw_layers WHERE layer_wms_layer = '."'$sep[0]'"." LIMIT 1;";
+	//$qs_query = pg_query($conn,$qs_name);
+	//$qs_name_data = pg_fetch_assoc($qs_query);	
+	//$layer_d = $qs_name_data["layer_desc"];
+	//$cod_oficial = $qs_name_data["cod_oficial"];
+
+	$qs_name_data = $servicio_geovisor->get_consulta($qs_name);
+
+
+	$layer_d = $qs_name_data[0]["layer_desc"];
+	$cod_oficial = $qs_name_data[0]["cod_oficial"];
 	
 	array_push($layer_desc,$layer_d);
 	array_push($layer_names,$sep[0]);
@@ -46,22 +63,35 @@ $html = "";
 
 for ($i=0; $i<sizeof($layer_names); $i++) {
 	
-	$query_string = "SELECT DISTINCT layer_id,layer_metadata_url,layer_schema,layer_table FROM mod_geovisores.vw_layers WHERE layer_wms_layer = '" . $layer_names[$i] . "' LIMIT 1";
+	$query_string = 'SELECT DISTINCT layer_id,layer_metadata_url,layer_schema,layer_table FROM "MIC-GEOVISORES".vw_layers WHERE layer_wms_layer = '."'$layer_names[$i]' LIMIT 1";
 	
-	$query = pg_query($conn,$query_string);
+	//$query = pg_query($conn,$query_string);
 
-	$data = pg_fetch_assoc($query);
+	//$data = pg_fetch_assoc($query);
 
-	$layer_id = $data["layer_id"];
-	$schema = $data["layer_schema"];
-	$table= $data["layer_table"];
+	$data = $servicio_geovisor->get_consulta($query_string);
+
+
+	$layer_id = $data[0]["layer_id"];
+	$schema = $data[0]["layer_schema"];
+	$table= $data[0]["layer_table"];
 	
-	$query_string2 = "SELECT * FROM \"$schema\".\"$table\" WHERE id IN (" . implode(",",$gids[$layer_names[$i]]) . ")";
+	$query_string2 = "SELECT * FROM $schema.$table WHERE id IN (" . implode(",",$gids[$layer_names[$i]]) . ")";
 	
-	$query2 = pg_query($conn,$query_string2);
+	//echo $query_string2;
+
+	$resultado_query2 = $servicio_geovisor->get_consulta_ahrsc($query_string2);
+
+	//$query2 = pg_query($conn,$query_string2);
 	
-	$query_count = pg_num_rows($query2);
+	$query_count = 0; 
 	
+	if(!empty($resultado_query2))
+	{
+		
+		$query_count = count($resultado_query2);
+	
+	}
 	$metadata_url = $data["metadata_url"];
 	$target = " target=\"_blank\"";
 					
@@ -101,7 +131,7 @@ for ($i=0; $i<sizeof($layer_names); $i++) {
 
 	$html .= "<div style=\"display:none;\" class=\"popup-layer-content\">";	
 	
-	while($r = pg_fetch_assoc($query2)) {
+	foreach($resultado_query2 as $r ) {
 		
 		$html .= "<table class=\"popup-table gfi-info-table\" cellpadding=\"5\">";
 		
@@ -135,6 +165,20 @@ for ($i=0; $i<sizeof($layer_names); $i++) {
 	
 	$html .= "</div>";
 
+}
+
+function encrypt($string) {
+	
+	$new_string = "";
+	
+	for ($i=0; $i<strlen($string); $i++) {
+		
+		$new_string .= ord(substr($string,$i,1)) . ";";
+		
+	}
+	
+	return $new_string;
+	
 }
 
 echo $html;

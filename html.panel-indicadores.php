@@ -31,13 +31,38 @@
 
 				<div id="abr-container">
 				
-					<?php DrawAbrInd(); ?>
+					<?php
+
+					
+					$servicio_indicadores = new RepositorioServicioIndicadores();
+
+					$resultado_drawabr = $servicio_indicadores->DrawAbrInd(-1);
+
+					if($resultado_drawabr->flag)
+					{
+						echo $resultado_drawabr->detalle;
+					}
+				
+					  //DrawAbrInd(); 
+						
+					?>
 				
 				</div>
 				
 				<div id="layers-container">
-				
-					<?php DrawContainersInd(); ?>
+
+					<?php 
+					
+					//DrawContainersInd();
+
+					$resultado_drawabr = $servicio_indicadores->DrawContainersInd(-1);
+					
+					if($resultado_drawabr->flag)
+					{
+						echo $resultado_drawabr->detalle;
+					}
+					
+					?>
 				
 				</div>
 

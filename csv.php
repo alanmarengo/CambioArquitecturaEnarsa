@@ -1,7 +1,7 @@
 <?php
 
-include("./pgconfig.php");
-include("./tools.php");
+//include("./pgconfig.php");
+//include("./tools.php");
 
 header("Content-Type: text/csv");
 header("Content-Disposition: attachment; filename=file.csv");
@@ -10,6 +10,7 @@ $_GET['q'] = 'test';
 
 $q = $_GET["q"];
 
+echo $q;
 $string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 	
 $conn = pg_connect($string_conn);
@@ -18,7 +19,7 @@ $query_string = decrypt($q);
 
 $query = pg_query($conn,$query_string);
 
-//echo $query;
+echo $query;
 
 $csv = parseSQLToCSV($query);
 

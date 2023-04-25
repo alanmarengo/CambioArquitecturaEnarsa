@@ -8,33 +8,33 @@ require_once(dirname(__FILE__,4).'/MIC-GEOVISOR/CAPA-DOMINIO/CLASES/Clases.php')
 
 class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 
-	/*
-	public $consulta_principal;
+	
+	public function get_consulta_ahrsc($query_string)
+    {
+        $conexion = new ConexionGeovisores();
+        $resultado = $conexion->get_consulta_ahrsc($query_string);
 
-	public function _construct(){
+        if(!empty($resultado))
+        {
+            return $resultado;
+        }else{
+            return false;
+        }
+    }
+	
+    public function get_consulta($query_string)
+    {
+        $conexion = new ConexionGeovisores();
+        $resultado = $conexion->get_consulta($query_string);
 
-		$this->consulta_principal=  'SELECT c.origen, c.origen_id, c.origen_id_especifico, c.origen_search_text, 
-										c.subclase_id, c.estudios_id, c.cod_esia_id, c.cod_temporalidad_id, 
-										c.objetos_id, ce.cap AS esia_cap, ce.titulo AS esia_titulo, 
-										ce.orden_esia AS esia_orden_esia, ce.ruta AS esia_ruta, 
-										ce.cod_esia AS esia_cod_original, e.estudios_palabras_clave, 
-										e.sub_proyecto_id, e.estudio_estado_id, e.nombre, e.fecha, e.institucion, 
-										e.responsable, e.equipo, e.cod_oficial, e.descripcion, 
-										e.fecha_text_original, e.institucion_id, e.sub_proyecto_desc, e.proyecto_id, 
-										e.proyecto_desc, e.proyecto_extent, e.institucion_nombre, e.institucion_tel, 
-										e.institucion_contacto, e.institucion_email, t.cod_temp, 
-										t.desde AS tempo_desde, t.hasta AS tempo_hasta, t.descripcion AS tempo_desc, 
-										sc.clase_id, sc.subclase_desc, sc.subclase_cod, sc.estado_subclase, 
-										sc.cod_unsubclase, sc.descripcio, sc.cod_nom, sc.fec_bbdd, cs.clase_desc
-									FROM mod_geovisores.catalogo c
-									LEFT JOIN mod_catalogo.vw_estudio e ON c.estudios_id = e.estudios_id
-									LEFT JOIN mod_catalogo.cod_esia ce ON ce.cod_esia_id = c.cod_esia_id
-									LEFT JOIN mod_catalogo.cod_temporalidad t ON t.cod_temporalidad_id = c.cod_temporalidad_id
-									LEFT JOIN mod_catalogo.subclase sc ON sc.subclase_id = c.subclase_id
-									LEFT JOIN mod_catalogo.clase cs ON cs.clase_id = sc.clase_id;';
-	}
-
-	*/
+        if(!empty($resultado))
+        {
+            return $resultado;
+        }else{
+            return 'la consulta no produjo resultados.';
+        }
+    }
+	
 
 	public function get_layer_info_pgda() // faltan registros para su funcionamiento 
 	{
@@ -119,7 +119,6 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		return $html;
 
 	}
-
 
     public function ListaProyectos()
 	{
@@ -548,7 +547,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		//print_r($resultado);
 		
 		$respuesta = '';
-		$respuesta_op_server = new respuesta_error();
+		$respuesta_op_server = new respuesta_error_geovisor();
 		if(!empty($resultado))
 		{	
 			$respuesta = '';
@@ -755,7 +754,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		$respuesta = $conexion->get_consulta($query_string);
 		//print_r($r);		
 
-		$respuesta_op_server = new respuesta_error();
+		$respuesta_op_server = new respuesta_error_geovisor();
 		if(!empty($respuesta))
 		{	
 		
@@ -826,6 +825,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 			if(!empty($proyectos)) // si la lista de proyectos no viene vacia.
 			{
 				/* se crea la extension para la consulta  */
+				//$subconsulta_proyectos = ' AND C.sub_proyecto_id IN ('.implode(",",$proyectos).')';
 				$subconsulta_proyectos = ' AND C.sub_proyecto_id IN ('.implode(",",$proyectos).')';
 			}
 
@@ -1526,6 +1526,194 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 		return $html;
     }
 
+
+	
+	public function get_layer_info($results)
+	{
+		//$results = $_POST["results"];
+
+		$layer_names = array();
+		$layer_desc = array();
+		$estudios_id = array();
+		$gids = array();
+
+		//$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+			
+		//$conn = pg_connect($string_conn);	
+		$conexion = new ConexionGeovisores(); 		
+		//$data = $conexion->get_consulta($query_string);
+
+		for ($i=0; $i<sizeof($results); $i++) {
+			
+			$sep = explode(";",$results[$i]);
+			
+			$qs_name = 'SELECT layer_desc,cod_oficial FROM "MIC-GEOVISORES".vw_layers WHERE layer_wms_layer = '."'$sep[0]'".' LIMIT 1;';
+			//$qs_query = pg_query($conn,$qs_name);
+			//$qs_name_data = pg_fetch_assoc($qs_query);
+
+			$qs_name_data = $conexion->get_consulta($qs_name);
+
+
+			$layer_d = $qs_name_data[0]["layer_desc"];
+			$cod_oficial = $qs_name_data[0]["cod_oficial"];
+			
+			array_push($layer_desc,$layer_d);
+			array_push($layer_names,$sep[0]);
+			array_push($estudios_id,$cod_oficial);
+			
+			if(!empty($gids[$sep[0]]))
+			{
+				if (!$gids[$sep[0]]) {
+				
+					$gids[$sep[0]] = array();
+				
+				}
+			}
+			
+			
+			array_push($gids[$sep[0]],$sep[0]);
+			
+		}
+
+		$layer_names = array_unique($layer_names);
+
+		$layer_names = array_values($layer_names);
+
+		$html = "";
+
+		for ($i=0; $i<sizeof($layer_names); $i++) {
+			
+			$query_string = 'SELECT DISTINCT layer_id,layer_metadata_url,layer_schema,layer_table FROM "MIC-GEOVISORES".vw_layers WHERE layer_wms_layer = '."'$layer_names[$i]'"." LIMIT 1;";
+			
+			//$query = pg_query($conn,$query_string);
+
+			//$data = pg_fetch_assoc($query);
+
+			$data = $conexion->get_consulta($query_string);
+
+
+			$layer_id = $data[0]["layer_id"];
+			$schema = $data[0]["layer_schema"];
+			$table= $data[0]["layer_table"];
+			
+			$query_string2 = "SELECT * FROM $schema.$table WHERE id IN ('" . implode(",",$gids[$layer_names[$i]]) . "')";
+			
+			//$query2 = pg_query($conn,$query_string2);
+
+			echo $query_string2;
+
+			$resultado_qs2 = $conexion->get_consulta($query_string2);
+			
+			$query_count = 0;
+
+			//$query_count = count($resultado_qs2);
+			
+			//$query_count = pg_num_rows($query2);
+			
+			if(isset($data["metadata_url"]))
+			{
+				$metadata_url = $data["metadata_url"];
+
+			}else{
+				$metadata_url = '';
+			}
+			$target = " target=\"_blank\"";
+							
+			if ($metadata_url == "") {
+								
+				$metadata_url = "javascript:alert('Esta capa no posee metadatos asociados');";
+				$target = "";
+								
+			}
+			
+			$html .= "<div class=\"popup-layer-node jus-between\" data-state=\"0\">";
+				$html .= "<div class=\"popup-layer-node-icons ml-15\">";
+					$html .= "<div class=\"layer-icon\" title=\"Ver/Ocultar\">";
+						$html .= "<a href=\"#\" onclick=\"geomap.map.togglePopupLayers(this)\"><img src=\"./images/geovisor/icons/popup-layer-closed.png\" data-inactive=\"./images/geovisor/icons/popup-layer-closed.png\"
+						data-active=\"./images/geovisor/icons/popup-layer-opened.png\"></a>";
+					$html .= "</div>";
+				$html .= "</div>";
+				$html .= "<a href=\"#\" class=\"layer-label\" style=\"cursor:text\" alt=\"" . $layer_desc[$i] . "\">" . $layer_desc[$i] . "</a>";
+				$html .= "<div class=\"popup-layer-node-icons\">";
+					/*$html .= "<div class=\"layer-icon\">";
+						$html .= "<a href=\"" . $metadata_url . "\"" . $target . "><img src=\"./images/geovisor/icons/popup-layer-info-inactive.png\" data-inactive=\"./images/geovisor/icons/popup-layer-info-inactive.png\"
+						data-active=\"./images/geovisor/icons/popup-layer-info-active.png\"></a>";
+					$html .= "</div>";*/ 
+
+					/*
+					$html .= "<div class=\"layer-icon\" title=\"Descargar datos en CSV\">";
+						$html .= "<a href=\"./csv.php?q=".$this->encrypt(str_replace("geom,","",$query_string2))."\"><img src=\"./images/geovisor/icons/popup-layer-download-inactive.png\" data-inactive=\"./images/geovisor/icons/popup-layer-download-inactive.png\"
+						data-active=\"./images/geovisor/icons/popup-layer-download-active.png\"></a>";
+					$html .= "</div>";
+					$html .= "<div class=\"layer-icon\" title=\"Ver Recursos Asociados\">";
+						$html .= "<a href=\"./mediateca.php?mode=10&mode_id=".$layer_id."&solapa=0&o=0\" target=\"_blank\"><img src=\"./images/geovisor/icons/popup-layer-recurso-inactive.png\" data-inactive=\"./images/geovisor/icons/popup-layer-recurso-inactive.png\"
+						data-active=\"./images/geovisor/icons/popup-layer-recurso-active.png\"></a>";
+						/*&mode_label=".$layer_desc[$i]."*/
+						/*$html .= "<a href=\"./mediateca.php?mode=-1&solapa=0&o=0&s=".$estudios_id[$i]."\" target=\"_blank\"><img src=\"./images/geovisor/icons/popup-layer-recurso-inactive.png\" data-inactive=\"./images/geovisor/icons/popup-layer-recurso-inactive.png\"
+						data-active=\"./images/geovisor/icons/popup-layer-recurso-active.png\"></a>";*/
+
+					
+					$html .= "</div>";
+				$html .= "</div>";
+			$html .= "</div>";
+
+			$html .= "<div style=\"display:none;\" class=\"popup-layer-content\">";	
+			
+			while($resultado_qs2) {
+				
+				$html .= "<table class=\"popup-table gfi-info-table\" cellpadding=\"5\">";
+				
+				$hasData = false;
+				
+				foreach ($resultado_qs2 as $item => $value){
+					
+					if(( strpos( $item, "geom" ) === false) && ( $item != "id" ) && (strpos( $item, "cod_" ) === false) && ( $item != "origen") && ( $item != "fec_bbdd")) {
+					
+						$html .= "<tr>";
+						$html .= "<td>" . str_replace("_"," ",$item) . "</td>";
+						$html .= "<td>" . $value . "</td>";
+						$html .= "</tr>";
+						
+						$hasData = true;
+					
+					}
+				
+				}
+				
+				if (!$hasData) {
+					
+					$html .= "<tr><td><p>Este registro no posee columnas habilitadas para mostrar.</p></td></tr>";
+					
+				}
+			
+				$html .= "</table>";
+				$html .= "<hr>";
+				
+			}
+			
+			$html .= "</div>";
+
+		}
+
+		echo $html;
+
+	} 
+
+	
+	public function encrypt($string) {
+	
+		$new_string = "";
+		
+		for ($i=0; $i<strlen($string); $i++) {
+			
+			$new_string .= ord(substr($string,$i,1)) . ";";
+			
+		}
+		
+		return $new_string;
+		
+	}
+
 };// fin interface 
 
 
@@ -1536,9 +1724,11 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 //$respuesta = $test->get_layer_info_pgda();
 //echo $respuesta;
 
-
-
-
+// $results = array();
+// $results[0] = 'sig_santacruz:vp_geo_puntos_acotados_sit' ;
+// $respuesta = $test->get_layer_info($results);
+// echo $respuesta;
+// 
 //echo $test->get_buffer('raster', [1,2,3,4]);
 //echo wms_get_layer_extent('ahrsc:area_lb'); //Demo
 

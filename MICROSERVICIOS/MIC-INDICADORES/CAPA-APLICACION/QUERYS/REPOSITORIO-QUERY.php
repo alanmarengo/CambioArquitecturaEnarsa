@@ -2,6 +2,8 @@
 
 require_once(dirname(__FILE__,4).'/MIC-INDICADORES/CAPA-DOMINIO/INTERFACE-QUERYS/REPOSITORIO-INTERFACE-QUERY.php');
 require_once(dirname(__FILE__,4).'/MIC-INDICADORES/CAPA-DATOS/capa-acceso.php');
+require_once(dirname(__FILE__,4).'/MIC-INDICADORES/CAPA-DOMINIO/CLASES/Clases.php');
+
 
 
 
@@ -36,7 +38,7 @@ class RepositorioQueryIndicadores implements IRepositorioQueryIndicadores{
         {       
           // print_r($clase); 
         
-           $query_string_records = 'SELECT * FROM "MIC-INDICADORES".ind_panel WHERE clase_id = '. $clase["clase_id"] . "  ORDER BY ind_titulo ASC"; // falta poner el and del filtro de los recursos restringidos. 
+           $query_string_records = 'SELECT * FROM "MIC-INDICADORES".ind_panel WHERE clase_id = '. $clase["clase_id"] . "  $extension_recursos_restringidos  ORDER BY ind_titulo ASC"; // falta poner el and del filtro de los recursos restringidos. 
 		
 		   //echo $query_string_records;
 
@@ -280,6 +282,19 @@ class RepositorioQueryIndicadores implements IRepositorioQueryIndicadores{
 		}
 		
 	}
+
+	public function get_consulta($query_string)
+    {
+        $conexion = new ConexionIndicadores();
+        $resultado = $conexion->get_consulta($query_string);
+
+        if(!empty($resultado))
+        {
+            return $resultado;
+        }else{
+            return false;
+        }
+    }
 
 } // fin RepositorioQueryIndicadores
 

@@ -16,6 +16,14 @@ class RepositorioServicioGeovisor implements IRepositorioServicioGeovisor{
         $this->servicio_usuario=new RepositorioServicioUsuario();
         $this->query= new RepositorioQueryGeovisor();
     }
+
+    public function get_consulta_ahrsc($query_string){
+        return $this->query->get_consulta_ahrsc($query_string);
+    }
+
+    public function get_consulta($query_string){
+        return $this->query->get_consulta($query_string);
+    }
     
     public function Get_Layer_Security($user_id, $layer_id)
     {

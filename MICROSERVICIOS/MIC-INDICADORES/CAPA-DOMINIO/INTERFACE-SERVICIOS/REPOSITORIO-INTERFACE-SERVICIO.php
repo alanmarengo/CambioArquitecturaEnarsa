@@ -8,6 +8,7 @@ interface IRepositorioServicioIndicadores{
     public function DrawIndicadores($user_id,$clase_id);
     public function DrawIndicadoresSearch($user_id,$pattern);
     public function ComboCruce();
+    public function get_consulta($query_string);
 
 }
 

@@ -18,6 +18,8 @@ interface IRepositorioQueryGeovisor{
     public function get_medicion($wkt, $type);
     public function get_buffer($wkt, $layers);
     public function get_layer_preview($layer_id);
+    public function get_consulta($query_string);
+    public function get_consulta_ahrsc($query_string);
 }
 
 

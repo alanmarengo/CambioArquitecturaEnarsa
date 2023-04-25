@@ -61,16 +61,30 @@
 					
 					$servicio_geovisor = new RepositorioServicioGeovisor();
 
-					echo $servicio_geovisor->DrawAbr();
+					$resultado_drawAbr = $servicio_geovisor->DrawAbr();
 					
-					
-					DrawAbr(); ?>
+					if($resultado_drawAbr->flag)
+					{
+						echo $resultado_drawAbr->detalle;
+					}
+					//DrawAbr();
+					 ?>
 				
 				</div>
 				
 				<div id="layers-container">
 				
-					<?php DrawContainers(); ?>
+					<?php
+					
+					echo $servicio_geovisor->DrawContainers();
+					//$resultado_drawContainers =  $servicio_geovisor->DrawContainers();
+					//
+					//if($resultado_drawContainers->flag)
+					//{
+					//	echo $resultado_drawContainers->detalle;
+					//}
+					
+					?>
 				
 				</div>
 

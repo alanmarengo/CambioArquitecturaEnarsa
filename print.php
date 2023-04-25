@@ -1,7 +1,18 @@
-<?php include("./pgconfig.php"); ?>
-<?php include("./fn.php"); ?>
-<?php include("./geovisor.fn.php"); ?>
-<?php include("./login.php"); ?>
+<?php // include("./pgconfig.php"); ?>
+<?php // include("./fn.php"); ?>
+<?php // include("./geovisor.fn.php"); ?>
+<?php // include("./login.php"); ?>
+
+<?php 
+
+require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+
+
+$servicio_geovisor_print = new RepositorioServicioGeovisor();
+
+
+
+?>
 
 <!DOCTYPE html>
 <html lang="es" style="background-color:white !Important;">
@@ -73,7 +84,15 @@
 							
 						?>
 						
-							<p><?php echo GetLayerLabel($legends[$i]); ?></p>
+							<p><?php 
+								$result_get_layer_name = $servicio_geovisor_print->GetLayerLabel($legends[$i]);
+								
+								if($result_get_layer_name->flag)
+								{
+									echo $result_get_layer_name->detalle;
+								}
+								
+								?></p>
 							<p><img src="<?php echo $image; ?>"></p>
 							<hr>
 						

@@ -18,7 +18,7 @@ class RepositorioQueryCatalogo implements IRepositorioQueryCatalogo{
         {
             return $resultado;
         }else{
-            return 'la consulta no produjo resultados.';
+            return false;
         }
     }
 

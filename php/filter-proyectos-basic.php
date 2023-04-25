@@ -1,8 +1,10 @@
 <?php
 
-include("../pgconfig.php");
+//include("../pgconfig.php");
 
-include("../login.php");
+//include("../login.php");
+
+require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
 
 
 if ((isset($_SESSION)) && (sizeof($_SESSION) > 0))
@@ -10,12 +12,40 @@ if ((isset($_SESSION)) && (sizeof($_SESSION) > 0))
 	$user_id = $_SESSION["user_info"]["user_id"];
 }else $user_id = -1; /* usuario publico, no hay perfil */
 
-$proyectos = $_POST["proyectos"];
-$geovisor = $_POST["geovisor"];
 
-$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+
+
+
+
+$proyectos = [5,3,9,11,10,6,2,4,7,1];  //$_POST["proyectos"];
+$geovisor = -1; // $_POST["geovisor"];
+
+
+
+
+
+$servicio_geovisor_fpb = new RepositorioServicioGeovisor();
+
+$resultado_fpb = $servicio_geovisor_fpb->filter_proyectos_basic($user_id, $proyectos, $geovisor);
+
+if($resultado_fpb->flag)
+{
+	echo $resultado_fpb->detalle;
+}
+
+exit; 
+
+
+
+
+
+
+
+
+
+//$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 	
-$conn = pg_connect($string_conn);
+//$conn = pg_connect($string_conn);
 
 if (isset($proyectos)>0) {
 	
@@ -27,6 +57,8 @@ if (isset($proyectos)>0) {
 		
 		$get_layers_query_string = "SELECT string_agg(layer_id::text, ', ') AS layer_ids FROM mod_geovisores.layers_find('','','','".implode(",",$proyectos)."',-1,-1,-1,'',-1,-1)   WHERE mod_login.check_permisos_new(0, layer_id, $user_id) ;";
 	}
+
+	echo $get_layers_query_string;
 	
 	$get_layers_query = pg_query($conn,$get_layers_query_string);
 
@@ -148,6 +180,7 @@ if (isset($proyectos)>0) {
 		
 		</div>
 		</div>
+		
 		
 		<?php
 		

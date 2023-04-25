@@ -24,7 +24,7 @@ data-minimizable="1" data-minimized-title="BUSCAR CAPAS">
 			</div>
 		</div>
 		
-		<?php if (!isMobile()) { include("./popup.advanced-search.php"); } ?>
+		<?php //if (!isMobile()) { include("./popup.advanced-search.php"); } ?>
 		
 		<div class="jump-window-body jump-window-full-body" id="popup-body">
 			
@@ -39,7 +39,22 @@ data-minimizable="1" data-minimized-title="BUSCAR CAPAS">
 							</a>
 						</div>
 						<div class="w100p jump-scroll p-5-20 bfinner">
-							<span><?php echo DrawProyectos(); ?></span>
+							<span>
+							<?php 
+								require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+
+								$servicio_geovisor = new RepositorioServicioGeovisor();
+
+								$result = $servicio_geovisor->DrawProyectos();
+
+								if($result->flag)
+								{
+									echo $result->detalle;
+								}
+
+
+							?>
+							 </span>
 						</div>	
 					</div>
 					<div class="jump-window-group flex-column flex-grow" id="dynbox-popup-layers">

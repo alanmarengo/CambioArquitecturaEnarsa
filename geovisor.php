@@ -2,11 +2,13 @@
 
 
 
-include("pgconfig.php"); 
-//include("geovisor.fn.php"); 
-// include("./fn.php"); 
+//include("pgconfig.php"); 
+include("geovisor.fn.php"); 
+ include("./fn.php"); 
 include("./login.php");
 
+
+// Importamos el Microservicios Geovisor
 require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
 
  
