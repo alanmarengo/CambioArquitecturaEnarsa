@@ -1,4 +1,4 @@
-<?php include("./fn.php"); ?>
+<?php // include("./fn.php"); ?>
 
 <!DOCTYPE html>
 <html lang="es">

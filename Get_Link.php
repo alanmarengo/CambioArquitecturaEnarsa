@@ -1,16 +1,18 @@
 <?php
-include("./pgconfig.php");
+
+require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-CATALOGO/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
+
+//include("./pgconfig.php"); // 
 //$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;	
 //$conn = pg_connect($string_conn);
 
-#$getId = $_GET['id'];
+$getId = $_GET['id'];
 
 function GET_LINK($ID){
     $link;
 
     $servicio_catalogo = new RepositorioServicioCatalogo();
 
-    
     //global $conn;
     $SQL="SELECT RRA.link FROM mod_catalogo.redireccion_recursos_asociados as RRA WHERE RRA.id =$ID";
     
@@ -23,5 +25,5 @@ function GET_LINK($ID){
     return $link;
 }
 
-#echo GET_LINK($getId)
+echo GET_LINK($getId)
 ?>

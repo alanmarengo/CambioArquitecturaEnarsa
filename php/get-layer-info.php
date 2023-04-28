@@ -6,7 +6,7 @@
 require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
 
 $servicio_geovisor = new RepositorioServicioGeovisor();
-$results[0] = "ahrsc:vp_geo_gegam_turbidez_pga1;398 ";
+//$results[0] = "ahrsc:vp_geo_gegam_turbidez_pga1;398 ";
 
 
 //$results = $_POST["results"];

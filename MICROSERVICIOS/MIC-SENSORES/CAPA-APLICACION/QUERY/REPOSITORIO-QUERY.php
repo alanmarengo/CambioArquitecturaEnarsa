@@ -7,7 +7,20 @@ require_once(dirname(__FILE__,4).'/MIC-SENSORES/CAPA-DOMINIO/CLASES/Clases.php')
 
 class RepositorioQuerySensores implements IRepositorioQuerySensores{
 
- 
+    public function get_consulta($query_string)
+    {
+        $conexion = new ConexionSensores();
+        $resultado = $conexion->get_consulta($query_string);
+
+        if(!empty($resultado))
+        {
+            return $resultado;
+        }else{
+            return 'la consulta no produjo resultados.';
+        }
+    }
+
+
     public function clear_json($str) {
 	
         $bad = array("\n","\r","\"");

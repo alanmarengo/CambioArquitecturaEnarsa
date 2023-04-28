@@ -20,5 +20,10 @@ class RepositorioServicioSensores implements IRepositorioServicioSensores{
         $this->query->csv_redes_hidro($parametro_id,$fd, $fh, $estacion_id, $categoria_parametro_id);
     }
 
+    public function get_consulta($query_string){
+       return $this->query->get_consulta($query_string);
+
+    }
+
 
 }

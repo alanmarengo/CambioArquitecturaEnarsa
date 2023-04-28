@@ -4,7 +4,7 @@
 
 //include("pgconfig.php"); 
 include("geovisor.fn.php"); 
- include("./fn.php"); 
+include("./fn.php"); 
 include("./login.php");
 
 

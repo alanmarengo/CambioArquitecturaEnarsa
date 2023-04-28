@@ -13,15 +13,8 @@ if ((isset($_SESSION)) && (sizeof($_SESSION) > 0))
 }else $user_id = -1; /* usuario publico, no hay perfil */
 
 
-
-
-
-
-$proyectos = [5,3,9,11,10,6,2,4,7,1];  //$_POST["proyectos"];
-$geovisor = -1; // $_POST["geovisor"];
-
-
-
+$proyectos = $_POST["proyectos"]; // [5,3,9,11,10,6,2,4,7,1];
+$geovisor =  $_POST["geovisor"];
 
 
 $servicio_geovisor_fpb = new RepositorioServicioGeovisor();
@@ -34,13 +27,6 @@ if($resultado_fpb->flag)
 }
 
 exit; 
-
-
-
-
-
-
-
 
 
 //$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;

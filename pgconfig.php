@@ -2,9 +2,10 @@
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
+// se importa la libreria 
 require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-CATALOGO/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
 
- 
+ // la funcion modo mantenimiento sigue comportandose igual con la diferencia que cambia la relacion a la que apunta 
 function modo_mantenimiento() 
 {		
 

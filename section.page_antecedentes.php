@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="./css/page_template.css" />
 <?php
-include("./Get_Link.php");
+//include("./Get_Link.php");
 ?>
 <div id="page_antecedentes" class="page page_template">
     <div class="row">

@@ -1,8 +1,10 @@
 <?php
 
 header('Content-Type: application/json');
+require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-SENSORES/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
 
-include("./pgconfig.php");
+
+//include("./pgconfig.php");
 
 /*
  * {
@@ -30,29 +32,38 @@ include("./pgconfig.php");
  * }
  * */
 
-$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+//$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 
-$conn = pg_connect($string_conn);
+//$conn = pg_connect($string_conn);
 
 //$conn = pg_connect("host=localhost port=5432 dbname=ahrsc user=postgres password=plahe100%");
 
-$SQL = "SELECT estacion, dato_nombre, dato, maximo, minimo, to_char(media::float, 'FM999999990.00') as media, ultima_act,unidad,tipo_sensor,(ultima_act::date-30) AS fecha_menos_30 FROM mod_sensores.vw_sensores_data_index WHERE dato IS NOT NULL ORDER BY estacion ASC";
+$SQL = " select * from datos.get_sensores_data_index();";
 
-$recordset = pg_query($conn,$SQL);
+$servicio_sensores = new RepositorioServicioSensores();
+
+//$recordset = pg_query($conn,$SQL);
+
+//$result = $servicio_sensores->json_sensores();
+
+//echo $SQL;
+//$recordset = $servicio_sensores->get_consulta('set datestyle to "ISO, DMY"');
+
+$recordset = $servicio_sensores->get_consulta($SQL);
 
 function draw_tupla($row)
 {
        echo '{';
-       echo '"estacion":"'.$row[0].'",';
-       echo '"dato_nombre":"'.$row[1].'",';
-       echo '"dato":"'.$row[2].'",';
-       echo '"maximo":"'.$row[3].'",';
-       echo '"minimo":"'.$row[4].'",';
-       echo '"media":"'.$row[5].'",';
-       echo '"ultima_act":"'.$row[6].'",';
-       echo '"fecha_inicial":"'.$row[9].'",';
-       echo '"unidad":"'.$row[7].'",';
-       echo '"tipo":"'.$row[8].'"';
+       echo '"estacion":"'.$row["estacion"].'",';
+       echo '"dato_nombre":"'.$row["dato_nombre"].'",';
+       echo '"dato":"'.$row["dato"].'",';
+       echo '"maximo":"'.$row["maximo"].'",';
+       echo '"minimo":"'.$row["minimo"].'",';
+       echo '"media":"'.$row["media"].'",';
+       echo '"ultima_act":"'.$row["ultima_act"].'",';
+       echo '"fecha_inicial":"'.$row["fecha_menos_30"].'",';
+       echo '"unidad":"'.$row["unidad"].'",';
+       echo '"tipo":"'.$row["tipo_sensor"].'"';
        echo '}';
        
        return true;
@@ -62,9 +73,9 @@ $fflag = false;
 
 echo "[";
 
-$row = pg_fetch_row($recordset);
+//$row = pg_fetch_row($recordset);
 
-while($row) 
+foreach($recordset as $row) 
 {
   if ($fflag)
   {
@@ -77,10 +88,10 @@ while($row)
   
   draw_tupla($row);
   
-  $row = pg_fetch_row($recordset);//NEXT
+  //$row = pg_fetch_row($recordset);//NEXT
 };
 
 echo "]";
-pg_close($conn);
+//pg_close($conn);
 
 ?>
