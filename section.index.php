@@ -465,7 +465,7 @@ $(document).ready(function() {
         top: 80
     }); */
 
-    $.getJSON(model.apiUrlBase + 'mediateca_noticias_index.php', function(data) {
+    $.getJSON(model.apiUrlBase + '/mediateca_noticias_index.php', function(data) {
         model.noticias = data;
 
         console.log(model.apiUrlBase);
@@ -530,7 +530,7 @@ $(document).ready(function() {
         $('#noticias-slider').html(html);
     });
 
-    $.getJSON(model.apiUrlBase + 'json_sensores.php', function(data) {
+    $.getJSON(model.apiUrlBase + '/json_sensores.php', function(data) {
         model.sensores = data;
         sensorRefresh();
         setInterval(

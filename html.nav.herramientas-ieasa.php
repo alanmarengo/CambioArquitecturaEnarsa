@@ -9,8 +9,8 @@
 		<li>
 			<a href="./indicadores.php">Indicadores</a>
 		</li>
-		<!--<li>
+		<li>
 			<a href="./estadisticas.php">Estadísticas</a>
-		</li> -->
+		</li>
 	</ul>
 </div>
