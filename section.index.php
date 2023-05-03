@@ -420,7 +420,7 @@
                         <span> INDICADORES </span>
                     </div>
                 </a>
-                <a 
+                <!--<a 
                     href="./estadisticas.php" 
                     class="col-md-12 link-icon" 
                     id="estadisticas" 
@@ -429,7 +429,7 @@
                     <div class="spanContent">
                         <span> ESTADISTICAS </span>
                     </div>
-                </a>
+                </a> -->
             </div>
         </div>
     </div>

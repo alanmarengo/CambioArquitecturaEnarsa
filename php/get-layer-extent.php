@@ -6,7 +6,7 @@ require_once("./wms_tools.php");
 require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
 
 
-//$_POST['layer_id'] = 919;
+$_POST['layer_id'] = 919;
 $layer_id = $_POST["layer_id"];
 
 
@@ -15,7 +15,7 @@ $layer_id = $_POST["layer_id"];
 	
 //$conn = pg_connect($string_conn);
 
-$query_string = 'SELECT layer_schema,layer_table,layer_wms_layer FROM "MIC-GEOVISORES".vw_layers WHERE layer_id = '. $layer_id . " LIMIT 1;";
+$query_string = 'SELECT layer_database,layer_schema,layer_table,layer_wms_layer FROM "MIC-GEOVISORES".vw_layers WHERE layer_id = '. $layer_id . " LIMIT 1;";
 
 //$query = pg_query($conn,$query_string);
 
@@ -31,7 +31,7 @@ st_xmin(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision):
 st_ymin(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS miny,
 st_xmax(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS maxx,
 st_ymax(st_expand(st_extent(st_transform(T.geom, 3857)), 200::double precision)::box3d) AS maxy
-FROM \"" . trim($data[0]["layer_schema"]) . "\".\"" . ($data[0]["layer_table"]) . "\" T";
+FROM ". trim($data[0]["layer_schema"]) . "." . ($data[0]["layer_table"]) . " T";
 
 //echo $query_string2;
 

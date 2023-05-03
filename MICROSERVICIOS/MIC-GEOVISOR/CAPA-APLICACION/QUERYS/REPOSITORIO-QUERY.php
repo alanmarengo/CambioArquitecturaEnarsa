@@ -879,7 +879,7 @@ class RepositorioQueryGeovisor implements IRepositorioQueryGeovisor{
 					if($x==0) // si es el primer registro
 					{ 
 						$aux_primera_seccion .= <<<EOD
-												div class="popup-panel-tree-item" data-state="0">
+												<div class="popup-panel-tree-item" data-state="0">
 												<div class="popup-panel-tree-item-header">
 													<i class="fas fa-folder popup-panel-tree-item-icon popup-icon"></i>
 													<a href="#" class="popup-panel-tree-item-label popup-text">

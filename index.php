@@ -1,5 +1,5 @@
-<?php include("./fn.php"); ?>
-<?php include("./login.php"); ?>
+<?php // include("./fn.php"); ?>
+<?php // include("./login.php"); ?>
 
 <?php include_once("./pgconfig.php"); ?>
 

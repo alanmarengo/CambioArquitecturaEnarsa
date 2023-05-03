@@ -6,11 +6,17 @@
 require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
 
 $servicio_geovisor = new RepositorioServicioGeovisor();
-//$results[0] = "ahrsc:vp_geo_gegam_turbidez_pga1;398 ";
+//$aux[0] = "ahrsc:vp_geo_papal_tramosensible_leat1;2";
+//$_POST["results"][0] = "ahrsc:vp_geo_papal_tramosensible_leat1;2";
+//array_push($_POST["results"],$aux[0]);
 
 
-//$results = $_POST["results"];
+
+$results = $_POST["results"];
+
+
 //print_r($_POST);
+//print_r($results);
 
 //Array ( [results] => Array ( [0] => ahrsc:vp_geo_higeo_acuiferos_pga1;1 ) )
 
@@ -45,7 +51,7 @@ for ($i=0; $i<sizeof($results); $i++) {
 	array_push($layer_names,$sep[0]);
 	array_push($estudios_id,$cod_oficial);
 	
-	if (!$gids[$sep[0]]) {
+	if (!empty($gids[$sep[0]])) {
 		
 		$gids[$sep[0]] = array();
 		

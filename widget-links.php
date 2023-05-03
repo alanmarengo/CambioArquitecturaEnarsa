@@ -17,9 +17,9 @@
 		<span>INDICADORES</span>
 	</a>
 </div>
-<div class="widget-link" style="background-color:#3f9cca; right:0px; top:320px;">
+<!-- <div class="widget-link" style="background-color:#3f9cca; right:0px; top:320px;">
 	<a href="./estadisticas.php">
-		<!--<img src="./images/icono_estadisticas.png" />-->
-		<span>ESTADISTICAS</span>
+		<img src="./images/icono_estadisticas.png" />-->
+		<!--<span>ESTADISTICAS</span>
 	</a>
-</div>
+</div> -->

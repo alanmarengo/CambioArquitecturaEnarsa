@@ -104,10 +104,10 @@ $(logoContentDesktop).html(`
 		</div>
 		<div class="contentTextLogo">
 			<h4> OBSERVATORIO </h4>	
-			<div class="textLogo" style="display: ${isGeo35 === true ? 'none' : ''}">	
+			<!-- <div class="textLogo" style="display: ${isGeo35 === true ? 'none' : ''}">	
 					APROVECHAMIENTOS HIDROELÉCTRICOS <br/>
 					DEL RIO SANTA CRUZ
-			</div>
+			</div> -->
 		</div>
 	</a>
 `)
