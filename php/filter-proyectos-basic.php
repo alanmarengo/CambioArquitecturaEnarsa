@@ -1,7 +1,6 @@
 <?php
 
 //include("../pgconfig.php");
-
 //include("../login.php");
 
 require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
@@ -207,10 +206,8 @@ if (isset($proyectos)>0) {
 				</div>
 					
 				<div class="popup-panel-tree-item-subpanel">
-					<ul>
-					
-						<?php
-						
+					<ul>					
+						<?php						
 						//$layer_query_string = "SELECT DISTINCT clase_id,layer_id,tipo_layer_id,layer_desc,layer_wms_layer,layer_wms_server FROM mod_geovisores.vw_layers WHERE clase_id = " . $r["clase_id"] . " AND subclase_id = " . $r["subclase_id"] . " AND layer_id IN (" . $layer_ids . ")   AND mod_login.check_permisos_new(0, layer_id, $user_id) ORDER BY layer_desc ASC";
 						//$layer_query = pg_query($conn,$layer_query_string);
 						

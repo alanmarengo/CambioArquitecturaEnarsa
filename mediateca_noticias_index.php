@@ -2,9 +2,13 @@
 
 header('Content-Type: application/json');
 
+//include("./pgconfig.php");
+
 require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-MEDIATECA/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
 
-//include("./pgconfig.php");
+$servicio_mediateca_noticias = new RepositorioServicioMediateca();
+
+$recordset = $servicio_mediateca_noticias->noticias_mediateca();
 
 
 function limpiar($str)
@@ -24,9 +28,6 @@ function limpiar($str)
 
 
 
-$servicio_mediateca_noticias = new RepositorioServicioMediateca();
-
-$recordset = $servicio_mediateca_noticias->noticias_mediateca();
 
 // echo $SQL;
 //echo "[".print_r($recordset->detalle)."]";

@@ -4,9 +4,9 @@
 
 <?php
 //include("./Get_Link.php");
-
-include_once("pgconfig.php");
-
+//include_once("pgconfig.php");
+// se importa el repositorio de servicios del microservicio catalogo
+require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-CATALOGO/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
 
 $servicio_catalogo = new RepositorioServicioCatalogo();
 

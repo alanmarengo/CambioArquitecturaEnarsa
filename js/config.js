@@ -1,2 +1,2 @@
 /* SITEURL = "http://observatorio.ieasa.com.ar/"; */
-SITEURL = "http://observatorio.energia-argentina.com.ar/";
+SITEURL = "https://observatorio-dev.energia-argentina.com.ar/";

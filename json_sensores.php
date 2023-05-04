@@ -1,8 +1,16 @@
 <?php
 
 header('Content-Type: application/json');
+
+// se importa la libreria MIC-SENSORES
 require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-SENSORES/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
 
+// funcion que devuelve la informacion de los sensores 
+$SQL = " select * from datos.get_sensores_data_index();";
+
+$servicio_sensores = new RepositorioServicioSensores();
+
+$recordset = $servicio_sensores->get_consulta($SQL);
 
 //include("./pgconfig.php");
 
@@ -38,10 +46,6 @@ require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-SENSORES/CAPA-APLICACION/SER
 
 //$conn = pg_connect("host=localhost port=5432 dbname=ahrsc user=postgres password=plahe100%");
 
-$SQL = " select * from datos.get_sensores_data_index();";
-
-$servicio_sensores = new RepositorioServicioSensores();
-
 //$recordset = pg_query($conn,$SQL);
 
 //$result = $servicio_sensores->json_sensores();
@@ -49,7 +53,7 @@ $servicio_sensores = new RepositorioServicioSensores();
 //echo $SQL;
 //$recordset = $servicio_sensores->get_consulta('set datestyle to "ISO, DMY"');
 
-$recordset = $servicio_sensores->get_consulta($SQL);
+
 
 function draw_tupla($row)
 {

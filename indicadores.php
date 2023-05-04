@@ -1,9 +1,10 @@
-<?php include("pgconfig.php"); ?>
-<?php include("geovisor.fn.php"); ?>
-<?php include("indicadores.fn.php"); ?>
-<?php include("./fn.php"); ?>
+
+<?php // include("pgconfig.php"); ?>
+<?php // include("geovisor.fn.php"); ?>
+<?php // include("indicadores.fn.php"); ?>
+<?php // include("./fn.php"); ?>
 <?php
- include("./login.php");
+ //include("./login.php");
  require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-INDICADORES/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIOS.php');
 
  

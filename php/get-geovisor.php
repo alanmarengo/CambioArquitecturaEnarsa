@@ -7,8 +7,6 @@ require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/S
 require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-USUARIO/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
 
 
-
-
 if ((isset($_SESSION)) && (sizeof($_SESSION) > 0))
 {
 	$user_id = $_SESSION["user_info"]["user_id"];
