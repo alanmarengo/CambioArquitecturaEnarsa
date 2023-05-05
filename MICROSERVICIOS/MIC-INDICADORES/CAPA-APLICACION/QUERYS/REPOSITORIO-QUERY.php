@@ -179,7 +179,7 @@ class RepositorioQueryIndicadores implements IRepositorioQueryIndicadores{
 				$html_return.= <<<EOD
 				<div class="layer-group" data-state="0" data-cid="{$clase["clase_id"]}">					
 					<div class="layer-header">							
-						<a href="#" class="layer-label" id="indicador-label-{$clase["ind_id"]}" onclick="indicadores.loadIndicador({$clase["ind_id"]},{$clase["ind_titulo"]},{$clase["clase_id"]}); $('.layer-label').removeClass('layer-label-active'); $(this).addClass('layer-label-active'); $('#nav-panel-arrow-a').trigger('click');">
+						<a href="#" class="layer-label" id="indicador-label-{$clase["ind_id"]}" onclick="indicadores.loadIndicador({$clase["ind_id"]},'{$clase["ind_titulo"]}',{$clase["clase_id"]}); $('.layer-label').removeClass('layer-label-active'); $(this).addClass('layer-label-active'); $('#nav-panel-arrow-a').trigger('click');">
 							<span>{$clase["ind_titulo"]} </span>
 						</a>							
 					</div>					

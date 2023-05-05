@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-CATALOGO/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
 
 
-$_REQUEST["tema_id"] = 3;
+//$_REQUEST["tema_id"] = 14;
 
 //global $tema_id_;
 $tema_id_ = $_REQUEST["tema_id"];
@@ -27,7 +27,7 @@ $recordset = $servicio_catalogo->get_consulta($SQL);
 
 
 
-function draw_tupla($row)
+function draw_tupla($row,$servicio_catalogo)
 {
        echo '{';
        echo '"tema_id":"'.$row["tema_id"].'",';
@@ -37,13 +37,13 @@ function draw_tupla($row)
        echo '"tema_geovisor":"'.$row["geovisor"].'",';
        echo '"tema_minigeovisor":"'.$row["geovisor_mini"].'",';
        echo '"tema_recursos_asociados":"'.$row["recursos_asociados"].'",';
-       echo '"tema_imagenes":';draw_imagenes($row["tema_id"]);
+       echo '"tema_imagenes":';draw_imagenes($row["tema_id"],$servicio_catalogo);
        echo '}';
        
        return true;
 };
 
-function draw_imagenes($tema_id_)
+function draw_imagenes($tema_id_,$servicio_catalogo)
 {
 
     //global $conn;
@@ -59,23 +59,26 @@ function draw_imagenes($tema_id_)
   
   $recordset_img = $servicio_catalogo->get_consulta($SQL_img);
 
-	$row = pg_fetch_row($recordset_img);
-
-	while($row) 
-	{
-  		if ($fflag)
-  		{
-      			echo ',';
-  		}
-  		else
-  		{
-      			$fflag = true;
-  		};
-  
-  		echo "\"".limpiar_global($row[1])."\"";
-  
-  		$row = pg_fetch_row($recordset);//NEXT
-	};
+	//$row = pg_fetch_row($recordset_img);
+  if($recordset_img)
+  {
+    foreach($recordset_img as $row) 
+      {
+          if ($fflag)
+          {
+                echo ',';
+          }
+          else
+          {
+                $fflag = true;
+          };
+      
+          echo "\"".limpiar_global($row['recurso_path_url'])."\"";
+      
+          //$row = pg_fetch_row($recordset);//NEXT
+      };
+  }
+	
 
 	echo "]";
 
@@ -99,12 +102,17 @@ foreach($recordset as $row)
       $fflag = true;
   };
   
-  draw_tupla($row);
+  draw_tupla($row,$servicio_catalogo);
   
   //$row = pg_fetch_row($recordset);//NEXT
 };
 
 echo "]";
+
+function limpiar_global($str)
+{
+         return str_replace(array("\n","\r","\""),'',$str);
+}; 
 
 //pg_close($conn);
 

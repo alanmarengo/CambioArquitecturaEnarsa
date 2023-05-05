@@ -1,12 +1,33 @@
-<?php include("./pgconfig.php"); ?>
+<?php// include("./pgconfig.php"); ?>
 <?php include("./fn.php"); ?>
-<?php include("./ldap.php"); ?>
+<?php// include("./ldap.php"); ?>
 <?php
 	
+	require_once(dirname(__FILE__).'/MICROSERVICIOS/MIC-USUARIO/CAPA-APLICACION/SERVICIO/REPOSITORIO-SERVICIO.php');
+
+	//$_POST["user-name"] = "fcaroff";
+	//$_POST["user-password"] = "";
 	//include("../include.vars.pg.php");
 	
 	if ((isset($_POST["user-name"])) && (isset($_POST["user-password"]))) 
-	{
+	{	/*
+		$logged = false;
+		$servicio_usuario = new RepositorioServicioUsuario();
+
+		$result = $servicio_usuario->login($_POST["user-name"],$_POST["user-password"]);
+
+		if($result->flag)
+		{	
+			$logged = true;
+			
+			session_start();
+			
+			$_SESSION["user_info"] = $result->detalle['user_info'];
+			
+		}else{
+
+			die("Invalid Token");
+		} */
 		
 		//$user_name = trim($_POST["user-name"]);
 		
@@ -16,61 +37,51 @@
 		
 		$user_password = pg_escape_string($_POST["user-password"]);
 		
-		$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+		//$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 		
-		$conn = pg_connect($string_conn);
+		//$conn = pg_connect($string_conn);
 		
 		//$query_string = "SELECT * FROM mod_login.user_data WHERE user_name = '$user_name' AND user_pass = md5('$user_password')";
 		
-		$query_string = "SELECT * FROM mod_login.user_data WHERE user_name = '$user_name' AND user_estado_id=1;";/* Si el usuario existe */
+		//$query_string = "SELECT * FROM mod_login.user_data WHERE user_name = '$user_name' AND user_estado_id=1;"; //Si el usuario existe 
 		
-		$query = pg_query($conn,$query_string);
+		//$query = pg_query($conn,$query_string);
 		
-		$n_registros = pg_num_rows($query);
+		//$n_registros = pg_num_rows($query);
 		
-		$result = pg_fetch_assoc($query);
+		//$result = pg_fetch_assoc($query);		
 		
 		$logged = false;
+
+		$servicio_usuario = new RepositorioServicioUsuario();
+		$result = $servicio_usuario->login($_POST["user-name"],$_POST["user-password"]);
 				
 		//var_dump($n_registros);
 		//var_dump($result);
 		
-		if ($n_registros > 0) {
-			
-			if ($result["user_contra_dominio"] == 't') 
-			{
-				//ldap_login($user_name,$user_password);
-				if(ldap_login($user_name,$user_password))
-				{
-					$logged = true;
-			
-					session_start();
-			
-					$_SESSION["user_info"] = $result;
-				}
-				else	{ die("Invalid Token");	};
-			}
-			else
-			{
-				$query_string = "SELECT * FROM mod_login.user_data WHERE user_name = '$user_name' AND user_pass = md5('$user_password')";
+		if ($result->flag) 
+		{			
+			//$query_string = "SELECT * FROM mod_login.user_data WHERE user_name = '$user_name' AND user_pass = md5('$user_password')";
 		
-				$query = pg_query($conn,$query_string);
+			//$query = pg_query($conn,$query_string);
 		
-				$n_registros = pg_num_rows($query);
+			//$n_registros = pg_num_rows($query);
 		
-				//$result = pg_fetch_assoc($query);
-				
-				if(($n_registros>0)&&(strlen($user_password)>0))
-				{
+			//$result = pg_fetch_assoc($query);
+			
+			$logged = true;
+		
+			session_start();
+		
+			$_SESSION["user_info"] = $result->detalle["user_info"][0];
 
-					$logged = true;
+			//if(($n_registros>0)&&(strlen($user_password)>0))
+			//{				
+
+			//}
+
 			
-					session_start();
-			
-					$_SESSION["user_info"] = $result;
-				}else  { die("Invalid Token"); };
-			};
-		}
+		} else  { die("Invalid Token"); };
 		
 	}else{
 		
@@ -102,7 +113,7 @@
 		
 			<?php
 		
-		if ($result) {
+		if ($result->flag) {
 			
 			?>
 			
