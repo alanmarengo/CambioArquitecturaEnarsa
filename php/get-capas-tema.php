@@ -1,21 +1,28 @@
 <?php
 
-include("../pgconfig.php");
+//include("../pgconfig.php");
 
+require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+
+$_POST["tema_id"] = 3;
 $tema_id = $_POST["tema_id"];
 
 $layers_id = array();
 
-$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+//$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 	
-$conn = pg_connect($string_conn);
+//$conn = pg_connect($string_conn);
 
-$query_string = "SELECT * FROM mod_catalogo.temas_capas WHERE tema_id = " . $tema_id;
+$query_string_temas_capas = "SELECT * FROM mic_catalogo_fdw.temas_capas WHERE tema_id = $tema_id ;";
 
-$query = pg_query($conn,$query_string);
+//$query = pg_query($conn,$query_string);
 
-while($r = pg_fetch_assoc($query)) {
-	
+$servicio_geovisor = new RepositorioServicioGeovisor();
+
+$result_temas_capas = $servicio_geovisor->get_consulta($query_string_temas_capas);
+
+foreach($result_temas_capas as $r)
+{	
 	array_push($layers_id,$r["layer_id"]);
 	
 }
@@ -24,21 +31,24 @@ $layers_id = array_unique($layers_id);
 
 $layers_id = array_values($layers_id);
 
-$query_string = "SELECT DISTINCT layer_id,layer_desc,layer_wms_server,layer_wms_layer,layer_schema,layer_table FROM mod_geovisores.vw_layers WHERE layer_id IN(" . implode(",",$layers_id) . ")";
+$query_string_layers= 'SELECT DISTINCT layer_id,layer_desc,layer_wms_server,layer_wms_layer,layer_schema,layer_table FROM "MIC-GEOVISORES".vw_layers WHERE layer_id IN('.implode(",",$layers_id) . ")";
 
-$query = pg_query($conn,$query_string);
+//$query = pg_query($conn,$query_string);
+$result_layers = $servicio_geovisor->get_consulta($query_string_layers);
 
-$gl_query_string = "SELECT geovisor FROM mod_catalogo.temas WHERE tema_id = " . $tema_id;
+$gl_query_string = "SELECT geovisor FROM mic_catalogo_fdw.temas WHERE tema_id = " . $tema_id;
 
-$gl_query = pg_query($conn,$gl_query_string);
+$result_gl =$servicio_geovisor->get_consulta($gl_query_string);
 
-$gl = pg_fetch_assoc($gl_query);
+//$gl_query = pg_query($conn,$gl_query_string);
 
-$json = "{\"geovisor_link\":\"" . $gl["geovisor"] . "\",\"layers\":[";
+//$gl = pg_fetch_assoc($gl_query);
+
+$json = "{\"geovisor_link\":\"" . $result_gl[0]["geovisor"] . "\",\"layers\":[";
 
 $entered = false;
 
-while ($data = pg_fetch_assoc($query)) {
+foreach($result_layers as $data) {
 
 	$entered = true;
 

@@ -115,6 +115,6 @@ function limpiar_global($str)
 }; 
 
 //pg_close($conn);
-
+$servicio_catalogo = null;
 
 ?>
