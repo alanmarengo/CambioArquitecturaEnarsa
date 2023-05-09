@@ -1,13 +1,18 @@
 <?php
 
-include("../pgconfig.php");
+//include("../pgconfig.php");
+
+require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+
+$_POST["wkt"] = 'POLYGON((-7856386.23101514 -6113904.726182583,-7755237.072887988 -6203815.088962278,-7680311.713408106 -6113904.726182583,-7773968.284140151 -6042725.746145464,-7856386.23101514 -6113904.726182583))';
+$_POST["type"] = 'Polygon';
 
 $wkt = $_POST["wkt"];
 $type = $_POST["type"];
 
-$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+//$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 	
-$conn = pg_connect($string_conn);
+//$conn = pg_connect($string_conn);
 
 if ($type == "LineString") {
 
@@ -28,15 +33,19 @@ if ($type == "LineString") {
 
 }
 
-$query = pg_query($conn,$query_string);
+//echo $query_string; exit;
+//$query = pg_query($conn,$query_string);
 
-$data = pg_fetch_assoc($query);
+//$data = pg_fetch_assoc($query);
+$servicio_geovisor = New RepositorioServicioGeovisor();
 
-$area = $data["area"];
+$data = $servicio_geovisor->get_consulta_ahrsc($query_string);
 
-$data = explode(".",$data["km"]);
+$area = $data[0]["area"];
 
-$data = $data[0] . "." . substr($data[1],0,2);
+$data = explode(".",$data[0]["km"]);
+
+$data = $data[0][0] . "." . substr($data[0][1],0,2);
 
 if ($type == "LineString") {
 

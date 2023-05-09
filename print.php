@@ -56,8 +56,8 @@ $servicio_geovisor_print = new RepositorioServicioGeovisor();
 		<div class="page-container" style="background-color: #FFFFFF !important; width:1024px;">
 			
 			<div class="header">
-			
-				<img src="./images/print-header.png" style="margin:10px 0; padding:10px;">
+				<!-- Aca cambiar link a la imagen que se podra en reemplazo a la actual  -->
+ 				<img src="./images/print-header.png" style="margin:10px 0; padding:10px;">
 				<a href="#" id="icon-print" onclick="this.style.display='none'; window.print(); this.style.display=''; " style="font-size:24px; color:black; float:right; position: relative; right: 10px;">
 				
 					<i class="fa fa-print"></i>

@@ -4,7 +4,7 @@
 
 require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
 
-$_POST["tema_id"] = 3;
+//$_POST["tema_id"] = 3;
 $tema_id = $_POST["tema_id"];
 
 $layers_id = array();

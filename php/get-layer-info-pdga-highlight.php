@@ -1,7 +1,10 @@
 <?php
 
-include("../pgconfig.php");
-include("../tools.php");
+//include("../pgconfig.php");
+//include("../tools.php");
+
+//require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
+
 
 $results = $_POST["results"];
 
@@ -9,9 +12,9 @@ $results = $_POST["results"];
 
 $layers_arr = array();
 
-$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
+//$string_conn = "host=" . pg_server . " user=" . pg_user . " port=" . pg_portv . " password=" . pg_password . " dbname=" . pg_db;
 	
-$conn = pg_connect($string_conn);
+//conn = pg_connect($string_conn);
 
 for ($i=0; $i<sizeof($results); $i++) {
 	

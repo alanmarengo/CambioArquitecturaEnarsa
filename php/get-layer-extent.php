@@ -6,7 +6,7 @@ require_once("./wms_tools.php");
 require_once(dirname(__FILE__,2).'/MICROSERVICIOS/MIC-GEOVISOR/CAPA-APLICACION/SERVICIOS/REPOSITORIO-SERVICIO.php');
 
 
-$_POST['layer_id'] = 1001;
+//$_POST['layer_id'] = 1150;
 $layer_id = $_POST["layer_id"];
 
 
